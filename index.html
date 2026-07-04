@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nimiq UI Kit</title>
+  <meta name="description" content="The authoritative Nimiq design system reference — tokens, foundations, CSS components, live Vue components, identicons and utilities.">
+  <link rel="icon" href="favicon.ico">
+
+  <!-- Fonts + design system (real sources) -->
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/nimiq-style.min.css">
+  <link rel="stylesheet" href="tokens/tokens.css">
+  <link rel="stylesheet" href="assets/css/vue-components.css">
+  <link rel="stylesheet" href="assets/css/kit.css">
+</head>
+<body class="kit-body">
+
+<button class="kit-menu-btn" aria-label="Toggle navigation" onclick="document.querySelector('.kit-sidebar').classList.toggle('open')">☰</button>
+
+<div class="kit-shell">
+  <!-- ============================ SIDEBAR ============================ -->
+  <aside class="kit-sidebar">
+    <div class="kit-brand">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use xlink:href="assets/icons/nimiq-style.icons.svg#nq-hexagon"/></svg>
+      <div>
+        <div class="kit-brand-title">Nimiq UI Kit</div>
+        <div class="kit-brand-sub">Design System</div>
+      </div>
+    </div>
+    <div class="kit-search-wrap">
+      <input type="text" class="kit-search" id="kit-search" placeholder="Search the kit…" autocomplete="off">
+    </div>
+    <nav class="kit-nav" id="kit-nav">
+      <div class="kit-nav-group">
+        <div class="kit-nav-group-title">Getting started</div>
+        <a href="#overview">Overview</a>
+      </div>
+      <div class="kit-nav-group">
+        <div class="kit-nav-group-title">Foundations</div>
+        <a href="#brand">Brand &amp; Logo</a>
+        <a href="#color">Color</a>
+        <a href="#gradients">Gradients</a>
+        <a href="#typography">Typography</a>
+        <a href="#spacing">Spacing &amp; Grid</a>
+        <a href="#radius">Radius</a>
+        <a href="#elevation">Elevation</a>
+        <a href="#motion">Motion</a>
+        <a href="#breakpoints">Breakpoints</a>
+        <a href="#icons">Iconography</a>
+      </div>
+      <div class="kit-nav-group">
+        <div class="kit-nav-group-title">Components · CSS</div>
+        <a href="#buttons">Buttons</a>
+        <a href="#inputs">Inputs</a>
+        <a href="#cards">Cards</a>
+        <a href="#notices">Notices</a>
+        <a href="#text-classes">Text, Labels &amp; Links</a>
+      </div>
+      <div class="kit-nav-group">
+        <div class="kit-nav-group-title">Components · Vue</div>
+        <a href="#vc-amounts">Amounts &amp; Identity</a>
+        <a href="#vc-inputs">Inputs</a>
+        <a href="#vc-feedback">Feedback &amp; Overlay</a>
+        <a href="#vc-layout">Layout &amp; Pages</a>
+        <a href="#vc-qr">QR</a>
+      </div>
+      <div class="kit-nav-group">
+        <div class="kit-nav-group-title">More</div>
+        <a href="#identicons">Identicons</a>
+        <a href="#utilities">Utilities</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#resources">Resources</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ============================ MAIN ============================ -->
+  <main class="kit-main">
+    <div class="kit-container">
+
+      <header class="kit-hero">
+        <h1>Nimiq UI Kit</h1>
+        <p>The authoritative reference for the entire Nimiq UI universe — design tokens, foundations, CSS components, live Vue components, identicons and utilities — built directly from the real, published sources.</p>
+      </header>
+
+      <!-- ===================== OVERVIEW ===================== -->
+      <section class="kit-section" id="overview">
+        <h2>Overview</h2>
+        <p class="kit-section-lede">Every value, class and component on this page is rendered from the actual Nimiq packages — not a mock-up. The kit consolidates five current sources into one browsable, copyable system.</p>
+        <div class="kit-card">
+          <table class="res-table">
+            <thead><tr><th>Source</th><th>Package</th><th>Provides</th></tr></thead>
+            <tbody>
+              <tr><td>@nimiq/style</td><td><code>0.8.5</code></td><td>Colors, gradients, type scale, buttons, inputs, cards, notices, icon sprite</td></tr>
+              <tr><td>@nimiq/vue-components</td><td><code>git</code></td><td>34 live Vue components (Identicon, Amount, Tooltip, QR, inputs…)</td></tr>
+              <tr><td>@nimiq/identicons</td><td><code>1.6.2</code></td><td>Identicon / avatar generator</td></tr>
+              <tr><td>@nimiq/utils</td><td><code>local</code></td><td>Formatting, validation, request-links, tweening, clipboard</td></tr>
+              <tr><td>nimiq/wallet</td><td><code>master</code></td><td>Fonts (Muli, Fira Mono), opacity ladder, crypto colors, patterns</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================== BRAND ===================== -->
+      <section class="kit-section" id="brand">
+        <h2>Brand &amp; Logo <span class="kit-provenance">nimiq/wallet · @nimiq/style</span></h2>
+        <p class="kit-section-lede">The Nimiq logo pairs the gold hexagon “signet” with the <strong>NIMIQ</strong> wordmark (uppercase, bold, <code class="kit-inline-code">letter-spacing: 0.08em</code>, gap = 0.382× the signet width) — exactly as the live wallet composes it. The gold signet stays legible on light and dark surfaces.</p>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Logo — on light</span></div>
+          <div class="demo-stage center"><span class="nq-logo-lockup nq-logo-lg" style="color:var(--nimiq-blue)"><span class="nq-logo-signet"></span><span class="nq-logo-wordmark">Nimiq</span></span></div>
+        </div>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Logo — on blue gradient</span></div>
+          <div class="demo-stage dark center"><span class="nq-logo-lockup nq-logo-lg" style="color:#fff"><span class="nq-logo-signet"></span><span class="nq-logo-wordmark">Nimiq</span></span></div>
+        </div>
+        <div class="kit-subsection">
+          <h3>Monochrome</h3>
+          <p class="kit-note">Single-colour versions — the signet and wordmark share <code class="kit-inline-code">currentColor</code> — for print, watermarks or any single-ink context where the gold logo can't be used.</p>
+          <div class="demo">
+            <div class="demo-head"><span class="demo-title">Dark — on light</span></div>
+            <div class="demo-stage center"><span class="nq-logo-lockup nq-logo-lg" style="color:var(--nimiq-blue)"><svg viewBox="0 0 27 24" class="nq-logo-signet-mono"><use xlink:href="assets/icons/nimiq-style.icons.svg#nq-hexagon"/></svg><span class="nq-logo-wordmark">Nimiq</span></span></div>
+          </div>
+          <div class="demo">
+            <div class="demo-head"><span class="demo-title">White — on blue</span></div>
+            <div class="demo-stage dark center"><span class="nq-logo-lockup nq-logo-lg" style="color:#fff"><svg viewBox="0 0 27 24" class="nq-logo-signet-mono"><use xlink:href="assets/icons/nimiq-style.icons.svg#nq-hexagon"/></svg><span class="nq-logo-wordmark">Nimiq</span></span></div>
+          </div>
+        </div>
+        <div class="kit-subsection">
+          <h3>Signet</h3>
+          <p class="kit-note">The mark on its own, at increasing sizes. A single-colour version also ships in <code class="kit-inline-code">@nimiq/style</code> as the <code class="kit-inline-code">nq-hexagon</code> icon, which inherits <code class="kit-inline-code">currentColor</code> for monochrome use.</p>
+          <div class="demo"><div class="demo-stage center" style="gap:36px;align-items:flex-end">
+            <span class="nq-logo-signet" style="width:24px;height:24px"></span>
+            <span class="nq-logo-signet" style="width:32px;height:32px"></span>
+            <span class="nq-logo-signet" style="width:48px;height:48px"></span>
+            <span class="nq-logo-signet" style="width:72px;height:72px"></span>
+          </div></div>
+        </div>
+      </section>
+
+      <!-- ===================== COLOR ===================== -->
+      <section class="kit-section" id="color">
+        <h2>Color <span class="kit-provenance">@nimiq/style</span></h2>
+        <p class="kit-section-lede">Ten brand colors plus neutrals. Click any swatch to copy its hex. Text-color utilities are <code class="kit-inline-code">.nq-&lt;color&gt;</code>; background utilities are <code class="kit-inline-code">.nq-&lt;color&gt;-bg</code>.</p>
+        <div class="kit-subsection"><h3>Brand palette</h3><div class="swatch-grid" id="swatches-brand"></div></div>
+        <div class="kit-subsection"><h3>Neutrals</h3><div class="swatch-grid" id="swatches-neutral"></div></div>
+        <div class="kit-subsection">
+          <h3>Light opacity ladder <span class="kit-provenance">nimiq/wallet</span></h3>
+          <p class="kit-note">Nimiq Blue at descending alpha — the greyscale text system. Vars <code class="kit-inline-code">--text-100 … --text-6</code>.</p>
+          <div class="ladder" id="ladder"></div>
+        </div>
+        <div class="kit-subsection">
+          <h3>Crypto colors <span class="kit-provenance">nimiq/wallet</span></h3>
+          <div class="swatch-grid" id="swatches-crypto"></div>
+        </div>
+        <div class="kit-subsection">
+          <h3>On-dark &amp; darkened variants</h3>
+          <p class="kit-note">Inside a <code class="kit-inline-code">.nq-*-bg</code> surface, light-blue and red swap to brighter on-dark values. Darkened values back the hover states.</p>
+          <div class="swatch-grid" id="swatches-variants"></div>
+        </div>
+      </section>
+
+      <!-- ===================== GRADIENTS ===================== -->
+      <section class="kit-section" id="gradients">
+        <h2>Gradients <span class="kit-provenance">@nimiq/style</span></h2>
+        <p class="kit-section-lede">The signature look. One formula drives them all — a brighter accent glows from the bottom-right into the base color.</p>
+        <div class="code-wrap kit-subsection"><pre class="code" id="gradient-formula"></pre></div>
+        <div class="gradient-grid" id="gradients"></div>
+      </section>
+
+      <!-- ===================== TYPOGRAPHY ===================== -->
+      <section class="kit-section" id="typography">
+        <h2>Typography <span class="kit-provenance">@nimiq/style · wallet</span></h2>
+        <p class="kit-section-lede"><strong>Muli</strong> for UI (weights 400/600/700), <strong>Fira Mono</strong> for addresses &amp; hex. The scale lives on the 8px grid: <code class="kit-inline-code">1rem = 8px</code>.</p>
+        <div class="kit-card">
+          <div class="type-row"><div class="type-spec"><span class="nq-h1">Heading 1</span></div><div class="type-meta">.nq-h1 · 24px/3rem · 700</div></div>
+          <div class="type-row"><div class="type-spec"><span class="nq-h2">Heading 2</span></div><div class="type-meta">.nq-h2 · 20px/2.5rem · 700</div></div>
+          <div class="type-row"><div class="type-spec"><span class="nq-h3">Heading 3</span></div><div class="type-meta">.nq-h3 · 16px/2rem · 700</div></div>
+          <div class="type-row"><div class="type-spec"><span class="nq-text">Body text — the quick brown fox jumps over the lazy dog.</span></div><div class="type-meta">.nq-text · 16px/2rem</div></div>
+          <div class="type-row"><div class="type-spec"><span class="nq-text-s">Small text — the quick brown fox.</span></div><div class="type-meta">.nq-text-s · 14px · 600</div></div>
+          <div class="type-row"><div class="type-spec"><span class="nq-label">Label text</span></div><div class="type-meta">.nq-label · 14px · 600 · uppercase</div></div>
+          <div class="type-row"><div class="type-spec" style="font-family:'Fira Mono',monospace">NQ07 0000 0000 0000 0000</div><div class="type-meta">Fira Mono · addresses</div></div>
+        </div>
+      </section>
+
+      <!-- ===================== SPACING ===================== -->
+      <section class="kit-section" id="spacing">
+        <h2>Spacing &amp; Grid <span class="kit-provenance">@nimiq/style</span></h2>
+        <p class="kit-section-lede">Everything is an 8px grid. The rem base is 8px (<code class="kit-inline-code">--nimiq-size: 8px</code>), so <code class="kit-inline-code">Nrem = N × 8px</code>. Utilities <code class="kit-inline-code">.margin-top-1…5</code>.</p>
+        <div class="spec-grid" id="spacing-grid"></div>
+      </section>
+
+      <!-- ===================== RADIUS ===================== -->
+      <section class="kit-section" id="radius">
+        <h2>Radius <span class="kit-provenance">@nimiq/style</span></h2>
+        <div class="spec-grid">
+          <div class="spec-cell"><div class="radius-box" style="border-radius:4px"></div><div class="spec-meta">input · 4px</div></div>
+          <div class="spec-cell"><div class="radius-box" style="border-radius:10px"></div><div class="spec-meta">card · 10px</div></div>
+          <div class="spec-cell"><div class="radius-box" style="border-radius:13.5px"></div><div class="spec-meta">small/pill btn · 13.5px</div></div>
+          <div class="spec-cell"><div class="radius-box" style="border-radius:500px"></div><div class="spec-meta">button · 500px</div></div>
+        </div>
+      </section>
+
+      <!-- ===================== ELEVATION ===================== -->
+      <section class="kit-section" id="elevation">
+        <h2>Elevation <span class="kit-provenance">@nimiq/style</span></h2>
+        <div class="spec-grid">
+          <div class="spec-cell"><div class="shadow-box" style="box-shadow:0 4px 12px rgba(0,0,0,0.15)"></div><div class="spec-meta">.nq-shadow</div></div>
+          <div class="spec-cell"><div class="shadow-box" style="box-shadow:0 4px 20px rgba(0,0,0,0.15)"></div><div class="spec-meta">.nq-shadow-l</div></div>
+          <div class="spec-cell"><div class="shadow-box" style="box-shadow:0 4px 28px rgba(0,0,0,0.111158)"></div><div class="spec-meta">card</div></div>
+        </div>
+      </section>
+
+      <!-- ===================== MOTION ===================== -->
+      <section class="kit-section" id="motion">
+        <h2>Motion <span class="kit-provenance">@nimiq/style · @nimiq/utils</span></h2>
+        <p class="kit-section-lede">The Nimiq easing is <code class="kit-inline-code">cubic-bezier(0.25, 0, 0, 1)</code> (<code class="kit-inline-code">--nimiq-ease</code>). Durations: attr <code class="kit-inline-code">0.2s</code>, movement <code class="kit-inline-code">0.4s</code>.</p>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Easing &amp; Tweenable</span><small>@nimiq/utils Tweenable</small></div>
+          <div class="demo-stage" id="motion-stage" style="flex-direction:column;align-items:stretch;gap:20px">
+            <div style="display:flex;align-items:center;gap:16px">
+              <button class="nq-button-s" id="motion-play">Animate</button>
+              <div style="flex:1;height:12px;background:rgba(31,35,72,0.08);border-radius:500px;overflow:hidden">
+                <div id="motion-bar" style="height:100%;width:0;background:radial-gradient(100% 100% at bottom right,#265DD7,#0582CA);border-radius:500px"></div>
+              </div>
+              <div id="motion-count" style="font-family:'Fira Mono',monospace;min-width:48px;text-align:right">0</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== BREAKPOINTS ===================== -->
+      <section class="kit-section" id="breakpoints">
+        <h2>Breakpoints <span class="kit-provenance">nimiq/wallet</span></h2>
+        <div class="kit-card"><table class="res-table">
+          <thead><tr><th>Name</th><th>px</th><th>Name</th><th>px</th></tr></thead>
+          <tbody>
+            <tr><td>mobile</td><td><code>768</code></td><td>largeDesktop</td><td><code>1409</code></td></tr>
+            <tr><td>tablet</td><td><code>960</code></td><td>extraLargeDesktop</td><td><code>1499</code></td></tr>
+            <tr><td>halfMobile</td><td><code>1160</code></td><td>veryLargeDesktop</td><td><code>1800</code></td></tr>
+            <tr><td>smallDesktop</td><td><code>1199</code></td><td>ultraLargeDesktop</td><td><code>2000</code></td></tr>
+            <tr><td>mediumDesktop</td><td><code>1319</code></td><td></td><td></td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <!-- ===================== ICONS ===================== -->
+      <section class="kit-section" id="icons">
+        <h2>Iconography <span class="kit-provenance">@nimiq/style</span></h2>
+        <p class="kit-section-lede">The icon sprite. Icons inherit <code class="kit-inline-code">currentColor</code>. Each icon carries a plain-language summary in its <code class="kit-inline-code">aria-label</code>, <code class="kit-inline-code">title</code> and <code class="kit-inline-code">data-summary</code> (also on <code class="kit-inline-code">window.NimiqIconSummaries</code>) so an agent can identify it without vision. Click any icon to copy its markup.</p>
+        <div class="code-wrap kit-subsection"><pre class="code" id="icon-usage"></pre></div>
+        <div class="kit-subsection"><h3>On light</h3><div class="icon-grid" id="icon-grid-light"></div></div>
+        <div class="kit-subsection"><h3>On blue</h3><div class="icon-grid on-dark" id="icon-grid-dark"></div></div>
+      </section>
+
+      <!-- ===================== CSS: BUTTONS ===================== -->
+      <section class="kit-section" id="buttons">
+        <h2>Buttons <span class="kit-provenance">@nimiq/style</span></h2>
+        <p class="kit-section-lede">Three families: primary pill (<code class="kit-inline-code">.nq-button</code>), small (<code class="kit-inline-code">.nq-button-s</code>), and pill (<code class="kit-inline-code">.nq-button-pill</code>). Hover, focus and disabled states are live.</p>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Primary <small>.nq-button</small></span></div>
+          <div class="demo-stage">
+            <button class="nq-button">Default</button>
+            <button class="nq-button light-blue">Light blue</button>
+            <button class="nq-button green">Green</button>
+            <button class="nq-button gold">Gold</button>
+            <button class="nq-button orange">Orange</button>
+            <button class="nq-button red">Red</button>
+            <button class="nq-button" disabled>Disabled</button>
+          </div>
+          <div class="demo-stage dark"><button class="nq-button inverse">Inverse</button></div>
+        </div>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Small <small>.nq-button-s</small></span></div>
+          <div class="demo-stage">
+            <button class="nq-button-s">Default</button>
+            <button class="nq-button-s light-blue">Light blue</button>
+            <button class="nq-button-s green">Green</button>
+            <button class="nq-button-s orange">Orange</button>
+            <button class="nq-button-s red">Red</button>
+            <button class="nq-button-s" disabled>Disabled</button>
+          </div>
+        </div>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Pill <small>.nq-button-pill</small></span></div>
+          <div class="demo-stage">
+            <button class="nq-button-pill">Default</button>
+            <button class="nq-button-pill light-blue">Light blue</button>
+            <button class="nq-button-pill green">Green</button>
+            <button class="nq-button-pill orange">Orange</button>
+            <button class="nq-button-pill red">Red</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== CSS: INPUTS ===================== -->
+      <section class="kit-section" id="inputs">
+        <h2>Inputs <span class="kit-provenance">@nimiq/style</span></h2>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Text inputs <small>.nq-input · .nq-input-s</small></span></div>
+          <div class="demo-stage" style="flex-direction:column;align-items:stretch;max-width:360px">
+            <input class="nq-input" placeholder="Regular input">
+            <input class="nq-input" value="With a value">
+            <input class="nq-input-s" placeholder="Small input">
+            <input class="nq-input vanishing" placeholder="Vanishing (border on focus)">
+          </div>
+        </div>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">On blue background</span></div>
+          <div class="demo-stage nq-blue-bg" style="flex-direction:column;align-items:stretch">
+            <input class="nq-input" placeholder="Regular input">
+            <input class="nq-input-s" placeholder="Small input">
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== CSS: CARDS ===================== -->
+      <section class="kit-section" id="cards">
+        <h2>Cards <span class="kit-provenance">@nimiq/style</span></h2>
+        <p class="kit-section-lede">The card is Nimiq's primary container: a centered header (title + optional notice), a body, and a footer — each with 4rem padding on the 8px grid and 10px rounded corners.</p>
+        <div class="demo">
+          <div class="demo-stage center">
+            <div class="nq-card" style="width:100%;max-width:48rem;margin:0">
+              <div class="nq-card-header">
+                <h1 class="nq-h1">Card title</h1>
+                <p class="nq-notice info">An inline notice</p>
+              </div>
+              <div class="nq-card-body">
+                <p class="nq-text">The card is the primary container in Nimiq. Header, body and footer compose together, each with its own padding and rounded corners.</p>
+              </div>
+              <div class="nq-card-footer"><button class="nq-button light-blue">Action</button></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== CSS: NOTICES ===================== -->
+      <section class="kit-section" id="notices">
+        <h2>Notices <span class="kit-provenance">@nimiq/style</span></h2>
+        <div class="demo"><div class="demo-stage" style="flex-direction:column;align-items:stretch">
+          <div class="nq-notice info">Info — <code class="kit-inline-code">.nq-notice.info</code></div>
+          <div class="nq-notice success">Success — <code class="kit-inline-code">.nq-notice.success</code></div>
+          <div class="nq-notice warning">Warning — <code class="kit-inline-code">.nq-notice.warning</code></div>
+          <div class="nq-notice error">Error — <code class="kit-inline-code">.nq-notice.error</code></div>
+        </div></div>
+      </section>
+
+      <!-- ===================== CSS: TEXT CLASSES ===================== -->
+      <section class="kit-section" id="text-classes">
+        <h2>Text, Labels &amp; Links <span class="kit-provenance">@nimiq/style</span></h2>
+        <div class="demo"><div class="demo-stage" style="flex-direction:column;align-items:flex-start;gap:12px">
+          <a class="nq-link" href="#text-classes">A Nimiq link (.nq-link)</a>
+          <span class="nq-label">A label (.nq-label)</span>
+          <ul class="nq-list"><li>First list item</li><li>Second list item</li><li>Third list item</li></ul>
+        </div></div>
+      </section>
+
+      <!-- ===================== VUE COMPONENTS ===================== -->
+      <section class="kit-section" id="vc-amounts">
+        <h2>Vue · Amounts &amp; Identity <span class="kit-provenance">@nimiq/vue-components</span></h2>
+        <p class="kit-section-lede">Real, compiled <code class="kit-inline-code">@nimiq/vue-components</code> mounted live. Change the knobs to see each component react.</p>
+        <div id="vc-amounts-mount"></div>
+      </section>
+      <section class="kit-section" id="vc-inputs">
+        <h2>Vue · Inputs <span class="kit-provenance">@nimiq/vue-components</span></h2>
+        <div id="vc-inputs-mount"></div>
+      </section>
+      <section class="kit-section" id="vc-feedback">
+        <h2>Vue · Feedback &amp; Overlay <span class="kit-provenance">@nimiq/vue-components</span></h2>
+        <div id="vc-feedback-mount"></div>
+      </section>
+      <section class="kit-section" id="vc-layout">
+        <h2>Vue · Layout &amp; Pages <span class="kit-provenance">@nimiq/vue-components</span></h2>
+        <div id="vc-layout-mount"></div>
+      </section>
+      <section class="kit-section" id="vc-qr">
+        <h2>Vue · QR <span class="kit-provenance">@nimiq/vue-components</span></h2>
+        <div id="vc-qr-mount"></div>
+      </section>
+
+      <!-- ===================== IDENTICONS ===================== -->
+      <section class="kit-section" id="identicons">
+        <h2>Identicons <span class="kit-provenance">@nimiq/identicons</span></h2>
+        <p class="kit-section-lede">Deterministic avatars generated from any string. Type below to generate one live.</p>
+        <div class="demo">
+          <div class="demo-stage" style="gap:28px;align-items:center">
+            <div id="iqon-out" style="width:120px;height:120px;flex:0 0 auto"></div>
+            <div class="field" style="flex:1;min-width:220px">
+              <label for="iqon-input">Address / seed</label>
+              <input class="nq-input" id="iqon-input" value="NQ07 0000 0000 0000 0000 0000 0000 0000 0000">
+              <div class="kit-note" id="iqon-random" style="cursor:pointer;color:#0582CA">↻ Random</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== UTILITIES ===================== -->
+      <section class="kit-section" id="utilities">
+        <h2>Utilities <span class="kit-provenance">@nimiq/utils</span></h2>
+        <p class="kit-section-lede">Live, running <code class="kit-inline-code">@nimiq/utils</code> — bundled straight from source.</p>
+
+        <div class="kit-subsection">
+          <h3>FormattableNumber — loss-less amounts</h3>
+          <div class="kit-card play">
+            <div class="play-controls">
+              <div class="field"><label>Value</label><input id="fmt-val" value="1234567.891234"></div>
+              <div class="field"><label>Max decimals</label><input id="fmt-max" type="number" value="4"></div>
+              <div class="field check" style="flex-direction:row;align-items:center;gap:8px"><input id="fmt-group" type="checkbox" checked><label>Use grouping</label></div>
+            </div>
+            <div class="play-out" id="fmt-out"></div>
+          </div>
+        </div>
+
+        <div class="kit-subsection">
+          <h3>ValidationUtils — Nimiq address check</h3>
+          <div class="kit-card play">
+            <div class="play-controls">
+              <div class="field"><label>Address</label><input id="val-addr" value="NQ07 0000 0000 0000 0000 0000 0000 0000 0000"></div>
+            </div>
+            <div class="play-out" id="val-out"></div>
+          </div>
+        </div>
+
+        <div class="kit-subsection">
+          <h3>RequestLinkEncoding — payment links</h3>
+          <div class="kit-card play">
+            <div class="play-controls">
+              <div class="field"><label>Recipient</label><input id="rl-addr" value="NQ07 0000 0000 0000 0000 0000 0000 0000 0000"></div>
+              <div class="field"><label>Amount (NIM)</label><input id="rl-amount" type="number" value="12.5"></div>
+              <div class="field"><label>Message</label><input id="rl-msg" value="Coffee"></div>
+            </div>
+            <div class="play-out" id="rl-out"></div>
+          </div>
+        </div>
+
+        <div class="kit-subsection">
+          <h3>CurrencyInfo — fiat metadata</h3>
+          <div class="kit-card play">
+            <div class="play-controls">
+              <div class="field"><label>Currency code</label><input id="cur-code" value="EUR"></div>
+            </div>
+            <div class="play-out" id="cur-out"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== PATTERNS ===================== -->
+      <section class="kit-section" id="patterns">
+        <h2>Patterns <span class="kit-provenance">nimiq/wallet</span></h2>
+        <p class="kit-section-lede">Composed examples built from the primitives above, as they appear in the wallet.</p>
+        <div id="patterns-mount"></div>
+      </section>
+
+      <!-- ===================== RESOURCES ===================== -->
+      <section class="kit-section" id="resources">
+        <h2>Resources</h2>
+        <div class="kit-card"><table class="res-table">
+          <thead><tr><th>Package</th><th>Repository</th><th>License</th></tr></thead>
+          <tbody>
+            <tr><td>@nimiq/style</td><td><a href="https://github.com/nimiq/nimiq-style">github.com/nimiq/nimiq-style</a></td><td>MIT</td></tr>
+            <tr><td>@nimiq/vue-components</td><td><a href="https://github.com/nimiq/vue-components">github.com/nimiq/vue-components</a></td><td>—</td></tr>
+            <tr><td>@nimiq/identicons</td><td><a href="https://github.com/nimiq/iqons">github.com/nimiq/iqons</a></td><td>ISC</td></tr>
+            <tr><td>@nimiq/utils</td><td><a href="https://github.com/nimiq/nimiq-utils">github.com/nimiq/nimiq-utils</a></td><td>Apache-2.0</td></tr>
+            <tr><td>nimiq/wallet</td><td><a href="https://github.com/nimiq/wallet">github.com/nimiq/wallet</a></td><td>—</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div class="copy-toast" id="copy-toast">Copied!</div>
+
+<!-- Runtime: Vue 2.6 → vue-property-decorator global → NimiqVueComponents UMD -->
+<script src="assets/js/vue.min.js"></script>
+<script src="assets/js/vue-vendor.js"></script>
+<script src="assets/js/vue-components/NimiqVueComponents.umd.min.js"></script>
+<!-- Identicons (ES module, self-contained) → expose as a global for the kit -->
+<script type="module">
+  import Identicons from './assets/js/identicons.bundle.min.js';
+  window.Identicons = Identicons;
+  window.dispatchEvent(new CustomEvent('identicons-ready'));
+</script>
+<!-- Utils (IIFE global NimiqUtils) -->
+<script src="assets/js/nimiq-utils.kit.js"></script>
+<!-- Kit logic -->
+<script src="assets/js/kit.js"></script>
+</body>
+</html>

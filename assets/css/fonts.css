@@ -1,0 +1,39 @@
+/* Muli + Fira Mono — self-hosted from the Nimiq Wallet (wallet/public/fonts).
+ * Paths are relative to this file (assets/css/) → ../fonts/. */
+/* LICENCE Muli: ../fonts/LICENCE_MULI.txt */
+@font-face {
+    font-family: 'Muli';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/Muli-Regular.woff') format('woff');
+}
+@font-face {
+    font-family: 'Muli';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../fonts/Muli-SemiBold.woff') format('woff');
+}
+@font-face {
+    font-family: 'Muli';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/Muli-Bold.woff') format('woff');
+}
+/* LICENCE Fira Mono: ../fonts/LICENCE_FIRA_MONO.txt */
+@font-face {
+    font-family: 'Fira Mono';
+    font-style: normal;
+    font-weight: normal;
+    font-display: swap;
+    src: url('../fonts/FiraMono-Regular.woff') format('woff');
+}
+@font-face {
+    font-family: 'Fira Mono';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/FiraMono-Medium.woff') format('woff');
+}

@@ -1,0 +1,258 @@
+/* =============================================================================
+ * Nimiq UI Kit — chrome / layout styles (the kit's own UI, not the design system)
+ * Dimensions in px to stay independent of @nimiq/style's 8px rem grid.
+ * ========================================================================== */
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+body.kit-body {
+  font-family: 'Muli', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #1F2348;
+  background: #F4F4F4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: #0582CA; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* --- Shell --------------------------------------------------------------- */
+.kit-shell { display: flex; min-height: 100vh; }
+
+/* --- Sidebar ------------------------------------------------------------- */
+.kit-sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0; width: 288px;
+  background: #1F2348;
+  background-image: radial-gradient(100% 100% at bottom right, #260133, #1F2348);
+  color: #fff; display: flex; flex-direction: column; z-index: 20;
+}
+.kit-brand { display: flex; align-items: center; gap: 12px; padding: 24px 24px 16px; }
+.kit-brand svg, .kit-brand img { width: 32px; height: 32px; }
+.kit-brand-title { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+.kit-brand-sub { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.6; margin-top: 2px; }
+
+.kit-search-wrap { padding: 4px 20px 12px; }
+.kit-search {
+  width: 100%; border: none; outline: none; border-radius: 8px;
+  background: rgba(255,255,255,0.1); color: #fff;
+  padding: 10px 14px; font-family: inherit; font-size: 14px;
+}
+.kit-search::placeholder { color: rgba(255,255,255,0.5); }
+.kit-search:focus { background: rgba(255,255,255,0.16); box-shadow: 0 0 0 2px rgba(12,166,254,0.5); }
+
+.kit-nav { overflow-y: auto; padding: 4px 12px 32px; flex: 1; }
+.kit-nav-group { margin-top: 18px; }
+.kit-nav-group-title {
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em;
+  opacity: 0.45; padding: 4px 12px; font-weight: 700;
+}
+.kit-nav a {
+  display: block; color: rgba(255,255,255,0.72); font-size: 14px;
+  padding: 6px 12px; border-radius: 6px; text-decoration: none; transition: background .15s, color .15s;
+}
+.kit-nav a:hover { background: rgba(255,255,255,0.08); color: #fff; text-decoration: none; }
+.kit-nav a.active { background: rgba(12,166,254,0.18); color: #fff; box-shadow: inset 2px 0 0 #0CA6FE; }
+.kit-nav a.hidden-by-search { display: none; }
+
+/* --- Main ---------------------------------------------------------------- */
+.kit-main { margin-left: 288px; flex: 1; min-width: 0; }
+.kit-container { max-width: 1080px; margin: 0 auto; padding: 40px 48px 120px; }
+
+.kit-hero { padding: 24px 0 8px; }
+.kit-hero h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; }
+.kit-hero p { font-size: 18px; color: rgba(31,35,72,0.6); margin: 0 0 4px; max-width: 62ch; }
+
+/* --- Sections ------------------------------------------------------------ */
+.kit-section { padding-top: 56px; scroll-margin-top: 24px; }
+.kit-section > h2 {
+  font-size: 28px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 6px;
+  display: flex; align-items: center; gap: 12px;
+}
+.kit-section-lede { color: rgba(31,35,72,0.6); font-size: 16px; margin: 0 0 20px; max-width: 68ch; }
+.kit-provenance {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em; color: rgba(31,35,72,0.45);
+  background: rgba(31,35,72,0.06); padding: 3px 9px; border-radius: 20px; vertical-align: middle;
+}
+.kit-subsection { margin-top: 36px; }
+.kit-subsection > h3 { font-size: 18px; font-weight: 700; margin: 0 0 14px; }
+.kit-note { font-size: 14px; color: rgba(31,35,72,0.55); margin: 10px 0; }
+.kit-note code, .kit-inline-code {
+  font-family: 'Fira Mono', monospace; font-size: 0.88em;
+  background: rgba(31,35,72,0.07); padding: 1px 6px; border-radius: 4px;
+}
+
+/* --- Cards / panels ------------------------------------------------------ */
+.kit-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 28px rgba(0,0,0,0.06); padding: 24px; }
+
+/* --- Color swatches ------------------------------------------------------ */
+.swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+.swatch {
+  border-radius: 10px; overflow: hidden; background: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06); cursor: pointer; transition: transform .12s, box-shadow .12s;
+}
+.swatch:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,0.12); }
+.swatch-chip { height: 76px; }
+.swatch-meta { padding: 10px 12px; }
+.swatch-name { font-weight: 700; font-size: 14px; text-transform: capitalize; }
+.swatch-val { font-family: 'Fira Mono', monospace; font-size: 12px; color: rgba(31,35,72,0.55); margin-top: 2px; }
+.swatch-var { font-family: 'Fira Mono', monospace; font-size: 11px; color: rgba(31,35,72,0.4); margin-top: 1px; }
+
+/* opacity ladder */
+.ladder { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+.ladder-cell { border-radius: 8px; overflow: hidden; text-align: center; background:#fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; }
+.ladder-chip { height: 44px; }
+.ladder-label { font-family: 'Fira Mono', monospace; font-size: 11px; padding: 5px 0; color: rgba(31,35,72,0.6); }
+
+/* --- Gradients ----------------------------------------------------------- */
+.gradient-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+.gradient-tile {
+  height: 120px; border-radius: 12px; padding: 14px; display: flex; align-items: flex-end;
+  color: #fff; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+}
+
+/* --- Type specimens ------------------------------------------------------ */
+.type-row { display: flex; align-items: baseline; gap: 20px; padding: 14px 0; border-bottom: 1px solid rgba(31,35,72,0.08); }
+.type-row:last-child { border-bottom: none; }
+.type-spec { flex: 1; min-width: 0; }
+.type-meta { font-family: 'Fira Mono', monospace; font-size: 12px; color: rgba(31,35,72,0.5); white-space: nowrap; text-align: right; }
+
+/* --- Spacing / radius / shadow demos ------------------------------------- */
+.spec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+.spec-cell { text-align: center; font-size: 13px; }
+.spec-box { background: var(--nimiq-light-blue, #0582CA); border-radius: 4px; margin: 0 auto 8px; }
+.radius-box { width: 96px; height: 96px; background: radial-gradient(100% 100% at bottom right, #265DD7, #0582CA); margin: 0 auto 8px; }
+.shadow-box { width: 120px; height: 80px; background:#fff; border-radius: 10px; margin: 12px auto 16px; }
+.spec-meta { font-family: 'Fira Mono', monospace; font-size: 12px; color: rgba(31,35,72,0.55); }
+
+/* --- Icons --------------------------------------------------------------- */
+.icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
+.icon-cell {
+  display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 8px;
+  border-radius: 10px; cursor: pointer; transition: background .12s; text-align: center;
+}
+.icon-cell:hover { background: rgba(31,35,72,0.05); }
+.icon-cell svg { width: 24px; height: 24px; color: #1F2348; }
+.icon-cell .icon-name { font-family: 'Fira Mono', monospace; font-size: 10.5px; color: rgba(31,35,72,0.55); word-break: break-word; }
+.icon-grid.on-dark { background: #1F2348; background-image: radial-gradient(100% 100% at bottom right, #260133, #1F2348); border-radius: 12px; padding: 12px; }
+.icon-grid.on-dark .icon-cell svg { color: #fff; }
+.icon-grid.on-dark .icon-cell .icon-name { color: rgba(255,255,255,0.6); }
+.icon-grid.on-dark .icon-cell:hover { background: rgba(255,255,255,0.08); }
+
+/* --- Demo blocks (CSS + Vue components) ---------------------------------- */
+.demo { border: 1px solid rgba(31,35,72,0.1); border-radius: 12px; overflow: hidden; margin-bottom: 20px; background:#fff; }
+.demo-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding: 12px 16px; border-bottom: 1px solid rgba(31,35,72,0.08); }
+.demo-title { font-weight: 700; font-size: 15px; }
+.demo-title small { font-weight: 400; color: rgba(31,35,72,0.45); font-family:'Fira Mono',monospace; font-size: 12px; margin-left: 8px; }
+.demo-stage { padding: 28px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+.demo-stage.center { justify-content: center; }
+.demo-stage.dark { background: #1F2348; background-image: radial-gradient(100% 100% at bottom right, #260133, #1F2348); }
+.demo-stage.checker { background-image: linear-gradient(45deg,#eee 25%,transparent 25%),linear-gradient(-45deg,#eee 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#eee 75%),linear-gradient(-45deg,transparent 75%,#eee 75%); background-size:16px 16px; background-position:0 0,0 8px,8px -8px,-8px 0; }
+.demo-knobs { display: flex; flex-wrap: wrap; gap: 14px; padding: 14px 16px; background: rgba(31,35,72,0.03); border-top: 1px solid rgba(31,35,72,0.06); }
+.knob { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+.knob label { font-weight: 600; color: rgba(31,35,72,0.6); text-transform: uppercase; letter-spacing: 0.04em; font-size: 10.5px; }
+.knob input[type=text], .knob input[type=number], .knob select {
+  font-family: inherit; font-size: 13px; padding: 6px 8px; border-radius: 6px;
+  border: none; box-shadow: inset 0 0 0 1.5px rgba(31,35,72,0.14); background:#fff; color:#1F2348; min-width: 120px;
+}
+.knob.check { flex-direction: row; align-items: center; gap: 6px; }
+
+/* --- Code blocks --------------------------------------------------------- */
+.code-wrap { position: relative; }
+pre.code {
+  margin: 0; padding: 16px 18px; background: #1a1d3a; color: #e6e8f0;
+  font-family: 'Fira Mono', monospace; font-size: 12.5px; line-height: 1.6;
+  overflow-x: auto; border-radius: 0;
+}
+.demo pre.code { border-top: 1px solid rgba(31,35,72,0.08); }
+pre.code .tok-tag { color: #ff9db0; }
+pre.code .tok-attr { color: #ffd479; }
+pre.code .tok-str { color: #9ae6b4; }
+pre.code .tok-cmt { color: #7a7fa6; }
+
+/* --- Copy button + toast ------------------------------------------------- */
+.copy-btn {
+  position: absolute; top: 8px; right: 8px; z-index: 2; border: none; cursor: pointer;
+  background: rgba(255,255,255,0.12); color: #fff; border-radius: 6px; padding: 5px 10px;
+  font-family: inherit; font-size: 11px; font-weight: 600; transition: background .15s;
+}
+.copy-btn:hover { background: rgba(255,255,255,0.24); }
+.copy-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: #21BCA5; color: #fff; padding: 10px 20px; border-radius: 500px; font-weight: 600; font-size: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 100;
+}
+.copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* --- Utility playgrounds ------------------------------------------------- */
+.play { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+.play-controls { display: flex; flex-direction: column; gap: 12px; }
+.play-out {
+  background: rgba(31,35,72,0.04); border-radius: 10px; padding: 18px; font-family: 'Fira Mono', monospace;
+  font-size: 14px; min-height: 60px; word-break: break-word;
+}
+.play-out .ok { color: #21BCA5; } .play-out .bad { color: #D94432; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(31,35,72,0.55); }
+.field input, .field select {
+  font-family: inherit; font-size: 14px; padding: 9px 12px; border-radius: 8px; border: none;
+  box-shadow: inset 0 0 0 1.5px rgba(31,35,72,0.14); background:#fff; color:#1F2348;
+}
+.field input:focus, .field select:focus { outline: none; box-shadow: inset 0 0 0 2px rgba(5,130,202,0.5); }
+
+/* --- Patterns ------------------------------------------------------------ */
+.pattern-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+
+/* --- Resources ----------------------------------------------------------- */
+.res-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.res-table th, .res-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid rgba(31,35,72,0.08); }
+.res-table th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(31,35,72,0.45); }
+.res-table code { font-family: 'Fira Mono', monospace; font-size: 12.5px; }
+
+/* --- Vue-component demo tweaks ------------------------------------------- */
+/* AmountInput keeps an off-screen width-measurement node whose placeholder
+   text ("Width") only becomes transparent after its maxWidth computes. Force
+   it transparent so the helper text never flashes in a static demo. */
+.amount-input .full-width { color: transparent !important; }
+/* Let overlay components (Tooltip) escape the demo card instead of being clipped. */
+.demo.allow-overflow, .demo.allow-overflow .demo-stage { overflow: visible; }
+/* Identicon playground output fits its 120px box. */
+#iqon-out svg { display: block; width: 100%; height: 100%; }
+/* AccountList / AccountSelector hover caret: the component hard-codes top:3.625rem,
+   which sits too low for the kit's row height — center it (margin, not transform,
+   so the component's slide-in transform animation still works). */
+.account-entry .caret { top: 50% !important; margin-top: -1rem !important; }
+/* Contain BottomOverlay (position:fixed) inside its demo box instead of the viewport. */
+.bottom-overlay-demo .bottom-overlay { position: absolute; }
+
+/* --- Brand logo — the real Nimiq lockup (gold signet + NIMIQ wordmark),
+   reproduced from the live wallet (public/blocking.css). Gold gradient keeps
+   the signet legible on both light and dark surfaces. -------------------- */
+.nq-logo-lockup { display: inline-flex; align-items: center; line-height: 1; }
+.nq-logo-signet {
+  display: inline-block; flex: 0 0 auto;
+  background: url('data:image/svg+xml,<svg width="27" height="24" viewBox="0 0 27 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26.7 10.88l-5.63-9.76A2.25 2.25 0 0 0 19.12 0H7.87c-.8 0-1.54.43-1.94 1.13L.3 10.88c-.4.7-.4 1.55 0 2.24l5.63 9.76c.4.7 1.14 1.12 1.94 1.12h11.25c.8 0 1.55-.43 1.95-1.13l5.63-9.75c.4-.7.4-1.55 0-2.24z" fill="url(%23nqlogo)"/><defs><radialGradient id="nqlogo" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-26.9977 0 0 -24 27 24)"><stop stop-color="%23EC991C"/><stop offset="1" stop-color="%23E9B213"/></radialGradient></defs></svg>') no-repeat center / contain;
+}
+.nq-logo-wordmark { font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-left: -0.09em; }
+.nq-logo-lg .nq-logo-signet { width: 44px; height: 44px; margin-right: 17px; }
+.nq-logo-lg .nq-logo-wordmark { font-size: 33px; }
+/* Monochrome signet — the nq-hexagon icon, inheriting currentColor. */
+.nq-logo-signet-mono { display: inline-block; flex: 0 0 auto; }
+.nq-logo-lg .nq-logo-signet-mono { width: 44px; height: 44px; margin-right: 17px; }
+
+/* --- Mobile -------------------------------------------------------------- */
+.kit-menu-btn {
+  display: none; position: fixed; top: 14px; left: 14px; z-index: 30; border: none; cursor: pointer;
+  background: #1F2348; color: #fff; width: 44px; height: 44px; border-radius: 10px; font-size: 20px;
+}
+@media (max-width: 900px) {
+  .kit-sidebar { transform: translateX(-100%); transition: transform .25s var(--nimiq-ease, ease); box-shadow: 0 0 60px rgba(0,0,0,0.4); }
+  .kit-sidebar.open { transform: translateX(0); }
+  .kit-main { margin-left: 0; }
+  .kit-menu-btn { display: block; }
+  .kit-container { padding: 72px 20px 100px; }
+  .play { grid-template-columns: 1fr; }
+}
