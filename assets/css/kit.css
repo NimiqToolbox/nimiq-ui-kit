@@ -141,6 +141,8 @@ a:hover { text-decoration: underline; }
 .icon-grid.on-dark .icon-cell svg { color: #fff; }
 .icon-grid.on-dark .icon-cell .icon-name { color: rgba(255,255,255,0.6); }
 .icon-grid.on-dark .icon-cell:hover { background: rgba(255,255,255,0.08); }
+/* Extended (nimiq-icons) set — preserve each icon's own aspect ratio. */
+#icon-grid-nimiq svg { width: auto; height: 22px; max-width: 30px; }
 
 /* --- Demo blocks (CSS + Vue components) ---------------------------------- */
 .demo { border: 1px solid rgba(31,35,72,0.1); border-radius: 12px; overflow: hidden; margin-bottom: 20px; background:#fff; }
