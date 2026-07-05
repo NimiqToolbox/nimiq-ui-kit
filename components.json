@@ -1,0 +1,365 @@
+{
+  "$meta": {
+    "name": "Nimiq UI Kit — Vue component manifest",
+    "description": "Machine-readable catalog of the @nimiq/vue-components demonstrated live in the Nimiq UI Kit. Hand-generated so an LLM/agent can read the full component API surface without executing the JS-gated page.",
+    "source": "https://nimiqtoolbox.github.io/nimiq-ui-kit/",
+    "upstream": "https://github.com/nimiq/vue-components",
+    "generatedFrom": "assets/js/kit.js — the GROUPS object (~lines 400-547). One entry per live demo; props come from each demo's knobs plus props revealed by its Vue template and code(state) snippet.",
+    "componentCount": {
+      "demos": 31,
+      "distinctTags": 34,
+      "note": "GROUPS mounts 31 interactive demos across 5 groups. They reference 34 distinct component tags: the 31 demo tags plus PageHeader, PageBody and PageFooter, which are composed inside the single SmallPage demo (see its relatedTags). The kit's README and index.html say '34 components' — that number matches the distinct-tag count but is NOT the number of demos (31)."
+    },
+    "schemaNote": "Custom, intentionally simple schema inspired by the Custom Elements Manifest (webcomponents/custom-elements-manifest) and Storybook stories.json/args shapes, but flattened for direct LLM reading. Per component: name, tag, group, description, optional flags (deprecated, note, relatedTags), props[], optional events[], optional slots[], and example. Each prop has: name; type (string|number|boolean|select|object|array); options[] (select only); default (the kit's interactive knob default, OR the concrete value the demo passes for an inferred prop); inferred:true when the prop/value was read from the component's template or code() snippet rather than an interactive knob (so its exact runtime default is not asserted); optional note. events[] and slots[] are plain-language strings. This is NOT the W3C DTCG or CEM JSON schema; it is a bespoke reading aid.",
+    "conventions": {
+      "amountsUnit": "Crypto amounts are integers in the smallest unit (luna for NIM; NIM uses 5 decimals, so 1 NIM = 100000 luna). Fiat amounts are decimal numbers.",
+      "binding": "Examples use Vue 2 template syntax; a leading ':' marks a bound (JS-evaluated) prop, '@' marks an event listener, 'slot=' marks a named slot.",
+      "assetPath": "The kit calls NimiqVueComponents.setAssetPublicPath('assets/js/vue-components/') before mounting."
+    }
+  },
+  "components": [
+    {
+      "name": "Identicon",
+      "tag": "Identicon",
+      "group": "Amounts & Identity",
+      "description": "Deterministic avatar (identicon) generated from a Nimiq address or any seed string.",
+      "props": [
+        { "name": "address", "type": "string", "default": "NQ07 0000 0000 0000 0000 0000 0000 0000 0000", "note": "Address or seed string the identicon is derived from." }
+      ],
+      "example": "<Identicon address=\"NQ07 0000 0000 0000 0000 0000 0000 0000 0000\" />"
+    },
+    {
+      "name": "Amount",
+      "tag": "Amount",
+      "group": "Amounts & Identity",
+      "description": "Renders a crypto amount given in its smallest unit (luna for NIM), formatted for a currency with a maximum number of decimals.",
+      "props": [
+        { "name": "amount", "type": "number", "default": 123456789, "note": "In luna (NIM smallest unit)." },
+        { "name": "currency", "type": "select", "options": ["nim", "btc", "eth", "usdc"], "default": "nim" },
+        { "name": "maxDecimals", "type": "number", "default": 5 }
+      ],
+      "example": "<Amount :amount=\"123456789\" currency=\"nim\" :maxDecimals=\"5\" />"
+    },
+    {
+      "name": "FiatAmount",
+      "tag": "FiatAmount",
+      "group": "Amounts & Identity",
+      "description": "Renders a fiat amount formatted (locale-aware) for a given fiat currency.",
+      "props": [
+        { "name": "amount", "type": "number", "default": 1234.5 },
+        { "name": "currency", "type": "select", "options": ["eur", "usd", "gbp", "jpy", "chf"], "default": "eur" }
+      ],
+      "example": "<FiatAmount :amount=\"1234.5\" currency=\"eur\" />"
+    },
+    {
+      "name": "AddressDisplay",
+      "tag": "AddressDisplay",
+      "group": "Amounts & Identity",
+      "description": "Displays a Nimiq address in its canonical grouped, monospaced block form.",
+      "props": [
+        { "name": "address", "type": "string", "default": "NQ34 248H 1EQJ F5H9 5A9E K8P4 KRB1 T2FN 3LQR" }
+      ],
+      "example": "<AddressDisplay address=\"NQ34 248H 1EQJ F5H9 5A9E K8P4 KRB1 T2FN 3LQR\" />"
+    },
+    {
+      "name": "AccountRing",
+      "tag": "AccountRing",
+      "group": "Amounts & Identity",
+      "description": "Circular ring of identicons summarizing several accounts/addresses at once.",
+      "props": [
+        { "name": "addresses", "type": "array", "inferred": true, "note": "Array of address/seed strings." }
+      ],
+      "example": "<AccountRing :addresses=\"addresses\" />"
+    },
+    {
+      "name": "Account",
+      "tag": "Account",
+      "group": "Amounts & Identity",
+      "description": "A single account row: identicon, label and balance.",
+      "props": [
+        { "name": "label", "type": "string", "default": "Wallet" },
+        { "name": "address", "type": "string", "inferred": true },
+        { "name": "balance", "type": "number", "default": 4200000000, "inferred": true, "note": "In luna." }
+      ],
+      "example": "<Account label=\"Wallet\" :address=\"…\" :balance=\"4200000000\" />"
+    },
+    {
+      "name": "AmountWithFee",
+      "tag": "AmountWithFee",
+      "group": "Amounts & Identity",
+      "description": "Compound amount input pairing a send amount with a fee, validating against an available balance.",
+      "props": [
+        { "name": "value", "type": "object", "inferred": true, "note": "{ amount, fee, isValid }" },
+        { "name": "availableBalance", "type": "number", "default": 5000000000, "inferred": true, "note": "In luna." },
+        { "name": "currency", "type": "string", "default": "nim", "inferred": true },
+        { "name": "currencyDecimals", "type": "number", "default": 5, "inferred": true }
+      ],
+      "example": "<AmountWithFee :value=\"{amount,fee,isValid}\" :availableBalance=\"…\" currency=\"nim\" :currencyDecimals=\"5\" />"
+    },
+    {
+      "name": "AccountList",
+      "tag": "AccountList",
+      "group": "Amounts & Identity",
+      "description": "Scrollable list of accounts, each with a derivation path, label, address and balance; a minimum-balance threshold controls selectability.",
+      "props": [
+        { "name": "accounts", "type": "array", "inferred": true, "note": "Array of { path, label, userFriendlyAddress, balance }." },
+        { "name": "minBalance", "type": "number", "default": 1, "inferred": true }
+      ],
+      "example": "<AccountList :accounts=\"[{path,label,userFriendlyAddress,balance}, …]\" :minBalance=\"1\" />"
+    },
+    {
+      "name": "AccountDetails",
+      "tag": "AccountDetails",
+      "group": "Amounts & Identity",
+      "description": "Full account detail panel: identicon, label, wallet label, address and balance.",
+      "props": [
+        { "name": "address", "type": "string", "inferred": true },
+        { "name": "label", "type": "string", "default": "Main account" },
+        { "name": "walletLabel", "type": "string", "default": "Keyguard Wallet", "inferred": true },
+        { "name": "balance", "type": "number", "default": 4200000000, "inferred": true, "note": "In luna." }
+      ],
+      "example": "<AccountDetails :address=\"…\" label=\"Main account\" walletLabel=\"Keyguard Wallet\" :balance=\"4200000000\" />"
+    },
+    {
+      "name": "AccountSelector",
+      "tag": "AccountSelector",
+      "group": "Amounts & Identity",
+      "description": "Selector across wallets and their accounts (accounts keyed in a JS Map), with a minimum-balance threshold.",
+      "props": [
+        { "name": "wallets", "type": "array", "inferred": true, "note": "Array of { id, label, type, keyMissing, contracts, accounts: Map<address, account> }." },
+        { "name": "minBalance", "type": "number", "default": 1, "inferred": true }
+      ],
+      "example": "<AccountSelector :wallets=\"[{id,label,type,keyMissing,contracts,accounts:Map}]\" :minBalance=\"1\" />"
+    },
+    {
+      "name": "LabelInput",
+      "tag": "LabelInput",
+      "group": "Inputs",
+      "description": "Single-line text input for naming/labeling (e.g. an account label), with a placeholder.",
+      "props": [
+        { "name": "value", "type": "string", "default": "Savings" },
+        { "name": "placeholder", "type": "string", "default": "Set a label" }
+      ],
+      "example": "<LabelInput value=\"Savings\" placeholder=\"Set a label\" />"
+    },
+    {
+      "name": "AmountInput",
+      "tag": "AmountInput",
+      "group": "Inputs",
+      "description": "Numeric amount input operating in a crypto's smallest unit, with a decimals count and currency.",
+      "props": [
+        { "name": "value", "type": "number", "inferred": true, "note": "In luna (smallest unit)." },
+        { "name": "decimals", "type": "number", "default": 5, "inferred": true },
+        { "name": "currency", "type": "string", "default": "nim", "inferred": true },
+        { "name": "placeholder", "type": "string", "default": "0", "note": "Interactive knob in the kit demo." }
+      ],
+      "example": "<AmountInput :value=\"valueInLuna\" :decimals=\"5\" currency=\"nim\" />"
+    },
+    {
+      "name": "AddressInput",
+      "tag": "AddressInput",
+      "group": "Inputs",
+      "description": "Text input for a Nimiq address with validation feedback.",
+      "props": [
+        { "name": "value", "type": "string", "inferred": true },
+        { "name": "placeholder", "type": "string", "default": "Recipient address", "inferred": true }
+      ],
+      "events": ["input"],
+      "example": "<AddressInput :value=\"address\" placeholder=\"Recipient address\" @input=\"…\" />"
+    },
+    {
+      "name": "SelectBar",
+      "tag": "SelectBar",
+      "group": "Inputs",
+      "description": "Segmented selector bar of colored options; emits the selected value on change.",
+      "props": [
+        { "name": "name", "type": "string", "default": "fee", "inferred": true },
+        { "name": "options", "type": "array", "inferred": true, "note": "Array of { value, index, text, color } where color is a .nq-*-bg class." },
+        { "name": "selectedValue", "type": "number", "default": 1, "inferred": true }
+      ],
+      "events": ["changed"],
+      "example": "<SelectBar name=\"fee\"\n  :options=\"[{value:0,index:0,text:'Low',color:'nq-green-bg'}, …]\"\n  :selectedValue=\"1\" @changed=\"onChange\" />"
+    },
+    {
+      "name": "SliderToggle",
+      "tag": "SliderToggle",
+      "group": "Inputs",
+      "description": "Animated segmented toggle; each option is provided as a named slot and 'value' selects the active one.",
+      "props": [
+        { "name": "name", "type": "string", "default": "range", "inferred": true },
+        { "name": "value", "type": "string", "default": "week", "inferred": true, "note": "Must match one of the slot names." }
+      ],
+      "slots": ["One named slot per option (e.g. slot=\"day\", slot=\"week\", slot=\"month\")."],
+      "example": "<SliderToggle name=\"range\" value=\"week\">\n  <template slot=\"day\">Day</template>\n  <template slot=\"week\">Week</template>\n</SliderToggle>"
+    },
+    {
+      "name": "LanguageSelector",
+      "tag": "LanguageSelector",
+      "group": "Inputs",
+      "description": "Dropdown to pick a UI language from a list of locale codes.",
+      "props": [
+        { "name": "languages", "type": "array", "inferred": true, "note": "Array of locale codes, e.g. ['en','de','es','fr','nl','pt','ru','uk','zh']." },
+        { "name": "value", "type": "string", "default": "en", "inferred": true }
+      ],
+      "example": "<LanguageSelector :languages=\"['en','de','es', …]\" value=\"en\" />"
+    },
+    {
+      "name": "Tooltip",
+      "tag": "Tooltip",
+      "group": "Feedback & Overlay",
+      "description": "Hover/focus tooltip with a trigger slot and content; repositions to stay in view.",
+      "props": [
+        { "name": "preferredPosition", "type": "select", "options": ["top", "bottom", "left", "right"], "default": "bottom", "note": "Exposed in the kit as the 'Position' knob." }
+      ],
+      "slots": ["trigger — the element that shows the tooltip", "default — the tooltip content"],
+      "example": "<Tooltip preferredPosition=\"bottom\">\n  <span slot=\"trigger\">Hover me</span>\n  Tooltip content\n</Tooltip>"
+    },
+    {
+      "name": "Copyable",
+      "tag": "Copyable",
+      "group": "Feedback & Overlay",
+      "description": "Wraps content so clicking it copies the given text to the clipboard.",
+      "props": [
+        { "name": "text", "type": "string", "default": "NQ07 0000 0000 0000 0000 0000 0000 0000 0000", "note": "Text placed on the clipboard." }
+      ],
+      "slots": ["default — the clickable content"],
+      "example": "<Copyable text=\"NQ07 0000 0000 0000 0000 0000 0000 0000 0000\">Click to copy</Copyable>"
+    },
+    {
+      "name": "CopyableField",
+      "tag": "CopyableField",
+      "group": "Feedback & Overlay",
+      "description": "Labeled, copyable field. Renders white text — intended for a dark surface.",
+      "note": "White text; use on a dark surface.",
+      "props": [
+        { "name": "label", "type": "string", "default": "Address", "inferred": true },
+        { "name": "value", "type": "string", "inferred": true }
+      ],
+      "example": "<CopyableField label=\"Address\" :value=\"address\" />  <!-- white text; use on a dark surface -->"
+    },
+    {
+      "name": "LoadingSpinner",
+      "tag": "LoadingSpinner",
+      "group": "Feedback & Overlay",
+      "description": "Indeterminate loading spinner; inherits currentColor.",
+      "props": [],
+      "example": "<LoadingSpinner />"
+    },
+    {
+      "name": "CircleSpinner",
+      "tag": "CircleSpinner",
+      "group": "Feedback & Overlay",
+      "description": "Circular indeterminate spinner.",
+      "props": [],
+      "example": "<CircleSpinner />"
+    },
+    {
+      "name": "CloseButton",
+      "tag": "CloseButton",
+      "group": "Feedback & Overlay",
+      "description": "Standard circular close (×) button.",
+      "props": [],
+      "example": "<CloseButton />"
+    },
+    {
+      "name": "LongPressButton",
+      "tag": "LongPressButton",
+      "group": "Feedback & Overlay",
+      "description": "Button that confirms only after being held (long-pressed) for a duration in milliseconds.",
+      "props": [
+        { "name": "duration", "type": "number", "default": 2000, "note": "Hold duration in ms." }
+      ],
+      "slots": ["default — the button label"],
+      "example": "<LongPressButton :duration=\"2000\">Hold to confirm</LongPressButton>"
+    },
+    {
+      "name": "Timer",
+      "tag": "Timer",
+      "group": "Feedback & Overlay",
+      "description": "Progress/countdown timer between a start and end timestamp (ms since epoch).",
+      "props": [
+        { "name": "startTime", "type": "number", "inferred": true, "note": "Timestamp in ms." },
+        { "name": "endTime", "type": "number", "inferred": true, "note": "Timestamp in ms." }
+      ],
+      "example": "<Timer :startTime=\"start\" :endTime=\"end\" />"
+    },
+    {
+      "name": "PaymentInfoLine",
+      "tag": "PaymentInfoLine",
+      "group": "Feedback & Overlay",
+      "description": "One-line payment summary: a crypto amount and the requesting origin.",
+      "props": [
+        { "name": "cryptoAmount", "type": "object", "inferred": true, "note": "{ amount, currency, decimals } — amount in smallest unit." },
+        { "name": "origin", "type": "string", "default": "shop.example.com", "inferred": true }
+      ],
+      "example": "<PaymentInfoLine :cryptoAmount=\"{amount,currency,decimals}\" origin=\"shop.example.com\" />"
+    },
+    {
+      "name": "BottomOverlay",
+      "tag": "BottomOverlay",
+      "group": "Feedback & Overlay",
+      "description": "Dismissible overlay anchored to the bottom of its container; themeable; emits close.",
+      "props": [
+        { "name": "theme", "type": "select", "options": ["dark", "light", "green"], "default": "dark" }
+      ],
+      "events": ["close"],
+      "slots": ["default — the overlay content"],
+      "example": "<BottomOverlay theme=\"dark\" @close=\"onClose\">Overlay content</BottomOverlay>"
+    },
+    {
+      "name": "SmallPage",
+      "tag": "SmallPage",
+      "group": "Layout & Pages",
+      "description": "The fixed 52.5×70.5rem Nimiq modal page shell. Composes PageHeader, PageBody and PageFooter as slotted children.",
+      "relatedTags": ["PageHeader", "PageBody", "PageFooter"],
+      "props": [],
+      "slots": ["default — typically a PageHeader, a PageBody and a PageFooter"],
+      "example": "<SmallPage>\n  <PageHeader>Send transaction</PageHeader>\n  <PageBody>…</PageBody>\n  <PageFooter><button class=\"nq-button\">Send transaction</button></PageFooter>\n</SmallPage>"
+    },
+    {
+      "name": "Carousel",
+      "tag": "Carousel",
+      "group": "Layout & Pages",
+      "description": "Slide carousel; 'entries' names the slots and 'selected' picks the active slide.",
+      "props": [
+        { "name": "entries", "type": "array", "inferred": true, "note": "Array of slot-name strings." },
+        { "name": "selected", "type": "string", "inferred": true, "note": "One of the entry names." }
+      ],
+      "slots": ["One named slot per entry (slot=\"<entry>\")."],
+      "example": "<Carousel :entries=\"['a','b','c']\" selected=\"a\">\n  <div slot=\"a\">…</div>\n</Carousel>"
+    },
+    {
+      "name": "Wallet",
+      "tag": "Wallet",
+      "group": "Layout & Pages",
+      "description": "Wallet summary card showing a wallet's accounts and balance.",
+      "deprecated": true,
+      "note": "Marked @deprecated in the kit's example snippet.",
+      "props": [
+        { "name": "wallet", "type": "object", "inferred": true, "note": "{ id, label, type, accounts: [{ address }], balance, … }." }
+      ],
+      "example": "<Wallet :wallet=\"{id,label,type,accounts:[{address}],balance,…}\" />  <!-- @deprecated component -->"
+    },
+    {
+      "name": "QrCode",
+      "tag": "QrCode",
+      "group": "QR",
+      "description": "Renders a QR code for arbitrary data at a given pixel size.",
+      "props": [
+        { "name": "data", "type": "string", "default": "https://nimiq.com" },
+        { "name": "size", "type": "number", "default": 160, "inferred": true, "note": "Pixels." }
+      ],
+      "example": "<QrCode data=\"https://nimiq.com\" :size=\"160\" />"
+    },
+    {
+      "name": "QrScanner",
+      "tag": "QrScanner",
+      "group": "QR",
+      "description": "Live camera QR scanner; starts the camera on user action (requires localhost or HTTPS). Emits the decoded result plus error and cancel.",
+      "note": "In the kit the scanner is mounted on click because it grabs the camera on mount.",
+      "props": [],
+      "events": ["result", "error", "cancel"],
+      "example": "<QrScanner @result=\"onResult\" @error=\"onError\" @cancel=\"onCancel\" />"
+    }
+  ]
+}

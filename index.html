@@ -7,6 +7,62 @@
   <meta name="description" content="The authoritative Nimiq design system reference — tokens, foundations, CSS components, live Vue components, identicons and utilities.">
   <link rel="icon" href="favicon.ico">
 
+  <!-- Canonical + LLM/agent discovery (static artifacts: see llms.txt, AGENTS.md) -->
+  <link rel="canonical" href="https://nimiqtoolbox.github.io/nimiq-ui-kit/">
+  <link rel="alternate" type="text/markdown" href="llms.txt" title="llms.txt — LLM-friendly index">
+  <link rel="alternate" type="text/markdown" href="llms-full.txt" title="llms-full.txt — full kit as markdown">
+
+  <!-- Open Graph / Twitter (no og:image — only a favicon.ico exists, unsuitable as a preview) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Nimiq UI Kit">
+  <meta property="og:title" content="Nimiq UI Kit">
+  <meta property="og:description" content="The authoritative Nimiq design system reference — tokens, foundations, CSS components, live Vue components, identicons and utilities.">
+  <meta property="og:url" content="https://nimiqtoolbox.github.io/nimiq-ui-kit/">
+  <meta property="og:locale" content="en">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Nimiq UI Kit">
+  <meta name="twitter:description" content="The authoritative Nimiq design system reference — tokens, foundations, CSS components, live Vue components, identicons and utilities.">
+
+  <!-- Structured data: the kit as a TechArticle, plus its design tokens as a Dataset -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "@id": "https://nimiqtoolbox.github.io/nimiq-ui-kit/",
+        "name": "Nimiq UI Kit",
+        "headline": "Nimiq UI Kit — the authoritative Nimiq design system reference",
+        "description": "The authoritative Nimiq design system reference — design tokens, foundations, CSS components, live Vue components, identicons and utilities — as a zero-build static site.",
+        "url": "https://nimiqtoolbox.github.io/nimiq-ui-kit/",
+        "inLanguage": "en",
+        "keywords": "Nimiq, design system, design tokens, Vue components, CSS components, identicons, UI kit",
+        "about": ["Nimiq", "Design system", "Design tokens", "Vue.js components"],
+        "isBasedOn": [
+          "https://github.com/nimiq/nimiq-style",
+          "https://github.com/nimiq/vue-components",
+          "https://github.com/nimiq/iqons",
+          "https://github.com/nimiq/nimiq-utils",
+          "https://github.com/nimiq/wallet"
+        ],
+        "license": "https://opensource.org/licenses/MIT"
+      },
+      {
+        "@type": "Dataset",
+        "name": "Nimiq Design Tokens",
+        "description": "Machine-readable Nimiq design tokens: brand/neutral/crypto colors, the opacity ladder, the signature radial gradients, the typography scale, spacing, radius, shadow, motion, breakpoints and layout widths.",
+        "url": "https://nimiqtoolbox.github.io/nimiq-ui-kit/tokens/tokens.json",
+        "encodingFormat": "application/json",
+        "isPartOf": { "@id": "https://nimiqtoolbox.github.io/nimiq-ui-kit/" },
+        "distribution": [
+          { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://nimiqtoolbox.github.io/nimiq-ui-kit/tokens/tokens.json" },
+          { "@type": "DataDownload", "encodingFormat": "text/css", "contentUrl": "https://nimiqtoolbox.github.io/nimiq-ui-kit/tokens/tokens.css" }
+        ]
+      }
+    ]
+  }
+  </script>
+
   <!-- Fonts + design system (real sources) -->
   <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="stylesheet" href="assets/css/nimiq-style.min.css">
@@ -16,11 +72,12 @@
 </head>
 <body class="kit-body">
 
-<button class="kit-menu-btn" aria-label="Toggle navigation" onclick="document.querySelector('.kit-sidebar').classList.toggle('open')">☰</button>
+<button class="kit-menu-btn" id="kit-menu-btn" aria-label="Toggle navigation" aria-expanded="false" aria-controls="kit-sidebar">☰</button>
+<div class="kit-scrim" id="kit-scrim" aria-hidden="true"></div>
 
 <div class="kit-shell">
   <!-- ============================ SIDEBAR ============================ -->
-  <aside class="kit-sidebar">
+  <aside class="kit-sidebar" id="kit-sidebar" tabindex="-1">
     <div class="kit-brand">
       <svg viewBox="0 0 24 24" aria-hidden="true"><use xlink:href="assets/icons/nimiq-style.icons.svg#nq-hexagon"/></svg>
       <div>
@@ -89,6 +146,7 @@
         <h2>Overview</h2>
         <p class="kit-section-lede">Every value, class and component on this page is rendered from the actual Nimiq packages — not a mock-up. The kit consolidates five current sources into one browsable, copyable system.</p>
         <div class="kit-card">
+          <div class="table-scroll">
           <table class="res-table">
             <thead><tr><th>Source</th><th>Package</th><th>Provides</th></tr></thead>
             <tbody>
@@ -99,6 +157,7 @@
               <tr><td>nimiq/wallet</td><td><code>master</code></td><td>Fonts (Muli, Fira Mono), opacity ladder, crypto colors, patterns</td></tr>
             </tbody>
           </table>
+          </div>
         </div>
       </section>
 
@@ -232,7 +291,7 @@
       <!-- ===================== BREAKPOINTS ===================== -->
       <section class="kit-section" id="breakpoints">
         <h2>Breakpoints <span class="kit-provenance">nimiq/wallet</span></h2>
-        <div class="kit-card"><table class="res-table">
+        <div class="kit-card"><div class="table-scroll"><table class="res-table">
           <thead><tr><th>Name</th><th>px</th><th>Name</th><th>px</th></tr></thead>
           <tbody>
             <tr><td>mobile</td><td><code>768</code></td><td>largeDesktop</td><td><code>1409</code></td></tr>
@@ -241,7 +300,7 @@
             <tr><td>smallDesktop</td><td><code>1199</code></td><td>ultraLargeDesktop</td><td><code>2000</code></td></tr>
             <tr><td>mediumDesktop</td><td><code>1319</code></td><td></td><td></td></tr>
           </tbody>
-        </table></div>
+        </table></div></div>
       </section>
 
       <!-- ===================== ICONS ===================== -->
@@ -459,7 +518,7 @@
       <!-- ===================== RESOURCES ===================== -->
       <section class="kit-section" id="resources">
         <h2>Resources</h2>
-        <div class="kit-card"><table class="res-table">
+        <div class="kit-card"><div class="table-scroll"><table class="res-table">
           <thead><tr><th>Package</th><th>Repository</th><th>License</th></tr></thead>
           <tbody>
             <tr><td>@nimiq/style</td><td><a href="https://github.com/nimiq/nimiq-style">github.com/nimiq/nimiq-style</a></td><td>MIT</td></tr>
@@ -468,7 +527,7 @@
             <tr><td>@nimiq/utils</td><td><a href="https://github.com/nimiq/nimiq-utils">github.com/nimiq/nimiq-utils</a></td><td>Apache-2.0</td></tr>
             <tr><td>nimiq/wallet</td><td><a href="https://github.com/nimiq/wallet">github.com/nimiq/wallet</a></td><td>—</td></tr>
           </tbody>
-        </table></div>
+        </table></div></div>
       </section>
 
     </div>

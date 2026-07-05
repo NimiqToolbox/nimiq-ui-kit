@@ -27,6 +27,21 @@
       '<span class="tok-attr">$1</span>=<span class="tok-str">$2</span>');
     return e;
   }
+  // Give a non-semantic click-to-copy cell real button semantics + keyboard
+  // activation (Enter / Space), sharing one code path with the click handler.
+  // Pass label = null to keep an aria-label the element already carries.
+  function makeActivatable(elm, onActivate, label) {
+    elm.setAttribute('tabindex', '0');
+    elm.setAttribute('role', 'button');
+    if (label != null) elm.setAttribute('aria-label', label);
+    elm.addEventListener('click', onActivate);
+    elm.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar' || e.keyCode === 13 || e.keyCode === 32) {
+        e.preventDefault();
+        onActivate.call(elm, e);
+      }
+    });
+  }
 
   /* ---------- copy + toast ---------- */
   var toast = document.getElementById('copy-toast'), toastTimer;
@@ -71,7 +86,7 @@
       '<div class="swatch-meta"><div class="swatch-name">' + name + '</div>' +
       '<div class="swatch-val">' + val + '</div>' +
       (varName ? '<div class="swatch-var">' + varName + '</div>' : '') + '</div>';
-    s.onclick = function () { copyText(val); };
+    makeActivatable(s, function () { copyText(val); }, 'Copy ' + name + ' color ' + val);
     return s;
   }
   function fill(id, arr, mapper) { var c = document.getElementById(id); if (c) arr.forEach(function (a) { c.appendChild(mapper(a)); }); }
@@ -86,7 +101,7 @@
     LADDER.forEach(function (step) {
       var cell = el('div', 'ladder-cell');
       cell.innerHTML = '<div class="ladder-chip" style="background:rgba(31,35,72,' + (step / 100) + ')"></div><div class="ladder-label">' + step + '</div>';
-      cell.onclick = function () { copyText('var(--text-' + step + ')'); };
+      makeActivatable(cell, function () { copyText('var(--text-' + step + ')'); }, 'Copy opacity token var(--text-' + step + ')');
       c.appendChild(cell);
     });
   })();
@@ -97,7 +112,7 @@
     if (c) GRADIENTS.forEach(function (g) {
       var grad = 'radial-gradient(100% 100% at bottom right, ' + g[1] + ', ' + g[2] + ')';
       var t = el('div', 'gradient-tile', g[0]); t.style.backgroundImage = grad;
-      t.onclick = function () { copyText('var(--nimiq-' + g[0] + '-bg)'); };
+      makeActivatable(t, function () { copyText('var(--nimiq-' + g[0] + '-bg)'); }, 'Copy ' + g[0] + ' gradient var(--nimiq-' + g[0] + '-bg)');
       c.appendChild(t);
     });
     var f = document.getElementById('gradient-formula');
@@ -177,7 +192,7 @@
         cell.setAttribute('aria-label', nq + (desc ? ': ' + desc : ''));
         cell.setAttribute('data-summary', desc);
         cell.innerHTML = '<svg class="nq-icon" role="img" aria-label="' + esc(desc) + '"><use xlink:href="' + SPRITE + '#' + nq + '"/></svg><div class="icon-name">' + nq + '</div>';
-        cell.onclick = function () { copyText('<svg class="nq-icon"><use xlink:href="nimiq-style.icons.svg#' + nq + '"/></svg>'); };
+        makeActivatable(cell, function () { copyText('<svg class="nq-icon"><use xlink:href="nimiq-style.icons.svg#' + nq + '"/></svg>'); });
         c.appendChild(cell);
       });
     }
@@ -197,7 +212,7 @@
         cell.setAttribute('aria-label', 'nimiq:' + name + ': ' + human);
         cell.setAttribute('data-summary', human);
         cell.innerHTML = svg + '<div class="icon-name">' + name + '</div>';
-        cell.onclick = function () { copyText(svg); };
+        makeActivatable(cell, function () { copyText(svg); });
         grid.appendChild(cell);
       });
     }).catch(function (e) { console.warn('nimiq-icons load failed', e); grid.innerHTML = '<div class="kit-note">Could not load the extended icon set.</div>'; });
@@ -291,12 +306,11 @@
     });
   })();
 
-  /* ---------- scroll-spy + mobile nav ---------- */
+  /* ---------- scroll-spy ---------- */
   (function () {
     var navMap = {};
     [].forEach.call(document.querySelectorAll('.kit-nav a'), function (a) {
       navMap[a.getAttribute('href').slice(1)] = a;
-      a.addEventListener('click', function () { document.querySelector('.kit-sidebar').classList.remove('open'); });
     });
     var obs = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
@@ -307,6 +321,66 @@
       });
     }, { rootMargin: '-8% 0px -82% 0px', threshold: 0 });
     [].forEach.call(document.querySelectorAll('.kit-section'), function (s) { obs.observe(s); });
+  })();
+
+  /* ---------- accessible off-canvas drawer ---------- */
+  (function () {
+    var sidebar = document.getElementById('kit-sidebar') || document.querySelector('.kit-sidebar');
+    var btn = document.getElementById('kit-menu-btn');
+    var scrim = document.getElementById('kit-scrim');
+    if (!sidebar || !btn) return;
+    var isOpen = false, savedOverflow = '';
+
+    // Visible, focusable elements inside the drawer (order = DOM order).
+    function focusables() {
+      return [].slice.call(sidebar.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])'
+      )).filter(function (n) { return n.offsetWidth || n.offsetHeight || n.getClientRects().length; });
+    }
+    function openDrawer() {
+      if (isOpen) return; isOpen = true;
+      sidebar.classList.add('open');
+      if (scrim) scrim.classList.add('show');
+      btn.setAttribute('aria-expanded', 'true');
+      savedOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';     // lock background scroll while open
+      sidebar.focus();                              // move focus into the drawer (tabindex="-1")
+    }
+    function closeDrawer(returnFocus) {
+      if (!isOpen) return; isOpen = false;
+      sidebar.classList.remove('open');
+      if (scrim) scrim.classList.remove('show');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = savedOverflow;
+      if (returnFocus) btn.focus();                 // Escape returns focus to the toggle
+    }
+    function toggleDrawer() { isOpen ? closeDrawer(true) : openDrawer(); }
+
+    btn.addEventListener('click', toggleDrawer);
+    if (scrim) scrim.addEventListener('click', function () { closeDrawer(false); });
+    // Preserve existing behaviour: tapping a nav link closes the drawer.
+    [].forEach.call(document.querySelectorAll('.kit-nav a'), function (a) {
+      a.addEventListener('click', function () { closeDrawer(false); });
+    });
+
+    // Escape closes (+ returns focus); Tab is trapped within the drawer while open.
+    document.addEventListener('keydown', function (e) {
+      if (!isOpen) return;
+      if (e.key === 'Escape' || e.keyCode === 27) { closeDrawer(true); return; }
+      if (e.key === 'Tab' || e.keyCode === 9) {
+        var f = focusables(); if (!f.length) return;
+        var first = f[0], last = f[f.length - 1], active = document.activeElement;
+        var inList = f.indexOf(active) !== -1;
+        if (e.shiftKey) { if (active === first || !inList) { e.preventDefault(); last.focus(); } }
+        else { if (active === last || !inList) { e.preventDefault(); first.focus(); } }
+      }
+    });
+
+    // Growing past the drawer breakpoint resets everything (drawer is desktop-irrelevant).
+    var mq = window.matchMedia('(max-width: 960px)');
+    function onChange(e) { if (!e.matches) closeDrawer(false); }
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else if (mq.addListener) mq.addListener(onChange); // Safari < 14
   })();
 
   /* ---------- identicons playground ---------- */
@@ -326,7 +400,7 @@
     }
     function whenReady(cb) { if (window.Identicons) cb(); else window.addEventListener('identicons-ready', cb, { once: true }); }
     input.addEventListener('input', render);
-    if (rnd) rnd.addEventListener('click', function () { input.value = randomAddress(); render(); });
+    if (rnd) makeActivatable(rnd, function () { input.value = randomAddress(); render(); }, 'Generate a random address');
     whenReady(render);
   })();
 

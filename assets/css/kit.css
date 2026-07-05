@@ -5,6 +5,16 @@
 
 * { box-sizing: border-box; }
 
+/* Fluid type scale — clamp(min, viewport, max). Desktop max = original sizes,
+   so nothing changes on wide screens; the min/vw floor kicks in on phones. */
+:root {
+  --fs-hero-h1: clamp(28px, 6vw, 40px);
+  --fs-hero-p:  clamp(16px, 2.4vw, 18px);
+  --fs-h2:      clamp(22px, 4vw, 28px);
+  --fs-h3:      clamp(16px, 2.2vw, 18px);
+  --fs-lede:    clamp(15px, 1.6vw, 16px);
+}
+
 html, body { margin: 0; }
 body.kit-body {
   font-family: 'Muli', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -62,23 +72,23 @@ a:hover { text-decoration: underline; }
 .kit-container { max-width: 1080px; margin: 0 auto; padding: 40px 48px 120px; }
 
 .kit-hero { padding: 24px 0 8px; }
-.kit-hero h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; }
-.kit-hero p { font-size: 18px; color: rgba(31,35,72,0.6); margin: 0 0 4px; max-width: 62ch; }
+.kit-hero h1 { font-size: var(--fs-hero-h1); font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; }
+.kit-hero p { font-size: var(--fs-hero-p); color: rgba(31,35,72,0.6); margin: 0 0 4px; max-width: 62ch; }
 
 /* --- Sections ------------------------------------------------------------ */
 .kit-section { padding-top: 56px; scroll-margin-top: 24px; }
 .kit-section > h2 {
-  font-size: 28px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 6px;
-  display: flex; align-items: center; gap: 12px;
+  font-size: var(--fs-h2); font-weight: 700; letter-spacing: -0.01em; margin: 0 0 6px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
 }
-.kit-section-lede { color: rgba(31,35,72,0.6); font-size: 16px; margin: 0 0 20px; max-width: 68ch; }
+.kit-section-lede { color: rgba(31,35,72,0.6); font-size: var(--fs-lede); margin: 0 0 20px; max-width: 68ch; }
 .kit-provenance {
   display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.06em; color: rgba(31,35,72,0.45);
   background: rgba(31,35,72,0.06); padding: 3px 9px; border-radius: 20px; vertical-align: middle;
 }
 .kit-subsection { margin-top: 36px; }
-.kit-subsection > h3 { font-size: 18px; font-weight: 700; margin: 0 0 14px; }
+.kit-subsection > h3 { font-size: var(--fs-h3); font-weight: 700; margin: 0 0 14px; }
 .kit-note { font-size: 14px; color: rgba(31,35,72,0.55); margin: 10px 0; }
 .kit-note code, .kit-inline-code {
   font-family: 'Fira Mono', monospace; font-size: 0.88em;
@@ -206,10 +216,11 @@ pre.code .tok-cmt { color: #7a7fa6; }
 .field input:focus, .field select:focus { outline: none; box-shadow: inset 0 0 0 2px rgba(5,130,202,0.5); }
 
 /* --- Patterns ------------------------------------------------------------ */
-.pattern-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.pattern-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 20px; }
 
 /* --- Resources ----------------------------------------------------------- */
-.res-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.res-table { width: 100%; min-width: 460px; border-collapse: collapse; font-size: 14px; }
 .res-table th, .res-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid rgba(31,35,72,0.08); }
 .res-table th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(31,35,72,0.45); }
 .res-table code { font-family: 'Fira Mono', monospace; font-size: 12.5px; }
@@ -245,16 +256,77 @@ pre.code .tok-cmt { color: #7a7fa6; }
 .nq-logo-signet-mono { display: inline-block; flex: 0 0 auto; }
 .nq-logo-lg .nq-logo-signet-mono { width: 44px; height: 44px; margin-right: 17px; }
 
-/* --- Mobile -------------------------------------------------------------- */
+/* --- Off-canvas drawer: menu button + scrim ------------------------------ */
+/* z-index order: scrim (15) < menu button (16) < sidebar/drawer (20). So an
+   open drawer covers the button, and the darkened scrim sits over the content. */
 .kit-menu-btn {
-  display: none; position: fixed; top: 14px; left: 14px; z-index: 30; border: none; cursor: pointer;
+  display: none; position: fixed; top: 14px; left: 14px; z-index: 16; border: none; cursor: pointer;
   background: #1F2348; color: #fff; width: 44px; height: 44px; border-radius: 10px; font-size: 20px;
 }
-@media (max-width: 900px) {
-  .kit-sidebar { transform: translateX(-100%); transition: transform .25s var(--nimiq-ease, ease); box-shadow: 0 0 60px rgba(0,0,0,0.4); }
+.kit-menu-btn:focus-visible { outline: 3px solid #0CA6FE; outline-offset: 2px; }
+.kit-scrim {
+  position: fixed; inset: 0; z-index: 15; background: rgba(31,35,72,0.5);
+  opacity: 0; pointer-events: none; transition: opacity .25s var(--nimiq-ease, ease);
+}
+.kit-scrim.show { opacity: 1; pointer-events: auto; }
+.kit-scrim:focus-visible { outline: 3px solid #0CA6FE; outline-offset: -3px; }
+.kit-nav a:focus-visible { outline: 2px solid #0CA6FE; outline-offset: -2px; }
+
+/* --- Keyboard focus for the click-to-copy cells (role=button, tabindex=0) - */
+.swatch:focus-visible,
+.ladder-cell:focus-visible,
+.gradient-tile:focus-visible,
+.icon-cell:focus-visible,
+#iqon-random:focus-visible {
+  outline: 3px solid #0CA6FE; outline-offset: 2px;
+}
+
+/* --- Touch-safe demos: never let a fixed-rem component template (44rem / 52.5rem…)
+   push the page wider than the viewport. max-width caps the width, min-width:0 lets
+   the flex items shrink, and .demo's own overflow:hidden clips any residual. ----- */
+.demo, .demo-stage { max-width: 100%; }
+.demo-stage > *,
+.demo-stage .vue-mount-inner,
+.demo-stage .vue-mount-inner > * { max-width: 100%; }
+.demo-stage > * { min-width: 0; }
+
+/* --- Responsive breakpoints (aligned to Nimiq's tablet:960 / mobile:768 tokens) - */
+/* Tablet ≤960px — the fixed sidebar becomes an off-canvas drawer. */
+@media (max-width: 960px) {
+  .kit-sidebar {
+    transform: translateX(-100%);
+    transition: transform .25s var(--nimiq-ease, ease);
+    box-shadow: 0 0 60px rgba(0,0,0,0.4);
+  }
   .kit-sidebar.open { transform: translateX(0); }
   .kit-main { margin-left: 0; }
   .kit-menu-btn { display: block; }
-  .kit-container { padding: 72px 20px 100px; }
+  .kit-container { padding: 72px 32px 100px; }
   .play { grid-template-columns: 1fr; }
+}
+
+/* Mobile ≤768px — tighten chrome and stack the type specimen rows. */
+@media (max-width: 768px) {
+  .kit-container { padding: 72px 20px 88px; }
+  .kit-hero { padding: 12px 0 4px; }
+  .kit-section { padding-top: 44px; }
+  .kit-card { padding: 20px; }
+  .demo-stage { padding: 18px; gap: 14px; }
+  .demo-knobs { padding: 12px 14px; }
+  .type-row { flex-direction: column; align-items: stretch; gap: 4px; }
+  .type-meta { text-align: left; white-space: normal; }
+}
+
+/* Small phone ≤480px — smaller cells, tighter gaps, single-column where 2-up crowds. */
+@media (max-width: 480px) {
+  .kit-container { padding: 68px 14px 72px; }
+  .swatch-grid   { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+  .ladder        { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 6px; }
+  .gradient-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .spec-grid     { grid-template-columns: repeat(auto-fill, minmax(116px, 1fr)); gap: 12px; }
+  .icon-grid     { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 4px; }
+  .icon-cell     { padding: 12px 6px; }
+  .kit-card      { padding: 16px; }
+  .demo-stage    { padding: 14px; }
+  #identicons .field { min-width: 0 !important; }
 }

@@ -1,0 +1,933 @@
+# Nimiq UI Kit — Full Reference
+
+> The complete Nimiq design system in one flat, self-contained markdown file: design tokens, foundations, CSS components, the live Vue component catalog, identicons, utilities and icons. Hand-generated from the kit's real sources so any LLM or agent can consume the whole kit WITHOUT executing the JS-gated page.
+
+**Live site:** https://nimiqtoolbox.github.io/nimiq-ui-kit/
+**Machine-readable siblings:** `tokens/tokens.json` (tokens), `components.json` (Vue manifest), `assets/nimiq-icons.json` (extended icon set).
+**Why this file exists:** the site's real content (component catalog, code samples, swatches, icons) is injected at runtime by `assets/js/kit.js`. Fetching `index.html` alone shows only empty mount `<div>`s. This document is the static, complete alternative.
+
+The kit is a **zero-build static site** — just `index.html`, `assets/`, `tokens/`; no bundler, no dependencies to install. Every value below is copied from the real, current Nimiq packages, not a mock-up.
+
+## Sources of truth
+
+| Source | Version | Provides |
+|---|---|---|
+| [@nimiq/style](https://github.com/nimiq/nimiq-style) | 0.8.5 | Colors, gradients, type scale, buttons, inputs, cards, notices, icon sprite |
+| [@nimiq/vue-components](https://github.com/nimiq/vue-components) | git | The live Vue components (31 demos, 34 tags) |
+| [@nimiq/identicons](https://github.com/nimiq/iqons) | 1.6.2 | Identicon / avatar generator |
+| [@nimiq/utils](https://github.com/nimiq/nimiq-utils) | local | Formatting, validation, request-links, tweening, clipboard |
+| [nimiq/wallet](https://github.com/nimiq/wallet) | master | Muli / Fira Mono fonts, opacity ladder, crypto colors, patterns |
+| [onmax/nimiq-ui (nimiq-icons)](https://github.com/onmax/nimiq-ui) | MIT | Extended `nimiq-icons` set (Iconify JSON) |
+
+**Grid:** the whole system is an 8px grid — `html { font-size: 8px }`, so `1rem = 8px` and `Nrem = N × 8px`.
+**Naming:** CSS custom properties are `--nimiq-*` (e.g. `--nimiq-blue`); color utility classes are `.nq-<color>` (text) and `.nq-<color>-bg` (background); component classes are `.nq-*` (e.g. `.nq-button`, `.nq-card`).
+
+---
+
+# Design tokens
+
+Canonical machine-readable copy: `tokens/tokens.json`. A CSS custom-property mirror is `tokens/tokens.css`. All values below are from those files.
+
+## Brand palette
+
+Text utility = `.nq-<name>`, background/gradient utility = `.nq-<name>-bg`, CSS var = `--nimiq-<name>`.
+
+| Name | Hex | RGB | CSS var | Text class | Bg class |
+|---|---|---|---|---|---|
+| blue | `#1F2348` | 31, 35, 72 | `--nimiq-blue` | `.nq-blue` | `.nq-blue-bg` |
+| light-blue | `#0582CA` | 5, 130, 202 | `--nimiq-light-blue` | `.nq-light-blue` | `.nq-light-blue-bg` |
+| gold | `#E9B213` | 233, 178, 19 | `--nimiq-gold` | `.nq-gold` | `.nq-gold-bg` |
+| green | `#21BCA5` | 33, 188, 165 | `--nimiq-green` | `.nq-green` | `.nq-green-bg` |
+| orange | `#FC8702` | 252, 135, 2 | `--nimiq-orange` | `.nq-orange` | `.nq-orange-bg` |
+| red | `#D94432` | 216, 65, 51 | `--nimiq-red` | `.nq-red` | `.nq-red-bg` |
+| purple | `#5F4B8B` | 95, 75, 139 | `--nimiq-purple` | `.nq-purple` | `.nq-purple-bg` |
+| pink | `#FA7268` | 250, 114, 104 | `--nimiq-pink` | `.nq-pink` | `.nq-pink-bg` |
+| light-green | `#88B04B` | 136, 176, 75 | `--nimiq-light-green` | `.nq-light-green` | `.nq-light-green-bg` |
+| brown | `#795548` | 121, 85, 72 | `--nimiq-brown` | `.nq-brown` | `.nq-brown-bg` |
+
+## Neutrals
+
+| Name | Hex | CSS var | Bg class |
+|---|---|---|---|
+| gray | `#F4F4F4` | `--nimiq-gray` | `.nq-gray-bg` |
+| light-gray | `#FAFAFA` | `--nimiq-light-gray` | — |
+| white | `#FFFFFF` | `--nimiq-white` | — |
+
+## On-dark variants
+
+Inside a `.nq-*-bg` (dark) surface, light-blue and red swap to brighter on-dark values.
+
+| Name | Hex | CSS var |
+|---|---|---|
+| light-blue-on-dark | `#0CA6FE` | `--nimiq-light-blue-on-dark` |
+| red-on-dark | `#FF5C48` | `--nimiq-red-on-dark` |
+
+## Darkened variants (hover states)
+
+CSS var = `--nimiq-<name>-darkened`.
+
+| Name | Hex |
+|---|---|
+| blue | `#151833` |
+| light-blue | `#0071C3` |
+| gold | `#E5A212` |
+| green | `#20B29E` |
+| orange | `#FC7500` |
+| red | `#D13030` |
+
+## Special / semantic
+
+| Name | Value | CSS var |
+|---|---|---|
+| highlight-bg | `rgba(31, 35, 72, 0.06)` (Nimiq Blue @ 6%) | `--nimiq-highlight-bg` |
+| card-bg | `#FFFFFF` | `--nimiq-card-bg` |
+
+## Crypto colors (Nimiq Wallet)
+
+| Name | Hex | CSS var |
+|---|---|---|
+| bitcoin | `#F7931A` | `--bitcoin-orange` |
+| usdc | `#2775CA` | `--usdc-blue` |
+| usdt | `#009393` | `--usdt-green` |
+
+## Text opacity ladder (the wallet's greyscale text system)
+
+Nimiq Blue at descending alpha. **Formula:** `rgba(31, 35, 72, step/100)`. **CSS var:** `--text-<step>` (e.g. `--text-70` = `rgba(31,35,72,0.7)`).
+
+Steps: `100, 80, 70, 60, 50, 40, 35, 30, 25, 22, 20, 16, 14, 12, 10, 6`
+
+| Var | Value |
+|---|---|
+| `--text-100` | `rgba(31, 35, 72, 1)` |
+| `--text-80` | `rgba(31, 35, 72, 0.8)` |
+| `--text-70` | `rgba(31, 35, 72, 0.7)` |
+| `--text-60` | `rgba(31, 35, 72, 0.6)` |
+| `--text-50` | `rgba(31, 35, 72, 0.5)` |
+| `--text-40` | `rgba(31, 35, 72, 0.4)` |
+| `--text-35` | `rgba(31, 35, 72, 0.35)` |
+| `--text-30` | `rgba(31, 35, 72, 0.3)` |
+| `--text-25` | `rgba(31, 35, 72, 0.25)` |
+| `--text-22` | `rgba(31, 35, 72, 0.22)` |
+| `--text-20` | `rgba(31, 35, 72, 0.2)` |
+| `--text-16` | `rgba(31, 35, 72, 0.16)` |
+| `--text-14` | `rgba(31, 35, 72, 0.14)` |
+| `--text-12` | `rgba(31, 35, 72, 0.12)` |
+| `--text-10` | `rgba(31, 35, 72, 0.1)` |
+| `--text-6` | `rgba(31, 35, 72, 0.06)` |
+
+## Signature radial gradients
+
+One formula drives them all — a brighter accent glows from the bottom-right into the base color.
+
+**Formula:** `radial-gradient(100% 100% at bottom right, <accent>, var(--nimiq-<base>))`
+**CSS var / utility:** `--nimiq-<name>-bg` (also the `.nq-<name>-bg` class).
+
+| Name | Accent | Base var | Full value |
+|---|---|---|---|
+| blue | `#260133` | `--nimiq-blue` | `radial-gradient(100% 100% at bottom right, #260133, var(--nimiq-blue))` |
+| light-blue | `#265DD7` | `--nimiq-light-blue` | `radial-gradient(100% 100% at bottom right, #265DD7, var(--nimiq-light-blue))` |
+| gold | `#EC991C` | `--nimiq-gold` | `radial-gradient(100% 100% at bottom right, #EC991C, var(--nimiq-gold))` |
+| green | `#41A38E` | `--nimiq-green` | `radial-gradient(100% 100% at bottom right, #41A38E, var(--nimiq-green))` |
+| orange | `#FD6216` | `--nimiq-orange` | `radial-gradient(100% 100% at bottom right, #FD6216, var(--nimiq-orange))` |
+| red | `#CC3047` | `--nimiq-red` | `radial-gradient(100% 100% at bottom right, #CC3047, var(--nimiq-red))` |
+| purple | `#4D4C96` | `--nimiq-purple` | `radial-gradient(100% 100% at bottom right, #4D4C96, var(--nimiq-purple))` |
+| pink | `#E0516B` | `--nimiq-pink` | `radial-gradient(100% 100% at bottom right, #E0516B, var(--nimiq-pink))` |
+| light-green | `#70B069` | `--nimiq-light-green` | `radial-gradient(100% 100% at bottom right, #70B069, var(--nimiq-light-green))` |
+| brown | `#724147` | `--nimiq-brown` | `radial-gradient(100% 100% at bottom right, #724147, var(--nimiq-brown))` |
+
+**Darkened gradients (hover)** — CSS var `--nimiq-<name>-bg-darkened`, accent over the darkened base:
+
+| Name | Accent | Base var |
+|---|---|---|
+| blue | `#180021` | `--nimiq-blue-darkened` |
+| light-blue | `#2355C4` | `--nimiq-light-blue-darkened` |
+| gold | `#E58A1B` | `--nimiq-gold-darkened` |
+| green | `#3D9988` | `--nimiq-green-darkened` |
+| orange | `#EA5200` | `--nimiq-orange-darkened` |
+| red | `#BF2D46` | `--nimiq-red-darkened` |
+
+## Typography
+
+**UI font:** Muli — `'Muli', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif` (weights 400 / 600 / 700).
+**Mono font:** Fira Mono — `'Fira Mono', monospace` (addresses & hex).
+Scale sits on the 8px grid (`1rem = 8px`).
+
+| Class | px | rem | Weight | Line-height | Notes |
+|---|---|---|---|---|---|
+| (body) | 18 | 2.25rem | — | — | `--body-size`; no utility class (wallet uses 2rem) |
+| `.nq-h1` | 24 | 3rem | 700 | 1.2 | |
+| `.nq-h2` | 20 | 2.5rem | 700 | 1.2 | |
+| `.nq-h3` | 16 | 2rem | 700 | 1.2 | |
+| `.nq-text` | 16 | 2rem | — | — | color `rgba(31,35,72,0.7)` |
+| `.nq-text-s` | 14 | 1.75rem | 600 | — | |
+| `.nq-label` | 14 | 1.75rem | 600 | — | uppercase, letter-spacing `0.107em` |
+
+## Spacing (8px grid)
+
+Base unit `8px` (`--nimiq-size: 8px`). `Nrem = N × 8px`. Utility classes `.margin-top-1 … .margin-top-5` → 8px … 40px.
+
+| rem | px |
+|---|---|
+| 1rem | 8px |
+| 2rem | 16px |
+| 3rem | 24px |
+| 4rem | 32px |
+| 5rem | 40px |
+
+## Radius
+
+| Token | rem | px | Applies to |
+|---|---|---|---|
+| input | 0.5rem | 4px | `.nq-input` (`--nimiq-radius-input`) |
+| card | 1.25rem | 10px | `.nq-card` (`--nimiq-radius-card`) |
+| small-button | 1.6875rem | 13.5px | small / pill buttons (`--nimiq-radius-small`) |
+| pill-button | — | 500px | `.nq-button` full pill (`--nimiq-radius-pill`) |
+
+## Elevation / shadow
+
+| Token | Value | CSS var |
+|---|---|---|
+| `.nq-shadow` | `0 0.5rem 1.5rem rgba(0,0,0,0.15)` | `--nimiq-shadow` |
+| `.nq-shadow-l` | `0 0.5rem 2.5rem rgba(0,0,0,0.15)` | `--nimiq-shadow-l` |
+| card | `0 0.5rem 3.5rem rgba(0,0,0,0.111158)` | `--nimiq-shadow-card` |
+
+## Motion
+
+| Token | Value | CSS var |
+|---|---|---|
+| ease (standard easing) | `cubic-bezier(0.25, 0, 0, 1)` | `--nimiq-ease` |
+| attr-duration | `0.2s` | `--attr-duration` |
+| movement-duration | `0.4s` | `--movement-duration` |
+| button-spring | `cubic-bezier(0.41, 0.34, 0.26, 1.55)` | — |
+
+## Breakpoints (px, from the Nimiq Wallet)
+
+| Name | px | Name | px |
+|---|---|---|---|
+| mobile | 768 | largeDesktop | 1409 |
+| tablet | 960 | extraLargeDesktop | 1499 |
+| halfMobile | 1160 | veryLargeDesktop | 1800 |
+| smallDesktop | 1199 | ultraLargeDesktop | 2000 |
+| mediumDesktop | 1319 | | |
+
+(These are SCSS breakpoints in the wallet; CSS custom properties can't tokenize media-query breakpoints, so they are reference values.)
+
+## Layout widths (Nimiq Wallet app shell, rem)
+
+| Token | rem | CSS var |
+|---|---|---|
+| sidebar-width | 24rem | `--sidebar-width` |
+| settings-width | 131rem | `--settings-width` |
+| address-column-width | 150rem | `--address-column-width` |
+
+---
+
+# Foundations
+
+## Brand & logo
+
+The Nimiq logo pairs the gold hexagon "signet" with the **NIMIQ** wordmark (uppercase, bold, `letter-spacing: 0.08em`, gap = 0.382× the signet width) — exactly as the live wallet composes it. The gold signet stays legible on light and dark surfaces. Monochrome versions share `currentColor` across signet and wordmark for print, watermarks or any single-ink context. The signet also ships in `@nimiq/style` as the `nq-hexagon` sprite icon, which inherits `currentColor`.
+
+```html
+<!-- Full lockup -->
+<span class="nq-logo-lockup nq-logo-lg">
+  <span class="nq-logo-signet"></span>
+  <span class="nq-logo-wordmark">Nimiq</span>
+</span>
+
+<!-- Monochrome lockup (signet uses the hexagon icon, inherits currentColor) -->
+<span class="nq-logo-lockup nq-logo-lg" style="color:var(--nimiq-blue)">
+  <svg viewBox="0 0 27 24" class="nq-logo-signet-mono"><use xlink:href="assets/icons/nimiq-style.icons.svg#nq-hexagon"/></svg>
+  <span class="nq-logo-wordmark">Nimiq</span>
+</span>
+
+<!-- Signet alone -->
+<span class="nq-logo-signet" style="width:48px;height:48px"></span>
+```
+
+## Color
+
+Ten brand colors plus neutrals. Text-color utilities are `.nq-<color>`; background utilities are `.nq-<color>-bg` (which apply the signature gradient). The **opacity ladder** is Nimiq Blue at descending alpha — the wallet's greyscale text system, exposed as `--text-100 … --text-6`. **Crypto colors** cover Bitcoin, USDC and USDT. Inside a `.nq-*-bg` surface, light-blue and red swap to brighter **on-dark** values; **darkened** values back the hover states.
+
+## Gradients
+
+The signature Nimiq look. One formula drives them all: a brighter accent glows from the bottom-right into the base color — `radial-gradient(100% 100% at bottom right, <accent>, var(--nimiq-<base>))`. Applied via `--nimiq-<color>-bg` (and the `.nq-<color>-bg` classes).
+
+## Typography
+
+**Muli** for UI (weights 400 / 600 / 700), **Fira Mono** for addresses & hex. The scale lives on the 8px grid (`1rem = 8px`): headings `.nq-h1/.nq-h2/.nq-h3`, body `.nq-text`, small `.nq-text-s`, and uppercase `.nq-label`.
+
+## Spacing & grid
+
+Everything is an 8px grid. The rem base is 8px (`--nimiq-size: 8px`), so `Nrem = N × 8px`. Utilities `.margin-top-1 … .margin-top-5`.
+
+## Radius
+
+Inputs 4px, cards 10px, small/pill buttons 13.5px, primary buttons a full 500px pill.
+
+## Elevation
+
+Three shadows: `.nq-shadow`, `.nq-shadow-l`, and the softer card shadow.
+
+## Motion
+
+The Nimiq easing is `cubic-bezier(0.25, 0, 0, 1)` (`--nimiq-ease`). Durations: attribute changes `0.2s`, movement `0.4s`. A springy `cubic-bezier(0.41, 0.34, 0.26, 1.55)` is used for button presses. `@nimiq/utils` ships a `Tweenable` helper for JS-driven animation.
+
+## Breakpoints
+
+Nine named px breakpoints from the wallet, from `mobile` (768) to `ultraLargeDesktop` (2000) — see the tokens table above.
+
+## Iconography
+
+Two icon sets. (1) The **`@nimiq/style` sprite** (`assets/icons/nimiq-style.icons.svg`): 39 UI glyphs that inherit `currentColor`, used via `<svg class="nq-icon"><use xlink:href="…#nq-<name>"/></svg>`. Each icon carries a plain-language summary in its `aria-label`, `title` and `data-summary` (also on `window.NimiqIconSummaries`) so an agent can identify it without vision. (2) The **extended `nimiq-icons` set** (`assets/nimiq-icons.json`, Iconify format, MIT): 89 visible brand/crypto/social `logos-*` icons, also `currentColor`. Full lists in the [Icons](#icons) section below.
+
+---
+
+# CSS components (@nimiq/style)
+
+Plain HTML + classes — no JS required. Snippets below are lifted from the kit's live demo markup.
+
+## Buttons
+
+Three families: primary pill `.nq-button`, small `.nq-button-s`, and `.nq-button-pill`. Color modifier classes: `light-blue`, `green`, `gold`, `orange`, `red`. `inverse` is for dark surfaces. The `disabled` attribute is styled.
+
+```html
+<button class="nq-button">Default</button>
+<button class="nq-button light-blue">Light blue</button>
+<button class="nq-button green">Green</button>
+<button class="nq-button gold">Gold</button>
+<button class="nq-button orange">Orange</button>
+<button class="nq-button red">Red</button>
+<button class="nq-button" disabled>Disabled</button>
+<button class="nq-button inverse">Inverse</button>   <!-- on a dark surface -->
+
+<!-- Small -->
+<button class="nq-button-s">Default</button>
+<button class="nq-button-s light-blue">Light blue</button>
+
+<!-- Pill -->
+<button class="nq-button-pill">Default</button>
+<button class="nq-button-pill green">Green</button>
+```
+
+## Inputs
+
+`.nq-input` (regular) and `.nq-input-s` (small). Add `vanishing` for a borderless input that shows its border on focus. Work on light and on `.nq-blue-bg` surfaces.
+
+```html
+<input class="nq-input" placeholder="Regular input">
+<input class="nq-input" value="With a value">
+<input class="nq-input-s" placeholder="Small input">
+<input class="nq-input vanishing" placeholder="Vanishing (border on focus)">
+```
+
+## Cards
+
+The card is Nimiq's primary container: a centered header (title + optional inline notice), a body, and a footer — each with 4rem padding on the 8px grid and 10px rounded corners.
+
+```html
+<div class="nq-card">
+  <div class="nq-card-header">
+    <h1 class="nq-h1">Card title</h1>
+    <p class="nq-notice info">An inline notice</p>
+  </div>
+  <div class="nq-card-body">
+    <p class="nq-text">Header, body and footer compose together, each with its own padding and rounded corners.</p>
+  </div>
+  <div class="nq-card-footer">
+    <button class="nq-button light-blue">Action</button>
+  </div>
+</div>
+```
+
+## Notices
+
+`.nq-notice` with a state modifier: `info`, `success`, `warning`, `error`.
+
+```html
+<div class="nq-notice info">Info</div>
+<div class="nq-notice success">Success</div>
+<div class="nq-notice warning">Warning</div>
+<div class="nq-notice error">Error</div>
+```
+
+## Text, labels & links
+
+`.nq-link` (link), `.nq-label` (uppercase label), `.nq-list` (styled list), plus the type classes `.nq-h1/.nq-h2/.nq-h3`, `.nq-text`, `.nq-text-s`.
+
+```html
+<a class="nq-link" href="#">A Nimiq link</a>
+<span class="nq-label">A label</span>
+<ul class="nq-list">
+  <li>First list item</li>
+  <li>Second list item</li>
+  <li>Third list item</li>
+</ul>
+```
+
+---
+
+# Vue component catalog (@nimiq/vue-components)
+
+The kit mounts **31 live demos** across 5 groups, referencing **34 distinct component tags** (the 31 demo tags plus `PageHeader`, `PageBody`, `PageFooter`, which are composed inside the single `SmallPage` demo). Machine-readable form: `components.json`.
+
+**Conventions:** examples use Vue 2 templates. A leading `:` marks a bound (JS-evaluated) prop, `@` an event listener, `slot=` a named slot. Crypto amounts are integers in the smallest unit (**luna** for NIM; NIM has 5 decimals, so 1 NIM = 100000 luna). Props marked _(inferred)_ were read from the component's template/example rather than an interactive control, so their exact runtime default is not asserted. Before mounting, the kit calls `NimiqVueComponents.setAssetPublicPath('assets/js/vue-components/')`.
+
+## Group: Amounts & Identity
+
+### Identicon `<Identicon>`
+Deterministic avatar (identicon) generated from a Nimiq address or any seed string.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| address | string | `NQ07 0000 0000 0000 0000 0000 0000 0000 0000` | Address or seed string |
+
+```html
+<Identicon address="NQ07 0000 0000 0000 0000 0000 0000 0000 0000" />
+```
+
+### Amount `<Amount>`
+Renders a crypto amount given in its smallest unit (luna for NIM), formatted for a currency with a maximum number of decimals.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| amount | number | `123456789` | In luna |
+| currency | select | `nim` | one of: nim, btc, eth, usdc |
+| maxDecimals | number | `5` | |
+
+```html
+<Amount :amount="123456789" currency="nim" :maxDecimals="5" />
+```
+
+### FiatAmount `<FiatAmount>`
+Renders a fiat amount formatted (locale-aware) for a given fiat currency.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| amount | number | `1234.5` | |
+| currency | select | `eur` | one of: eur, usd, gbp, jpy, chf |
+
+```html
+<FiatAmount :amount="1234.5" currency="eur" />
+```
+
+### AddressDisplay `<AddressDisplay>`
+Displays a Nimiq address in its canonical grouped, monospaced block form.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| address | string | `NQ34 248H 1EQJ F5H9 5A9E K8P4 KRB1 T2FN 3LQR` | |
+
+```html
+<AddressDisplay address="NQ34 248H 1EQJ F5H9 5A9E K8P4 KRB1 T2FN 3LQR" />
+```
+
+### AccountRing `<AccountRing>`
+Circular ring of identicons summarizing several accounts/addresses at once.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| addresses | array | — | Array of address/seed strings _(inferred)_ |
+
+```html
+<AccountRing :addresses="addresses" />
+```
+
+### Account `<Account>`
+A single account row: identicon, label and balance.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| label | string | `Wallet` | |
+| address | string | — | _(inferred)_ |
+| balance | number | `4200000000` | In luna _(inferred)_ |
+
+```html
+<Account label="Wallet" :address="…" :balance="4200000000" />
+```
+
+### AmountWithFee `<AmountWithFee>`
+Compound amount input pairing a send amount with a fee, validating against an available balance.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| value | object | — | `{ amount, fee, isValid }` _(inferred)_ |
+| availableBalance | number | `5000000000` | In luna _(inferred)_ |
+| currency | string | `nim` | _(inferred)_ |
+| currencyDecimals | number | `5` | _(inferred)_ |
+
+```html
+<AmountWithFee :value="{amount,fee,isValid}" :availableBalance="…" currency="nim" :currencyDecimals="5" />
+```
+
+### AccountList `<AccountList>`
+Scrollable list of accounts, each with a derivation path, label, address and balance; a minimum-balance threshold controls selectability.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| accounts | array | — | Array of `{ path, label, userFriendlyAddress, balance }` _(inferred)_ |
+| minBalance | number | `1` | _(inferred)_ |
+
+```html
+<AccountList :accounts="[{path,label,userFriendlyAddress,balance}, …]" :minBalance="1" />
+```
+
+### AccountDetails `<AccountDetails>`
+Full account detail panel: identicon, label, wallet label, address and balance.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| address | string | — | _(inferred)_ |
+| label | string | `Main account` | |
+| walletLabel | string | `Keyguard Wallet` | _(inferred)_ |
+| balance | number | `4200000000` | In luna _(inferred)_ |
+
+```html
+<AccountDetails :address="…" label="Main account" walletLabel="Keyguard Wallet" :balance="4200000000" />
+```
+
+### AccountSelector `<AccountSelector>`
+Selector across wallets and their accounts (accounts keyed in a JS `Map`), with a minimum-balance threshold.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| wallets | array | — | Array of `{ id, label, type, keyMissing, contracts, accounts: Map<address, account> }` _(inferred)_ |
+| minBalance | number | `1` | _(inferred)_ |
+
+```html
+<AccountSelector :wallets="[{id,label,type,keyMissing,contracts,accounts:Map}]" :minBalance="1" />
+```
+
+## Group: Inputs
+
+### LabelInput `<LabelInput>`
+Single-line text input for naming/labeling (e.g. an account label), with a placeholder.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| value | string | `Savings` | |
+| placeholder | string | `Set a label` | |
+
+```html
+<LabelInput value="Savings" placeholder="Set a label" />
+```
+
+### AmountInput `<AmountInput>`
+Numeric amount input operating in a crypto's smallest unit, with a decimals count and currency.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| value | number | — | In luna (smallest unit) _(inferred)_ |
+| decimals | number | `5` | _(inferred)_ |
+| currency | string | `nim` | _(inferred)_ |
+| placeholder | string | `0` | |
+
+```html
+<AmountInput :value="valueInLuna" :decimals="5" currency="nim" />
+```
+
+### AddressInput `<AddressInput>`
+Text input for a Nimiq address with validation feedback. Emits `input`.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| value | string | — | _(inferred)_ |
+| placeholder | string | `Recipient address` | _(inferred)_ |
+
+Events: `input`
+
+```html
+<AddressInput :value="address" placeholder="Recipient address" @input="…" />
+```
+
+### SelectBar `<SelectBar>`
+Segmented selector bar of colored options; emits the selected value on change.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| name | string | `fee` | _(inferred)_ |
+| options | array | — | Array of `{ value, index, text, color }`, color = a `.nq-*-bg` class _(inferred)_ |
+| selectedValue | number | `1` | _(inferred)_ |
+
+Events: `changed`
+
+```html
+<SelectBar name="fee"
+  :options="[{value:0,index:0,text:'Low',color:'nq-green-bg'}, …]"
+  :selectedValue="1" @changed="onChange" />
+```
+
+### SliderToggle `<SliderToggle>`
+Animated segmented toggle; each option is provided as a named slot and `value` selects the active one.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| name | string | `range` | _(inferred)_ |
+| value | string | `week` | Must match a slot name _(inferred)_ |
+
+Slots: one named slot per option (e.g. `slot="day"`, `slot="week"`, `slot="month"`).
+
+```html
+<SliderToggle name="range" value="week">
+  <template slot="day">Day</template>
+  <template slot="week">Week</template>
+</SliderToggle>
+```
+
+### LanguageSelector `<LanguageSelector>`
+Dropdown to pick a UI language from a list of locale codes.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| languages | array | — | Locale codes, e.g. `['en','de','es','fr','nl','pt','ru','uk','zh']` _(inferred)_ |
+| value | string | `en` | _(inferred)_ |
+
+```html
+<LanguageSelector :languages="['en','de','es', …]" value="en" />
+```
+
+## Group: Feedback & Overlay
+
+### Tooltip `<Tooltip>`
+Hover/focus tooltip with a trigger slot and content; repositions to stay in view.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| preferredPosition | select | `bottom` | one of: top, bottom, left, right (the kit's "Position" knob) |
+
+Slots: `trigger` (the element that shows the tooltip), default (the tooltip content).
+
+```html
+<Tooltip preferredPosition="bottom">
+  <span slot="trigger">Hover me</span>
+  Tooltip content
+</Tooltip>
+```
+
+### Copyable `<Copyable>`
+Wraps content so clicking it copies the given text to the clipboard.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| text | string | `NQ07 0000 0000 0000 0000 0000 0000 0000 0000` | Text placed on the clipboard |
+
+Slots: default (the clickable content).
+
+```html
+<Copyable text="NQ07 0000 0000 0000 0000 0000 0000 0000 0000">Click to copy</Copyable>
+```
+
+### CopyableField `<CopyableField>`
+Labeled, copyable field. Renders **white text — intended for a dark surface.**
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| label | string | `Address` | _(inferred)_ |
+| value | string | — | _(inferred)_ |
+
+```html
+<CopyableField label="Address" :value="address" />  <!-- white text; use on a dark surface -->
+```
+
+### LoadingSpinner `<LoadingSpinner>`
+Indeterminate loading spinner; inherits `currentColor`. No props.
+
+```html
+<LoadingSpinner />
+```
+
+### CircleSpinner `<CircleSpinner>`
+Circular indeterminate spinner. No props.
+
+```html
+<CircleSpinner />
+```
+
+### CloseButton `<CloseButton>`
+Standard circular close (×) button. No props.
+
+```html
+<CloseButton />
+```
+
+### LongPressButton `<LongPressButton>`
+Button that confirms only after being held (long-pressed) for a duration in milliseconds.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| duration | number | `2000` | Hold duration in ms |
+
+Slots: default (the button label).
+
+```html
+<LongPressButton :duration="2000">Hold to confirm</LongPressButton>
+```
+
+### Timer `<Timer>`
+Progress/countdown timer between a start and end timestamp (ms since epoch).
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| startTime | number | — | Timestamp in ms _(inferred)_ |
+| endTime | number | — | Timestamp in ms _(inferred)_ |
+
+```html
+<Timer :startTime="start" :endTime="end" />
+```
+
+### PaymentInfoLine `<PaymentInfoLine>`
+One-line payment summary: a crypto amount and the requesting origin.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| cryptoAmount | object | — | `{ amount, currency, decimals }`, amount in smallest unit _(inferred)_ |
+| origin | string | `shop.example.com` | _(inferred)_ |
+
+```html
+<PaymentInfoLine :cryptoAmount="{amount,currency,decimals}" origin="shop.example.com" />
+```
+
+### BottomOverlay `<BottomOverlay>`
+Dismissible overlay anchored to the bottom of its container; themeable; emits `close`.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| theme | select | `dark` | one of: dark, light, green |
+
+Events: `close`. Slots: default (the overlay content).
+
+```html
+<BottomOverlay theme="dark" @close="onClose">Overlay content</BottomOverlay>
+```
+
+## Group: Layout & Pages
+
+### SmallPage `<SmallPage>`
+The fixed 52.5×70.5rem Nimiq modal page shell. Composes `PageHeader`, `PageBody` and `PageFooter` as slotted children. (These three related tags have no separate demo of their own.) No props.
+
+Slots: default — typically a `PageHeader`, a `PageBody` and a `PageFooter`.
+
+```html
+<SmallPage>
+  <PageHeader>Send transaction</PageHeader>
+  <PageBody>…</PageBody>
+  <PageFooter><button class="nq-button">Send transaction</button></PageFooter>
+</SmallPage>
+```
+
+### Carousel `<Carousel>`
+Slide carousel; `entries` names the slots and `selected` picks the active slide.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| entries | array | — | Array of slot-name strings _(inferred)_ |
+| selected | string | — | One of the entry names _(inferred)_ |
+
+Slots: one named slot per entry (`slot="<entry>"`).
+
+```html
+<Carousel :entries="['a','b','c']" selected="a">
+  <div slot="a">…</div>
+</Carousel>
+```
+
+### Wallet `<Wallet>` — **@deprecated**
+Wallet summary card showing a wallet's accounts and balance. Marked `@deprecated` in the kit's example.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| wallet | object | — | `{ id, label, type, accounts: [{ address }], balance, … }` _(inferred)_ |
+
+```html
+<Wallet :wallet="{id,label,type,accounts:[{address}],balance,…}" />  <!-- @deprecated component -->
+```
+
+## Group: QR
+
+### QrCode `<QrCode>`
+Renders a QR code for arbitrary data at a given pixel size.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| data | string | `https://nimiq.com` | |
+| size | number | `160` | Pixels _(inferred)_ |
+
+```html
+<QrCode data="https://nimiq.com" :size="160" />
+```
+
+### QrScanner `<QrScanner>`
+Live camera QR scanner; starts the camera on user action (requires localhost or HTTPS). Emits the decoded `result` plus `error` and `cancel`. No props.
+
+Events: `result`, `error`, `cancel`.
+
+```html
+<QrScanner @result="onResult" @error="onError" @cancel="onCancel" />
+```
+
+---
+
+# Identicons (@nimiq/identicons)
+
+Deterministic avatars generated from any string (typically a Nimiq address). The kit loads the self-contained ES-module bundle (`assets/js/identicons.bundle.min.js`) and exposes it as `window.Identicons`.
+
+```js
+import Identicons from './assets/js/identicons.bundle.min.js';
+// or, as the kit does, window.Identicons after the module runs
+
+// Render into a target element (returns a Promise):
+Identicons.render(addressOrSeedString, targetEl);
+```
+
+In Vue, use the `<Identicon :address="…" />` component (see the catalog above), which wraps the same generator. The same string always yields the same avatar.
+
+---
+
+# Utilities (@nimiq/utils)
+
+Bundled straight from source as the IIFE global `window.NimiqUtils` (`assets/js/nimiq-utils.kit.js`). The kit runs these live. Signatures below are exactly as the kit calls them.
+
+## FormattableNumber — loss-less amounts
+Parses and formats numbers without floating-point loss.
+
+```js
+const n = new NimiqUtils.FormattableNumber('1234567.891234');
+n.toString({ maxDecimals: 4, useGrouping: true });
+// → "1,234,567.8912"
+```
+
+## ValidationUtils — Nimiq address check
+Validates user-friendly Nimiq addresses. Also exposes `NIMIQ_ALPHABET` (`0123456789ABCDEFGHJKLMNPQRSTUVXY`).
+
+```js
+NimiqUtils.ValidationUtils.isValidAddress('NQ07 0000 0000 0000 0000 0000 0000 0000 0000');
+// → true / false
+```
+
+## RequestLinkEncoding — payment links
+Builds a shareable payment request link.
+
+```js
+NimiqUtils.RequestLinkEncoding.createRequestLink(
+  recipientAddress,   // 'NQ07 0000 …'
+  amount,             // NIM amount (number)
+  message,            // 'Coffee'
+  'wallet.nimiq.com'  // target/base host, as used in the kit
+);
+// → a wallet request-link string
+```
+
+## CurrencyInfo — fiat metadata
+Returns display metadata for a fiat currency code.
+
+```js
+const c = new NimiqUtils.CurrencyInfo('EUR');
+c.symbol;    // '€'
+c.decimals;  // 2
+c.name;      // 'Euro'
+```
+
+## Also available on `NimiqUtils`
+- `Clipboard.copy(text)` — copy text to the clipboard (used by the kit's copy buttons).
+- `Tweenable` — JS animation helper: `const t = new NimiqUtils.Tweenable(0); t.tweenTo(1000, 1100); t.currentValue; t.finished;`
+
+---
+
+# Icons
+
+## @nimiq/style sprite (39 icons)
+
+Sprite file: `assets/icons/nimiq-style.icons.svg`. Icons inherit `currentColor`. Usage:
+
+```html
+<svg class="nq-icon">
+  <use xlink:href="nimiq-style.icons.svg#nq-hexagon"/>
+</svg>
+```
+
+Each icon's plain-language summary (from `window.NimiqIconSummaries`, and mirrored in each rendered icon's `aria-label` / `title` / `data-summary`):
+
+| Icon id | Summary |
+|---|---|
+| `nq-alert-circle` | Circle containing an exclamation mark — alert / important notice |
+| `nq-alert-triangle` | Triangle containing an exclamation mark — warning / caution |
+| `nq-arrow-left` | Left-pointing arrow — go back / previous |
+| `nq-arrow-left-small` | Small left-pointing arrow — back (compact) |
+| `nq-arrow-right` | Right-pointing arrow — forward / next / proceed |
+| `nq-arrow-right-small` | Small right-pointing arrow — forward (compact) |
+| `nq-caret-right-small` | Small right chevron — expand or navigate forward |
+| `nq-cashlink` | Cashlink symbol — a Nimiq Cashlink (shareable link that holds NIM) |
+| `nq-cashlink-small` | Cashlink symbol (small) |
+| `nq-cashlink-xsmall` | Cashlink symbol (extra small) |
+| `nq-checkmark` | Checkmark — success / confirmed / completed |
+| `nq-checkmark-small` | Checkmark (small) — success |
+| `nq-close` | Cross / X — close or dismiss |
+| `nq-contacts` | People silhouettes — contacts / address book |
+| `nq-copy` | Two overlapping pages — copy to clipboard |
+| `nq-cross` | X cross — remove / cancel / error |
+| `nq-download` | Downward arrow onto a baseline — download / save |
+| `nq-face-neutral` | Neutral face — neutral or indifferent status |
+| `nq-face-sad` | Sad face — error or negative status |
+| `nq-gear` | Cog / gear wheel — settings |
+| `nq-hexagon` | Nimiq hexagon signet — the brand logo mark |
+| `nq-info-circle` | Circle containing the letter i — information / help |
+| `nq-info-circle-small` | Info circle (small) — information |
+| `nq-keys` | A key — private keys, login credentials or security |
+| `nq-ledger` | Ledger hardware wallet device |
+| `nq-lock-locked` | Closed padlock — locked / secure / encrypted |
+| `nq-lock-unlocked` | Open padlock — unlocked / accessible |
+| `nq-login` | Arrow entering a doorway — log in / sign in |
+| `nq-menu-dots` | Three dots — more options / overflow menu |
+| `nq-plus-circle` | Circle containing a plus — add / create new |
+| `nq-qr-code` | A QR code square — show or scan a QR code |
+| `nq-questionmark` | Question mark — help or unknown |
+| `nq-scan-qr-code` | Camera brackets framing a QR code — scan a QR code |
+| `nq-settings` | Horizontal sliders — settings / preferences |
+| `nq-stopwatch` | Stopwatch — time, pending state or countdown |
+| `nq-transfer` | Two arrows pointing opposite ways — transfer / swap / exchange |
+| `nq-under-payment` | Warning that a payment amount is too low (underpayment) |
+| `nq-view` | An open eye — show / reveal / view |
+| `nq-view-off` | An eye with a slash through it — hide / conceal |
+
+## Extended set — `nimiq-icons` (89 visible, MIT)
+
+File: `assets/nimiq-icons.json` (Iconify format: `{ prefix: "nimiq", icons: { name: { body, width?, height?, hidden? } } }`, default viewBox 12×12). The kit renders every icon whose `hidden` flag is not set; that is 89 `logos-*` brand/crypto/social logos (of 323 total entries — the other 234 are `hidden: true` and skipped). Each icon is `currentColor`; a name like `logos-bitcoin` reads as "logos bitcoin". Usage: read `icons["logos-bitcoin"].body` and wrap it in `<svg viewBox="0 0 12 12">…</svg>`.
+
+Visible icon names:
+
+`logos-bitcoin`, `logos-bitcoin-mono`, `logos-bitcoin-outline`, `logos-bitcoin-outline-mono`, `logos-colones-outline`, `logos-colones-outline-mono`, `logos-cpl-horizontal`, `logos-cpl-horizontal-mono`, `logos-cpl-tag`, `logos-cpl-tag-mono`, `logos-cpl-white-horizontal`, `logos-crypto-map`, `logos-crypto-map-horizontal`, `logos-crypto-map-horizontal-mono`, `logos-crypto-map-mono`, `logos-crypto-map-white-horizontal`, `logos-cryptocity`, `logos-cryptocity-horizontal`, `logos-cryptocity-horizontal-mono`, `logos-cryptocity-mono`, `logos-cryptocity-white-horizontal`, `logos-developer-center-horizontal`, `logos-developer-center-horizontal-mono`, `logos-developer-center-white-horizontal`, `logos-discord`, `logos-discord-mono`, `logos-ethereum`, `logos-ethereum-mono`, `logos-euro-outline`, `logos-euro-outline-mono`, `logos-facebook`, `logos-facebook-mono`, `logos-fm`, `logos-fm-horizontal`, `logos-fm-horizontal-mono`, `logos-fm-mono`, `logos-fm-white-horizontal`, `logos-github`, `logos-github-mono`, `logos-gmaps-pin`, `logos-gmaps-pin-mono`, `logos-instagram`, `logos-instagram-mono`, `logos-lightning-bitcoin`, `logos-lightning-bitcoin-mono`, `logos-lightning-bitcoin-outline`, `logos-lightning-bitcoin-outline-mono`, `logos-multisig`, `logos-multisig-mono`, `logos-nimiq`, `logos-nimiq-forum`, `logos-nimiq-forum-mono`, `logos-nimiq-hexagon-outline`, `logos-nimiq-hexagon-outline-mono`, `logos-nimiq-horizontal`, `logos-nimiq-horizontal-mono`, `logos-nimiq-mono`, `logos-nimiq-pay-horizontal`, `logos-nimiq-pay-horizontal-mono`, `logos-nimiq-pay-vertical`, `logos-nimiq-pay-vertical-mono`, `logos-nimiq-pay-white-horizontal`, `logos-nimiq-vertical`, `logos-nimiq-vertical-mono`, `logos-nimiq-wallet-horizontal`, `logos-nimiq-wallet-horizontal-mono`, `logos-nimiq-wallet-white-horizontal`, `logos-nimiq-white-horizontal`, `logos-nimiq-white-vertical`, `logos-reddit`, `logos-reddit-mono`, `logos-shiny-nim`, `logos-shiny-nim-mono`, `logos-super-simple-swap`, `logos-super-simple-swap-mono`, `logos-super-simple-swap-text`, `logos-super-simple-swap-text-mono`, `logos-telegram`, `logos-telegram-mono`, `logos-twitter`, `logos-twitter-mono`, `logos-usd-outline`, `logos-usd-outline-mono`, `logos-usdc`, `logos-usdc-mono`, `logos-usdt`, `logos-usdt-mono`, `logos-youtube`, `logos-youtube-mono`
+
+---
+
+# Patterns
+
+Composed examples built from the primitives above, as they appear in the wallet — e.g. an **account item** (identicon + label + `<Amount>`), and a **copyable address** (`<Copyable>` wrapping an `<AddressDisplay>`):
+
+```html
+<!-- Account item -->
+<div style="display:flex;align-items:center;gap:1.5rem">
+  <Identicon address="NQ07 0000 0000 0000 0000 0000 0000 0000 0000" style="width:6rem;height:6rem"/>
+  <div>
+    <div class="nq-label">Main account</div>
+    <div class="nq-h1"><Amount :amount="4200000000"/></div>
+  </div>
+</div>
+
+<!-- Copyable address -->
+<Copyable :text="address"><AddressDisplay :address="address"/></Copyable>
+```
+
+---
+
+# Resources
+
+| Package | Repository | License |
+|---|---|---|
+| @nimiq/style | https://github.com/nimiq/nimiq-style | MIT |
+| @nimiq/vue-components | https://github.com/nimiq/vue-components | — |
+| @nimiq/identicons | https://github.com/nimiq/iqons | ISC |
+| @nimiq/utils | https://github.com/nimiq/nimiq-utils | Apache-2.0 |
+| nimiq/wallet | https://github.com/nimiq/wallet | — |
+| nimiq-icons (extended set) | https://github.com/onmax/nimiq-ui | MIT |
+
+**In-kit artifacts for agents:** `llms.txt` (index) · `llms-full.txt` (this file) · `components.json` (Vue manifest) · `tokens/tokens.json` + `tokens/tokens.css` (tokens) · `assets/nimiq-icons.json` (extended icons) · `AGENTS.md` (how to consume & regenerate).

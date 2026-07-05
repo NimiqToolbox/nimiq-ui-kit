@@ -1,0 +1,41 @@
+# Nimiq UI Kit
+
+> The authoritative Nimiq design system reference — design tokens, foundations, CSS components, a live catalog of @nimiq/vue-components, identicons, utilities and icons — as a zero-build static site. This file indexes static, machine-readable artifacts so an LLM or agent can read the full kit without executing its JS-gated page.
+
+The site renders its real content (component catalog, code samples, swatches, icons) at runtime via `assets/js/kit.js`, so fetching `index.html` alone yields only empty mount points. Prefer the files below. All URLs are relative to the repo root (live base: https://nimiqtoolbox.github.io/nimiq-ui-kit/). The kit mounts 31 live Vue component demos covering 34 distinct component tags.
+
+## Full export
+
+- [llms-full.txt](llms-full.txt): The entire kit as one flat, self-contained markdown document — tokens (as tables), foundations, CSS components, every Vue component with props and copyable examples, identicons, utilities and icons. Start here.
+
+## Design tokens
+
+- [tokens/tokens.json](tokens/tokens.json): Canonical machine-readable tokens — brand/neutral/on-dark/darkened/crypto colors, opacity ladder + formula, gradients + formula, typography scale, spacing, radius, shadow, motion, breakpoints, layout.
+- [tokens/tokens.css](tokens/tokens.css): The same tokens as `--nimiq-*` CSS custom properties, drop-in for any project.
+
+## Components
+
+- [components.json](components.json): Structured manifest of the Vue component catalog (name, tag, group, description, props, events, slots, example) extracted from the `GROUPS` object in `assets/js/kit.js`.
+
+## Icons
+
+- [assets/nimiq-icons.json](assets/nimiq-icons.json): Extended `nimiq-icons` set in Iconify format (89 visible `logos-*` icons; skip entries with `hidden: true`).
+- [assets/icons/nimiq-style.icons.svg](assets/icons/nimiq-style.icons.svg): The @nimiq/style UI icon sprite (39 symbols; each id has a plain-language summary in `llms-full.txt` and on `window.NimiqIconSummaries`).
+
+## Agent guide
+
+- [AGENTS.md](AGENTS.md): How an agent should consume the kit and hand-regenerate these artifacts when the sources change.
+- [README.md](README.md): Human overview of what the kit is and where each value comes from.
+
+## Live site
+
+- [Nimiq UI Kit (live)](https://nimiqtoolbox.github.io/nimiq-ui-kit/): The interactive, JS-rendered site.
+
+## Optional
+
+- [@nimiq/style](https://github.com/nimiq/nimiq-style): Colors, gradients, type scale, buttons, inputs, cards, notices, icon sprite (v0.8.5, MIT).
+- [@nimiq/vue-components](https://github.com/nimiq/vue-components): Source of the live Vue components.
+- [@nimiq/identicons (iqons)](https://github.com/nimiq/iqons): Identicon / avatar generator (v1.6.2, ISC).
+- [@nimiq/utils](https://github.com/nimiq/nimiq-utils): Formatting, validation, request-links, tweening, clipboard (Apache-2.0).
+- [nimiq/wallet](https://github.com/nimiq/wallet): Fonts (Muli, Fira Mono), opacity ladder, crypto colors, patterns.
+- [onmax/nimiq-ui](https://github.com/onmax/nimiq-ui): Upstream of the extended `nimiq-icons` set (MIT).

@@ -21,6 +21,24 @@ Nimiq packages.
 
 A self-contained static site — no build, no dependencies: just `index.html`, `assets/`, `tokens/`.
 
+## For agents / LLMs
+
+The page's content is rendered at runtime by `assets/js/kit.js`, so fetching `index.html`
+without executing JavaScript shows only empty mount points. Hand-generated static artifacts
+let any LLM read the **full** kit without a browser:
+
+- **[`llms.txt`](llms.txt)** — a discovery index ([llmstxt.org](https://llmstxt.org/) format).
+- **[`llms-full.txt`](llms-full.txt)** — the entire kit as one flat markdown file: tokens (as
+  tables), foundations, CSS components, every Vue component with props + copyable examples,
+  identicons, utilities and icons. **Start here.**
+- **[`components.json`](components.json)** — structured manifest of the Vue catalog (31 demos
+  covering 34 component tags), extracted from the `GROUPS` object in `kit.js`.
+- **[`tokens/tokens.json`](tokens/tokens.json)** — machine-readable design tokens.
+- **[`AGENTS.md`](AGENTS.md)** — how to consume the kit and hand-regenerate these artifacts.
+
+Every rendered icon also carries a plain-language summary in its `aria-label` / `data-summary`
+and on `window.NimiqIconSummaries`, so agents can identify icons without vision.
+
 ## Built from
 
 Every value, class and component comes from the real, current sources:
