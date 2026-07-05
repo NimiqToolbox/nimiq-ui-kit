@@ -610,7 +610,7 @@
       'vc-qr-mount': [
         demo({ title: 'QrCode', tag: 'QrCode', stageClass: 'center',
           knobs: [{ name: 'data', label: 'Data', type: 'text', def: 'https://nimiq.com' }],
-          template: '<QrCode :data="data" :size="160"/>',
+          template: '<QrCode :data="data" :size="320"/>',
           code: function (s) { return '<QrCode data="' + s.data + '" :size="160" />'; } }),
         demo({ title: 'QrScanner', tag: 'QrScanner', stageClass: 'center', clickToMount: true,
           clickLabel: 'Enable camera & scan', clickNote: 'Live QR scanner — starts the camera on click (works on localhost / HTTPS). Shows a graceful message if no camera is available.',
@@ -735,20 +735,52 @@
     /* Demo constants ------------------------------------------------------ */
     var TOTAL = 2500;      /* conserved fiat total (EUR)          */
     var NIM_RATE = 0.0025; /* EUR per NIM                         */
-    var BTC_RATE = 50000;  /* EUR per BTC                         */
     var P0 = 60;           /* equilibrium boundary (%) NIM 60/40  */
     var REM = 8;           /* Nimiq rem base (px) used by source geometry */
+
+    /* Right-side assets. Every Nimiq swap is NIM (left) <-> a crypto (right).
+       `rate` is EUR per unit, chosen so the amount at equilibrium (40% of the
+       2500 EUR total = 1000 EUR) reads sensibly: BTC ~0.02, USDC/USDT ~1,500.
+       `dp` = max decimals shown; `color` recolours the right icon + bar (via the
+       --sbb-right custom property); `iconSvg`/`iconVb` are the header glyph,
+       lifted verbatim from the wallet's Bitcoin/Usdc/UsdtIcon and drawn in
+       currentColor so `color` tints them. */
+    var ICON_BTC =
+        '<circle fill="#fff" cx="21" cy="21" r="18"/>' +
+        '<path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M15.918 41.371c11.253 2.805 22.649-4.04 25.454-15.291C44.176 14.83 37.33 3.433 26.077.628 14.828-2.176 3.433 4.67.629 15.922c-2.806 11.25 4.041 22.645 15.289 25.45zm10.31-29.01c3.041.997 5.265 2.49 4.828 5.27-.316 2.033-1.501 3.018-3.075 3.364 2.161 1.07 3.26 2.712 2.213 5.557-1.3 3.533-4.388 3.831-8.495 3.092l-.998 3.8-2.407-.571.983-3.75a96.07 96.07 0 01-1.919-.474l-.986 3.768-2.406-.571.997-3.807-.652-.161c-.351-.087-.706-.175-1.065-.26l-3.135-.744 1.196-2.623s1.775.448 1.75.415c.682.16.985-.262 1.104-.544l1.575-6.007.255.06a2.197 2.197 0 00-.25-.076l1.123-4.288c.03-.487-.147-1.101-1.122-1.333.038-.024-1.75-.413-1.75-.413l.641-2.448 3.322.79-.003.011c.5.118 1.014.23 1.538.344L20.477 7l2.407.571-.967 3.69c.644.137 1.288.281 1.93.431l.96-3.664 2.408.57-.986 3.764zm-7.622 13.646c1.964.494 6.264 1.575 6.947-1.037.7-2.667-3.463-3.556-5.496-3.991-.229-.049-.43-.092-.594-.13l-1.323 5.043c.134.031.291.07.466.115zm1.857-7.369c1.638.416 5.212 1.324 5.835-1.048.636-2.428-2.838-3.159-4.535-3.516-.19-.04-.359-.076-.496-.108l-1.2 4.574c.114.027.247.06.396.098z"/>';
+    var ICON_USDC =
+        '<path fill="currentColor" d="M1000 2000c554 0 1000-446 1000-1000S1554 0 1000 0 0 446 0 1000s446 1000 1000 1000z"/>' +
+        '<path fill="#fff" d="M1275 1158c0-146-87-196-262-216-125-17-150-50-150-109s41-96 125-96c75 0 116 25 137 88 4 12 17 21 29 21h67c17 0 29-13 29-29v-5c-17-91-92-162-187-170V542c0-17-13-30-34-34h-62c-17 0-29 13-34 34v95c-125 17-204 101-204 205 0 137 84 191 259 212 116 21 154 46 154 113s-59 112-138 112c-108 0-146-46-158-108-4-17-17-25-29-25h-71c-17 0-29 12-29 29v4c16 104 83 179 221 200v100c0 17 12 29 33 34h62c17 0 30-13 34-34v-100c125-21 208-108 208-221z"/>' +
+        '<path fill="#fff" d="M788 1596a620 620 0 0 1-371-800 616 616 0 0 1 371-371c16-8 25-21 25-42v-58c0-17-9-29-25-33-5 0-13 0-17 4a749 749 0 0 0 0 1429c17 8 33 0 37-17 5-4 5-8 5-16v-59c0-12-13-29-25-37zm441-1300c-16-9-33 0-37 16-4 5-4 9-4 17v58c0 17 12 34 25 42a620 620 0 0 1 370 800 616 616 0 0 1-371 371c-16 8-24 21-24 42v58c0 17 8 29 25 33 4 0 12 0 16-4a749 749 0 0 0 488-942 756 756 0 0 0-488-491z"/>';
+    var ICON_USDT =
+        '<path fill="#fff" d="M 19.596219,7.6270475 H 66.430976 V 44.958728 c -15.933124,8.870098 -31.518243,8.139987 -46.834757,0 z"/>' +
+        '<path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M18.97.1h49.25c1.17 0 2.26.61 2.85 1.6L85.4 25.88a3.11 3.11 0 0 1-.53 3.86l-39.5 37.85a3.36 3.36 0 0 1-4.62 0L1.32 29.79a3.11 3.11 0 0 1-.49-3.93L16.17 1.62A3.3 3.3 0 0 1 18.97.1Zm42.89 10.8v6.79H47.83v4.7c9.85.5 17.25 2.57 17.3 5.04v5.17c-.05 2.47-7.45 4.54-17.3 5.04v11.55h-9.32V37.64c-9.85-.5-17.24-2.57-17.3-5.04v-5.17c.06-2.47 7.45-4.54 17.3-5.04v-4.7H24.5v-6.8h37.37ZM43.17 34.1c10.52 0 19.3-1.75 21.46-4.09-1.83-1.97-8.42-3.53-16.8-3.96v4.93a91.59 91.59 0 0 1-9.32 0v-4.93c-8.37.43-14.97 1.99-16.8 3.96 2.16 2.34 10.95 4.08 21.46 4.08Z"/>';
+
+    var ASSETS = {
+        btc:  { label: "Bitcoin",  unit: "BTC",  rate: 50000,       dp: 8, color: "var(--sbb-bitcoin)", iconVb: "0 0 42 42",     iconSvg: ICON_BTC },
+        usdc: { label: "USD Coin", unit: "USDC", rate: 1000 / 1500, dp: 2, color: "var(--sbb-usdc)",    iconVb: "0 0 2000 2000", iconSvg: ICON_USDC },
+        usdt: { label: "Tether",   unit: "USDT", rate: 1000 / 1500, dp: 2, color: "var(--sbb-usdt)",    iconVb: "0 0 86 69",     iconSvg: ICON_USDT }
+    };
 
     function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
     function fmtNim(n) {
         return Math.round(n).toLocaleString("en-US") + " NIM";
     }
-    function fmtBtc(n) {
-        if (!isFinite(n) || n <= 0) return "0 BTC";
-        var s = n.toFixed(8).replace(/\.?0+$/, "");
-        if (s === "" || s === "0") s = "0";
-        return s + " BTC";
+    /* Generic crypto formatter: rounds to `dp` decimals, trims trailing zeros,
+       and adds thousands separators to the integer part (=> "0.02 BTC",
+       "1,500 USDC"). Uses toFixed to avoid scientific notation on tiny amounts. */
+    function fmtCrypto(n, unit, dp) {
+        if (!isFinite(n) || n <= 0) return "0 " + unit;
+        var s = n.toFixed(dp).replace(/\.?0+$/, "");
+        if (s === "" || s === "0" || s === "-0") return "0 " + unit;
+        var neg = s.charAt(0) === "-";
+        if (neg) s = s.slice(1);
+        var dot = s.indexOf(".");
+        var intPart = (dot === -1 ? s : s.slice(0, dot));
+        var frac = (dot === -1 ? "" : s.slice(dot));
+        intPart = parseInt(intPart, 10).toLocaleString("en-US");
+        return (neg ? "-" : "") + intPart + frac + " " + unit;
     }
 
     /* CurvedLine path — verbatim formula from CurvedLine.vue (height 35) */
@@ -781,6 +813,8 @@
             handle: root.querySelector(".sbb-handle"),
             leftAmount: root.querySelector('.sbb-amount[data-side="left"]'),
             rightAmount: root.querySelector('.sbb-amount[data-side="right"]'),
+            rightLabel: root.querySelector(".sbb-right .sbb-clabel"),
+            rightIcon: root.querySelector(".sbb-right .sbb-cicon"),
             leftPct: root.querySelector(".sbb-left-percent"),
             rightPct: root.querySelector(".sbb-right-percent"),
             hintLeft: root.querySelector(".sbb-slidehint-left"),
@@ -791,6 +825,7 @@
         };
 
         var p = P0;
+        var asset = ASSETS.btc;   /* current right-side asset (default BTC) */
 
         function setCurve(svg, res, height) {
             svg.setAttribute("viewBox", "0 0 " + res.width + " " + height);
@@ -818,7 +853,7 @@
             el.rightBar.style.flexGrow = String(100 - p);
 
             el.leftAmount.textContent = fmtNim(leftFiat / NIM_RATE);
-            el.rightAmount.textContent = fmtBtc(rightFiat / BTC_RATE);
+            el.rightAmount.textContent = fmtCrypto(rightFiat / asset.rate, asset.unit, asset.dp);
 
             var leftPct = Math.round(p);
             var rightPct = Math.round(100 - p);
@@ -904,6 +939,37 @@
         /* ---- click the equilibrium dot to reset ---- */
         el.equi.addEventListener("click", function () { animateTo(P0); });
 
+        /* ---- right-side asset selector (NIM stays on the left) ----
+           Switches the right colour, header label + icon and the amount/unit.
+           The conserved-total drag keeps working: only `asset` changes, the
+           boundary `p` is untouched. */
+        function setAsset(key) {
+            if (!ASSETS[key]) return;
+            asset = ASSETS[key];
+            root.style.setProperty("--sbb-right", asset.color);
+            if (el.rightLabel) el.rightLabel.textContent = asset.label;
+            if (el.rightIcon) {
+                el.rightIcon.setAttribute("viewBox", asset.iconVb);
+                el.rightIcon.innerHTML = asset.iconSvg;
+            }
+            render();
+        }
+        var demo = root.closest(".demo");
+        var select = demo ? demo.querySelector(".sbb-select") : null;
+        if (select) {
+            var pills = select.querySelectorAll(".sbb-select-pill");
+            select.addEventListener("click", function (e) {
+                var btn = e.target.closest(".sbb-select-pill");
+                if (!btn || !select.contains(btn)) return;
+                for (var i = 0; i < pills.length; i++) {
+                    var on = pills[i] === btn;
+                    pills[i].classList.toggle("is-active", on);
+                    pills[i].setAttribute("aria-pressed", on ? "true" : "false");
+                }
+                setAsset(btn.getAttribute("data-asset"));
+            });
+        }
+
         window.addEventListener("resize", render);
         render();
     }
@@ -955,6 +1021,30 @@
     var stepEl = root.querySelector('.swa-step');
     if (!anim) return;
 
+    /* Right-side asset (NIM stays on the left). Each entry carries the piece
+       colour (drives currentColor on the whole right HTLC), the white logo
+       glyph that sits on the coloured disc (viewBox + inner SVG, lifted from
+       the wallet's swap/animation/{bitcoin,usdc,usdt}.svg) and the piece
+       amount + the footer "Locking up <unit>" text. */
+    var LOGO_BTC =
+        '<path fill="#fff" d="M40 22.8c.5-3.4-2.3-5.3-6-6.5l1.2-4.7-3-.7-1.2 4.5-2.4-.5 1.2-4.6-3-.7-1.2 4.7-2-.4-4-1-.8 3s2.2.4 2.1.5c1.3.3 1.5 1 1.4 1.6L21 23.4h.3-.3l-2 7.4a1 1 0 01-1.4.7l-2.1-.5-1.5 3.2 3.9 1 2.1.5-1.2 4.7 3 .7 1.2-4.7 2.4.6-1.2 4.7 3 .7 1.2-4.7c5 .9 8.9.5 10.5-3.9 1.3-3.5 0-5.5-2.7-6.8a4.6 4.6 0 003.7-4.2zm-6.9 9c-.9 3.6-7.1 1.7-9.2 1.2l1.7-6.2c2 .5 8.5 1.4 7.5 5zm1-9c-.9 3.2-6 1.5-7.8 1.1l1.5-5.6c1.7.4 7.1 1.1 6.2 4.4z"/>';
+    var LOGO_USDC =
+        '<path fill="#fff" d="M1275 1158c0-146-87-196-262-216-125-17-150-50-150-109s41-96 125-96c75 0 116 25 137 88 4 12 17 21 29 21h67c17 0 29-13 29-29v-5c-17-91-92-162-187-170V542c0-17-13-30-34-34h-62c-17 0-29 13-34 34v95c-125 17-204 101-204 205 0 137 84 191 259 212 116 21 154 46 154 113s-59 112-138 112c-108 0-146-46-158-108-4-17-17-25-29-25h-71c-17 0-29 12-29 29v4c16 104 83 179 221 200v100c0 17 12 29 33 34h62c17 0 30-13 34-34v-100c125-21 208-108 208-221z"/>' +
+        '<path fill="#fff" d="M788 1596a620 620 0 0 1-371-800 616 616 0 0 1 371-371c16-8 25-21 25-42v-58c0-17-9-29-25-33-5 0-13 0-17 4a749 749 0 0 0 0 1429c17 8 33 0 37-17 5-4 5-8 5-16v-59c0-12-13-29-25-37zm441-1300c-16-9-33 0-37 16-4 5-4 9-4 17v58c0 17 12 34 25 42a620 620 0 0 1 370 800 616 616 0 0 1-371 371c-16 8-24 21-24 42v58c0 17 8 29 25 33 4 0 12 0 16-4a749 749 0 0 0 488-942 756 756 0 0 0-488-491z"/>';
+    var LOGO_USDT =
+        '<path fill-rule="evenodd" clip-rule="evenodd" fill="#fff" d="M400.49 428.59C469.28 428.59 526.77 416.96 540.82 401.42C528.89 388.24 485.74 377.86 430.94 375.02V407.85C421.13 408.36 410.93 408.61 400.48 408.61C390.03 408.61 379.83 408.36 370 407.85V375.02C315.22 377.86 272.05 388.24 260.12 401.42C274.19 416.96 331.69 428.59 400.48 428.59H400.49ZM522.71 274.06V319.27H430.94V350.62C495.4 353.97 543.77 367.75 544.13 384.24V418.62C543.77 435.11 495.4 448.86 430.94 452.22V529.16H370.01V452.22C305.55 448.87 257.2 435.11 256.84 418.62V384.24C257.2 367.75 305.55 353.97 370.01 350.62V319.27H278.24V274.06H522.72H522.71ZM242.15 202.11H564.31C572.01 202.11 579.1 206.16 582.94 212.74L676.79 373.9C681.65 382.26 680.21 392.81 673.27 399.58L414.93 651.76C406.55 659.93 393.09 659.93 384.73 651.76L126.71 399.92C119.62 392.98 118.28 382.13 123.51 373.73L223.84 212.24C227.75 205.96 234.69 202.12 242.16 202.12L242.15 202.11Z"/>';
+
+    var ASSETS = {
+        btc:  { unit: 'BTC',  amount: '0.0004 BTC', color: 'var(--bitcoin-orange)', logoVb: '1 0 53 52',     logoSvg: LOGO_BTC },
+        usdc: { unit: 'USDC', amount: '15 USDC',    color: 'var(--usdc-blue)',      logoVb: '0 0 2000 2000', logoSvg: LOGO_USDC },
+        usdt: { unit: 'USDT', amount: '15 USDT',    color: 'var(--usdt-green)',     logoVb: '0 0 800 800',   logoSvg: LOGO_USDT }
+    };
+    var currentAsset = 'btc';
+    var currentStage = null;
+    var rightPiece  = root.querySelector('.swa-right .swa-piece');
+    var rightLogo   = root.querySelector('.swa-right .swa-btc-logo');
+    var rightAmount = root.querySelector('.swa-right .swa-swap-amount span');
+
     var STAGES = [
         'swa-sign-swap',
         'swa-await-incoming',
@@ -991,6 +1081,29 @@
         'swa-complete':        '5/5 Finalizing swap'
     };
 
+    /* The "Locking up <asset>" step follows the selected right-side asset. */
+    function labelFor(cls) {
+        if (cls === 'swa-await-incoming') return '2/5 Locking up ' + ASSETS[currentAsset].unit;
+        return STEP_LABEL[cls];
+    }
+
+    /* Apply the selected right-side asset: recolour the whole right HTLC piece
+       (currentColor), swap its white logo glyph + amount, and refresh the
+       footer label if the "Locking up" step is currently showing. The loop is
+       untouched — only the right asset's presentation changes. */
+    function applyAsset(key) {
+        if (!ASSETS[key]) return;
+        currentAsset = key;
+        var a = ASSETS[key];
+        if (rightPiece) rightPiece.style.color = a.color;
+        if (rightLogo) {
+            rightLogo.setAttribute('viewBox', a.logoVb);
+            rightLogo.innerHTML = a.logoSvg;
+        }
+        if (rightAmount) rightAmount.textContent = a.amount;
+        if (stepEl && currentStage) stepEl.textContent = labelFor(currentStage);
+    }
+
     var timer = null;
 
     function clearStages() {
@@ -1003,7 +1116,8 @@
         clearStages();
         anim.classList.add(cls);
         root.classList.toggle('swa-is-complete', cls === 'swa-complete');
-        if (stepEl && STEP_LABEL[cls]) stepEl.textContent = STEP_LABEL[cls];
+        currentStage = cls;
+        if (stepEl && labelFor(cls)) stepEl.textContent = labelFor(cls);
 
         if (instant) {
             /* Force a reflow so the snapped-back styles are committed while
@@ -1040,6 +1154,24 @@
         if (timer) clearTimeout(timer);
         step(0, true);
     }
+
+    /* ---- right-side asset selector (NIM stays on the left) ---- */
+    (function () {
+        var demo = root.closest('.demo');
+        var select = demo ? demo.querySelector('.swa-select') : null;
+        if (!select) return;
+        var pills = select.querySelectorAll('.swa-select-pill');
+        select.addEventListener('click', function (e) {
+            var btn = e.target.closest('.swa-select-pill');
+            if (!btn || !select.contains(btn)) return;
+            for (var i = 0; i < pills.length; i++) {
+                var on = pills[i] === btn;
+                pills[i].classList.toggle('is-active', on);
+                pills[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+            }
+            applyAsset(btn.getAttribute('data-asset'));
+        });
+    })();
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', start);

@@ -371,7 +371,7 @@
       "section": "#swaps",
       "group": "swap",
       "interactive": true,
-      "description": "Live, draggable two-sided balance bar (NIM ↔ BTC) for an atomic swap; drag the centre handle to move value between the two assets, updating the percentages, change-bars and equilibrium marker."
+      "description": "Live, draggable two-sided balance bar (NIM ↔ BTC/USDC/USDT — pick the crypto side with the selector) for an atomic swap; drag the centre handle to move value between the two assets, updating the percentages, change-bars and equilibrium marker."
     },
     {
       "name": "SwapAnimation",
@@ -380,7 +380,7 @@
       "section": "#swaps",
       "group": "swap",
       "interactive": false,
-      "description": "Looping 'Performing Atomic Swap' animation — two interlocking HTLC puzzle pieces (green NIM + orange BTC) with a counter-rotating dashed spinner, a step label and a success overlay."
+      "description": "Looping 'Performing Atomic Swap' animation — two interlocking HTLC puzzle pieces (green NIM + a switchable BTC/USDC/USDT piece via the selector) with a counter-rotating dashed spinner, a step label and a success overlay."
     },
     {
       "name": "Swap icons",

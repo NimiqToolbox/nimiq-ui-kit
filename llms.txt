@@ -21,7 +21,7 @@ The site renders its real content (component catalog, code samples, swatches, ic
 
 Faithful STATIC reproductions of distinctive Nimiq product UI, rebuilt in the kit's own token-driven HTML/CSS/JS from the real source repos (nimiq/wallet, nimiq/hub, nimiq/keyguard) — design references, not the runnable upstream components, and NOT part of @nimiq/vue-components. Cataloged in the `reproductions` array of [components.json](components.json) and documented in [llms-full.txt](llms-full.txt).
 
-- [Swaps](https://nimiqtoolbox.github.io/nimiq-ui-kit/#swaps): SwapBalanceBar (draggable NIM↔BTC balance bar), SwapAnimation (looping atomic-swap animation) and the swap icons — from nimiq/wallet.
+- [Swaps](https://nimiqtoolbox.github.io/nimiq-ui-kit/#swaps): SwapBalanceBar (draggable NIM↔BTC/USDC/USDT balance bar), SwapAnimation (looping atomic-swap animation) and the swap icons — each swap has a BTC/USDC/USDT asset selector — from nimiq/wallet.
 - [Ledger](https://nimiqtoolbox.github.io/nimiq-ui-kit/#ledger): LedgerUi — the looping animated Ledger Nano connect illustration — from nimiq/hub.
 - [Login File](https://nimiqtoolbox.github.io/nimiq-ui-kit/#login-file): LoginFile account card (3 colour variants) and its LoginFileAnimation draw-in animation — from nimiq/keyguard.
 - [Backup & Recovery](https://nimiqtoolbox.github.io/nimiq-ui-kit/#backup-recovery): BackupCodesIllustration and the 24-word RecoveryWords grid — from nimiq/keyguard.

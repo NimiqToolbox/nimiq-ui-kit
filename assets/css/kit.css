@@ -352,6 +352,9 @@ pre.code .tok-cmt { color: #7a7fa6; }
     --sbb-blue: var(--nimiq-blue, #1F2348);
     --sbb-green: var(--nimiq-green, #21BCA5);
     --sbb-bitcoin: var(--bitcoin-orange, #F7931A);
+    --sbb-usdc: var(--usdc-blue, #2775CA);
+    --sbb-usdt: var(--usdt-green, #009393);
+    --sbb-right: var(--sbb-bitcoin);  /* active right-side asset colour — switched by the selector, defaults to BTC */
     --sbb-lightblue-bg: var(--nimiq-light-blue-bg, radial-gradient(100% 100% at bottom right, #265DD7, #0582CA));
     --sbb-text-50: var(--text-50, rgba(31, 35, 72, 0.5));
     --sbb-text-20: var(--text-20, rgba(31, 35, 72, 0.2));
@@ -423,7 +426,7 @@ pre.code .tok-cmt { color: #7a7fa6; }
 .sbb-right .sbb-cicon { grid-column: 2; }
 
 .sbb-left .sbb-cicon { color: var(--sbb-green); }
-.sbb-right .sbb-cicon { color: var(--sbb-bitcoin); }
+.sbb-right .sbb-cicon { color: var(--sbb-right); }
 
 /* ------------------------------------------------------ connecting lines */
 .sbb-connecting-lines {
@@ -490,7 +493,7 @@ pre.code .tok-cmt { color: #7a7fa6; }
     border-radius: 40px 9.6px 9.6px 40px;   /* 5rem / 1.2rem */
 }
 .sbb-bar-right {
-    color: var(--sbb-bitcoin);
+    color: var(--sbb-right);
     justify-content: flex-start;
     /* last-child: outer (right) end fully rounded, inner (left) end small */
     border-radius: 9.6px 40px 40px 9.6px;
@@ -624,6 +627,60 @@ pre.code .tok-cmt { color: #7a7fa6; }
 }
 .sbb-equilibrium.sbb-hidden { opacity: 0; }
 
+/* --------------------------------------------------------------------------- *
+ * sbb / swa — asset selector (compact segmented pills).
+ * A small NIM<->crypto asset switcher placed on the light demo background,
+ * above each swap stage. Default (BTC) pill is highlighted in the asset colour.
+ * The active pill's brand colour is supplied per-button via the --pill-color
+ * custom property (see the inline styles in index.html).
+ * --------------------------------------------------------------------------- */
+.sbb-select,
+.swa-select {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    padding: 14px 16px 2px;
+}
+.sbb-select-pill,
+.swa-select-pill {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 0;
+    margin: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    padding: 7px 15px;
+    border-radius: 500px;
+    color: rgba(31, 35, 72, 0.55);
+    background: rgba(31, 35, 72, 0.06);
+    transition: background 0.15s var(--nimiq-ease, cubic-bezier(0.25, 0, 0, 1)),
+                color 0.15s var(--nimiq-ease, cubic-bezier(0.25, 0, 0, 1)),
+                box-shadow 0.15s var(--nimiq-ease, cubic-bezier(0.25, 0, 0, 1));
+}
+.sbb-select-pill:hover,
+.swa-select-pill:hover {
+    color: rgba(31, 35, 72, 0.9);
+    background: rgba(31, 35, 72, 0.1);
+}
+.sbb-select-pill:focus-visible,
+.swa-select-pill:focus-visible {
+    outline: 2px solid var(--pill-color, #0582CA);
+    outline-offset: 2px;
+}
+.sbb-select-pill.is-active,
+.sbb-select-pill.is-active:hover,
+.swa-select-pill.is-active,
+.swa-select-pill.is-active:hover {
+    color: #fff;
+    background: var(--pill-color, #1F2348);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.13);
+}
+
 /* --- swi --- */
 /* swi — swap icons (SwapIcon / SwapSmallIcon / SwapMediumIcon), copied verbatim from source SVGs */
 
@@ -682,6 +739,8 @@ pre.code .tok-cmt { color: #7a7fa6; }
     --nimiq-blue: #1F2348;
     --nimiq-green: #21BCA5;
     --bitcoin-orange: #F7931A;
+    --usdc-blue: #2775CA;
+    --usdt-green: #009393;
     --nimiq-orange: #FC8702;
     --nimiq-ease: cubic-bezier(0.25, 0, 0, 1);
 
@@ -2504,3 +2563,5 @@ pre.code .tok-cmt { color: #7a7fa6; }
 @keyframes ppb-loading-small-hex {
   0%{stroke-dashoffset:13} 17%{stroke-dashoffset:38.42} 33%{stroke-dashoffset:63.84} 50%{stroke-dashoffset:89.25} 67%{stroke-dashoffset:114.66} 83%{stroke-dashoffset:140.08} 100%{stroke-dashoffset:165.5}
 }
+/* Vue QrCode renders to <canvas> (raster) — render at 2x and scale to 160px so it's sharp on retina, matching the wallet's own technique. */
+#vc-qr-mount canvas { width: 160px !important; height: 160px !important; }

@@ -930,10 +930,10 @@ Distinctive Nimiq product UI — from the **Wallet**, the **Hub** and the **Keyg
 The atomic-swap experience from the live wallet. Live section: [`/#swaps`](https://nimiqtoolbox.github.io/nimiq-ui-kit/#swaps).
 
 ### SwapBalanceBar
-A live, **draggable** two-sided balance bar (NIM ↔ BTC): drag the centre handle to move value between the two assets, and the percentages, change-bars and equilibrium marker update. Reproduced from `SwapBalanceBar` in nimiq/wallet.
+A live, **draggable** two-sided balance bar (NIM ↔ BTC/USDC/USDT — a small selector picks the crypto side): drag the centre handle to move value between the two assets, and the percentages, change-bars and equilibrium marker update. Reproduced from `SwapBalanceBar` in nimiq/wallet.
 
 ### SwapAnimation
-The looping "Performing Atomic Swap" animation — two interlocking HTLC puzzle pieces (a green NIM piece and an orange BTC piece) with a counter-rotating dashed spinner, a step label and a success overlay. Reproduced from `SwapAnimation` in nimiq/wallet.
+The looping "Performing Atomic Swap" animation — two interlocking HTLC puzzle pieces (a green NIM piece and a switchable BTC/USDC/USDT piece, chosen with a small selector) with a counter-rotating dashed spinner, a step label and a success overlay. Reproduced from `SwapAnimation` in nimiq/wallet.
 
 ### Swap icons — `SwapIcon` · `SwapSmallIcon` · `SwapMediumIcon`
 The three swap glyphs at their native sizes: `SwapIcon` (12×16), `SwapSmallIcon` (16×16) and `SwapMediumIcon` (24×24). Reproduced from nimiq/wallet.
