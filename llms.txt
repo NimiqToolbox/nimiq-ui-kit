@@ -15,7 +15,17 @@ The site renders its real content (component catalog, code samples, swatches, ic
 
 ## Components
 
-- [components.json](components.json): Structured manifest of the Vue component catalog (name, tag, group, description, props, events, slots, example) extracted from the `GROUPS` object in `assets/js/kit.js`.
+- [components.json](components.json): Structured manifest of the Vue component catalog (name, tag, group, description, props, events, slots, example) extracted from the `GROUPS` object in `assets/js/kit.js`. Its top-level `reproductions` array additionally catalogs the "Wallet · Hub · Keyguard" static reproductions (below).
+
+## Reproductions (Wallet · Hub · Keyguard)
+
+Faithful STATIC reproductions of distinctive Nimiq product UI, rebuilt in the kit's own token-driven HTML/CSS/JS from the real source repos (nimiq/wallet, nimiq/hub, nimiq/keyguard) — design references, not the runnable upstream components, and NOT part of @nimiq/vue-components. Cataloged in the `reproductions` array of [components.json](components.json) and documented in [llms-full.txt](llms-full.txt).
+
+- [Swaps](https://nimiqtoolbox.github.io/nimiq-ui-kit/#swaps): SwapBalanceBar (draggable NIM↔BTC balance bar), SwapAnimation (looping atomic-swap animation) and the swap icons — from nimiq/wallet.
+- [Ledger](https://nimiqtoolbox.github.io/nimiq-ui-kit/#ledger): LedgerUi — the looping animated Ledger Nano connect illustration — from nimiq/hub.
+- [Login File](https://nimiqtoolbox.github.io/nimiq-ui-kit/#login-file): LoginFile account card (3 colour variants) and its LoginFileAnimation draw-in animation — from nimiq/keyguard.
+- [Backup & Recovery](https://nimiqtoolbox.github.io/nimiq-ui-kit/#backup-recovery): BackupCodesIllustration and the 24-word RecoveryWords grid — from nimiq/keyguard.
+- [Security](https://nimiqtoolbox.github.io/nimiq-ui-kit/#security): PasswordInput / PasswordBox (PIN / password with eye toggle + hexagon spinner) and BalanceDistributionBar — from nimiq/keyguard.
 
 ## Icons
 
@@ -37,5 +47,7 @@ The site renders its real content (component catalog, code samples, swatches, ic
 - [@nimiq/vue-components](https://github.com/nimiq/vue-components): Source of the live Vue components.
 - [@nimiq/identicons (iqons)](https://github.com/nimiq/iqons): Identicon / avatar generator (v1.6.2, ISC).
 - [@nimiq/utils](https://github.com/nimiq/nimiq-utils): Formatting, validation, request-links, tweening, clipboard (Apache-2.0).
-- [nimiq/wallet](https://github.com/nimiq/wallet): Fonts (Muli, Fira Mono), opacity ladder, crypto colors, patterns.
+- [nimiq/wallet](https://github.com/nimiq/wallet): Fonts (Muli, Fira Mono), opacity ladder, crypto colors, patterns; source of the Swaps reproductions.
+- [nimiq/hub](https://github.com/nimiq/hub): Source of the animated Ledger connect (`LedgerUi`) reproduction.
+- [nimiq/keyguard](https://github.com/nimiq/keyguard): Source of the Login File, backup codes, recovery words, PIN and balance-bar reproductions.
 - [onmax/nimiq-ui](https://github.com/onmax/nimiq-ui): Upstream of the extended `nimiq-icons` set (MIT).

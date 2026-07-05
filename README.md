@@ -15,6 +15,12 @@ Nimiq packages.
   rendered live and interactive with prop controls and copyable code.
 - **Identicons, utilities & patterns** — a live identicon playground, running `@nimiq/utils`
   demos (amount formatting, address validation, request-links…), and composed wallet patterns.
+- **Wallet · Hub · Keyguard reproductions** — faithful **static** reproductions of distinctive
+  Nimiq product UI, rebuilt in the kit's own tokens/HTML/CSS/JS from `nimiq/wallet`, `nimiq/hub`
+  and `nimiq/keyguard`: the draggable swap balance bar & the atomic-swap animation, the animated
+  Ledger connect, the Login File card & its draw-in animation, the backup codes, the 24-word
+  recovery-words grid, the PIN / password field, and the balance-distribution bar. These are
+  design references — not the runnable upstream components, and not part of `@nimiq/vue-components`.
 - **Copyable tokens** — `tokens/tokens.css` (CSS custom properties) and `tokens/tokens.json`
   (machine-readable). Every icon also carries a plain-language summary in its `aria-label` and
   on `window.NimiqIconSummaries`, so agents can identify it without vision.
@@ -32,7 +38,8 @@ let any LLM read the **full** kit without a browser:
   tables), foundations, CSS components, every Vue component with props + copyable examples,
   identicons, utilities and icons. **Start here.**
 - **[`components.json`](components.json)** — structured manifest of the Vue catalog (31 demos
-  covering 34 component tags), extracted from the `GROUPS` object in `kit.js`.
+  covering 34 component tags), extracted from the `GROUPS` object in `kit.js`. Its top-level
+  `reproductions` array also lists the Wallet · Hub · Keyguard static reproductions.
 - **[`tokens/tokens.json`](tokens/tokens.json)** — machine-readable design tokens.
 - **[`AGENTS.md`](AGENTS.md)** — how to consume the kit and hand-regenerate these artifacts.
 
@@ -49,7 +56,9 @@ Every value, class and component comes from the real, current sources:
 | [@nimiq/vue-components](https://github.com/nimiq/vue-components) | The 34 live Vue components |
 | [@nimiq/identicons](https://github.com/nimiq/iqons) `1.6.2` | Identicon avatars |
 | [@nimiq/utils](https://github.com/nimiq/nimiq-utils) | Formatting, validation, request-links, tweening, clipboard |
-| [nimiq/wallet](https://github.com/nimiq/wallet) | Muli / Fira Mono fonts, opacity ladder, crypto colours, patterns |
+| [nimiq/wallet](https://github.com/nimiq/wallet) | Muli / Fira Mono fonts, opacity ladder, crypto colours, patterns; the Swaps reproductions |
+| [nimiq/hub](https://github.com/nimiq/hub) | The animated Ledger connect (`LedgerUi`) reproduction |
+| [nimiq/keyguard](https://github.com/nimiq/keyguard) | The Login File, backup codes, recovery words, PIN & balance-bar reproductions |
 
 The `@nimiq/vue-components` UMD bundle and the `@nimiq/utils` browser bundle under `assets/js/`
 are compiled from those sources; the live demos load Vue 2 alongside the UMD bundle and mount

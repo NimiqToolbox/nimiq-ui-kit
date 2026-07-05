@@ -715,3 +715,610 @@
 
   console.log('Nimiq UI Kit ready.');
 })();
+
+/* ==== Wallet-Hub-Keyguard reproductions — init/animation IIFEs ==== */
+
+/* --- sbb --- */
+/* sbb — SwapBalanceBar interactivity.
+   Self-contained IIFE. Finds each .sbb-root and wires the draggable handle
+   (pointer events: mouse + touch), the live header amounts, the diagonal
+   "change" hatch on the gaining side, the marching slide-hints, the scale
+   percentages, the equilibrium dot and the CurvedLine connectors.
+
+   Simplified static mechanic (as used by the wallet demo): a fixed fiat total
+   is conserved across the two sides. The boundary is a percentage p:
+   left width = p%, right width = (100 - p)%. Header amounts are derived from
+   each side's fiat value via fixed exchange rates. */
+(function () {
+    "use strict";
+
+    /* Demo constants ------------------------------------------------------ */
+    var TOTAL = 2500;      /* conserved fiat total (EUR)          */
+    var NIM_RATE = 0.0025; /* EUR per NIM                         */
+    var BTC_RATE = 50000;  /* EUR per BTC                         */
+    var P0 = 60;           /* equilibrium boundary (%) NIM 60/40  */
+    var REM = 8;           /* Nimiq rem base (px) used by source geometry */
+
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    function fmtNim(n) {
+        return Math.round(n).toLocaleString("en-US") + " NIM";
+    }
+    function fmtBtc(n) {
+        if (!isFinite(n) || n <= 0) return "0 BTC";
+        var s = n.toFixed(8).replace(/\.?0+$/, "");
+        if (s === "" || s === "0") s = "0";
+        return s + " BTC";
+    }
+
+    /* CurvedLine path — verbatim formula from CurvedLine.vue (height 35) */
+    function curve(width, height) {
+        var minWidth = 2;
+        var localWidth = width <= minWidth ? minWidth : Math.round(width);
+        var angleSize = Math.max(8, Math.min(12, Math.sqrt(localWidth)));
+        var y = Math.round(Math.max(3, Math.min(10, angleSize - width / 10)));
+        var x = Math.round(Math.max(0, Math.min(12, angleSize - width / 10)));
+        var d =
+            "M 1 1 v 1 s 0 " + (angleSize - y) + " " + (angleSize - x) + " " + angleSize +
+            " S " + (Math.round(width) - ((angleSize - x) * 2 + 1)) + " " + (height - (angleSize + y + 3)) +
+            " " + (Math.round(width) - (angleSize + 1) + x) + " " + (height - (angleSize + 3)) +
+            " s " + (angleSize - x) + " " + angleSize + " " + (angleSize - x) + " " + angleSize +
+            " v 1";
+        return { d: d, width: localWidth };
+    }
+
+    function init(root) {
+        if (root.getAttribute("data-sbb-ready") === "true") return;
+        root.setAttribute("data-sbb-ready", "true");
+
+        var el = {
+            track: root.querySelector(".sbb-bar-track"),
+            leftBar: root.querySelector(".sbb-bar-left"),
+            rightBar: root.querySelector(".sbb-bar-right"),
+            leftChange: root.querySelector(".sbb-bar-left .sbb-change"),
+            rightChange: root.querySelector(".sbb-bar-right .sbb-change"),
+            separator: root.querySelector(".sbb-separator"),
+            handle: root.querySelector(".sbb-handle"),
+            leftAmount: root.querySelector('.sbb-amount[data-side="left"]'),
+            rightAmount: root.querySelector('.sbb-amount[data-side="right"]'),
+            leftPct: root.querySelector(".sbb-left-percent"),
+            rightPct: root.querySelector(".sbb-right-percent"),
+            hintLeft: root.querySelector(".sbb-slidehint-left"),
+            hintRight: root.querySelector(".sbb-slidehint-right"),
+            equi: root.querySelector(".sbb-equilibrium"),
+            curveLeft: root.querySelector(".sbb-curve-left"),
+            curveRight: root.querySelector(".sbb-curve-right")
+        };
+
+        var p = P0;
+
+        function setCurve(svg, res, height) {
+            svg.setAttribute("viewBox", "0 0 " + res.width + " " + height);
+            svg.style.width = res.width + "px";
+            svg.style.height = height + "px";
+            var path = svg.querySelector("path");
+            if (path) path.setAttribute("d", res.d);
+        }
+
+        function updateCurves() {
+            if (!el.curveLeft || !el.curveRight) return;
+            var h = 35;
+            var lb = el.leftBar, rb = el.rightBar;
+            var leftWidth = lb.offsetWidth / 2 + lb.offsetLeft - REM * 2.5;
+            var rightWidth = rb.offsetWidth / 2 - REM * 2.5;
+            setCurve(el.curveLeft, curve(leftWidth, h), h);
+            setCurve(el.curveRight, curve(rightWidth, h), h);
+        }
+
+        function render() {
+            var leftFiat = TOTAL * p / 100;
+            var rightFiat = TOTAL - leftFiat;
+
+            el.leftBar.style.flexGrow = String(p);
+            el.rightBar.style.flexGrow = String(100 - p);
+
+            el.leftAmount.textContent = fmtNim(leftFiat / NIM_RATE);
+            el.rightAmount.textContent = fmtBtc(rightFiat / BTC_RATE);
+
+            var leftPct = Math.round(p);
+            var rightPct = Math.round(100 - p);
+
+            /* gaining side's hatch = |p - p0| as a fraction of that side */
+            var leftChangePct = 0, rightChangePct = 0;
+            if (p > P0) leftChangePct = (p - P0) / p * 100;
+            else if (p < P0) rightChangePct = (P0 - p) / (100 - p) * 100;
+            el.leftChange.style.width = leftChangePct + "%";
+            el.rightChange.style.width = rightChangePct + "%";
+
+            el.leftPct.textContent = leftPct + "%";
+            el.rightPct.textContent = rightPct + "%";
+            var equiX = P0;
+            el.leftPct.classList.toggle("sbb-hidden",
+                leftPct <= 5 || (equiX < 10 && equiX > 5));
+            el.rightPct.classList.toggle("sbb-hidden",
+                rightPct <= 5 || (equiX > 90 && equiX < 95));
+
+            /* slide hints appear when a side collapses to <= 2% */
+            el.hintLeft.classList.toggle("sbb-hint-visible", rightPct <= 2);
+            el.hintRight.classList.toggle("sbb-hint-visible", leftPct <= 2);
+
+            /* equilibrium dot: at p0, hidden when near the handle or the edges */
+            var trackW = el.track.offsetWidth || root.offsetWidth || 1;
+            var thr = 8 / trackW * 100;
+            el.equi.style.left = equiX + "%";
+            el.equi.classList.toggle("sbb-hidden",
+                Math.abs(p - equiX) < thr || equiX <= 5 || equiX >= 95);
+
+            updateCurves();
+        }
+
+        /* ---- dragging (pointer events unify mouse + touch) ---- */
+        var grabbing = false, startX = 0, startP = 0;
+
+        function down(e) {
+            grabbing = true;
+            startX = e.clientX;
+            startP = p;
+            root.classList.remove("sbb-animating");
+            if (el.handle.setPointerCapture && e.pointerId != null) {
+                try { el.handle.setPointerCapture(e.pointerId); } catch (_) {}
+            }
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        function move(e) {
+            if (!grabbing) return;
+            var w = el.track.offsetWidth || 1;
+            /* p = (clientX - barLeft)/barWidth*100, applied as a grab-relative
+               delta so the handle never jumps under the cursor */
+            p = clamp(startP + (e.clientX - startX) / w * 100, 0, 100);
+            render();
+        }
+        function up(e) {
+            grabbing = false;
+            if (el.handle.releasePointerCapture && e.pointerId != null) {
+                try { el.handle.releasePointerCapture(e.pointerId); } catch (_) {}
+            }
+        }
+
+        el.handle.addEventListener("pointerdown", down);
+        el.handle.addEventListener("pointermove", move);
+        el.handle.addEventListener("pointerup", up);
+        el.handle.addEventListener("pointercancel", up);
+
+        /* ---- click a bar to move the handle there (animated) ---- */
+        function animateTo(target) {
+            root.classList.add("sbb-animating");
+            p = clamp(target, 0, 100);
+            render();
+            window.setTimeout(function () {
+                root.classList.remove("sbb-animating");
+            }, 320);
+        }
+        el.track.addEventListener("pointerdown", function (e) {
+            if (e.target.closest(".sbb-separator")) return; /* handled by handle */
+            var r = el.track.getBoundingClientRect();
+            animateTo((e.clientX - r.left) / r.width * 100);
+        });
+
+        /* ---- click the equilibrium dot to reset ---- */
+        el.equi.addEventListener("click", function () { animateTo(P0); });
+
+        window.addEventListener("resize", render);
+        render();
+    }
+
+    function boot() {
+        var roots = document.querySelectorAll(".sbb-root");
+        for (var i = 0; i < roots.length; i++) init(roots[i]);
+    }
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot);
+    } else {
+        boot();
+    }
+})();
+
+/* --- swi --- */
+/* swi — swap icons. Pure display: the three swap glyphs are inline SVGs that
+   inherit stroke:currentColor from CSS. No interactivity required, so this is a
+   near-no-op IIFE that simply confirms the root is present. */
+(function () {
+    "use strict";
+    function init() {
+        var root = document.querySelector(".swi-root");
+        if (!root) return;
+        // Nothing to wire — icons are static. Marker attribute for parity with the kit.
+        root.setAttribute("data-swi-ready", "true");
+    }
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+    } else {
+        init();
+    }
+})();
+
+/* --- swa --- */
+/* =====================================================================
+   swa — Atomic Swap animation loop.
+   Self-contained IIFE. Cycles the source's state classes on
+   `.swa-animation` (sign-swap -> await-incoming -> create-outgoing ->
+   await-secret -> settle-incoming -> complete), waits, then restarts.
+   No Vue, no state store, no network — a pure setTimeout chain.
+   ===================================================================== */
+(function () {
+    'use strict';
+
+    var root = document.querySelector('.swa-root');
+    if (!root) return;
+    var anim = root.querySelector('.swa-animation');
+    var stepEl = root.querySelector('.swa-step');
+    if (!anim) return;
+
+    var STAGES = [
+        'swa-sign-swap',
+        'swa-await-incoming',
+        'swa-create-outgoing',
+        'swa-await-secret',
+        'swa-settle-incoming',
+        'swa-complete'
+    ];
+
+    /* Time SPENT in each stage before advancing (ms). Mirrors the source
+       processStateChange() delays (0 / 1 / 2.6 / 2.6 / 1.6 / 1 s). The one
+       deviation: `sign-swap` is held for a short, perceptible beat rather
+       than the source's literal 0s (the real wallet blocked there on the
+       user signing) so the zoomed-in opening pose is visible in the loop. */
+    var DURATION = {
+        'swa-sign-swap':       700,
+        'swa-await-incoming':  1000,
+        'swa-create-outgoing': 2600,
+        'swa-await-secret':    2600,
+        'swa-settle-incoming': 1600,
+        'swa-complete':        1000
+    };
+
+    /* Extra hold on the green success screen before the loop restarts. */
+    var SUCCESS_HOLD = 1000;
+
+    /* Footer step label per stage (source nq-card-footer strings). */
+    var STEP_LABEL = {
+        'swa-sign-swap':       '1/5 Setting up atomic swap',
+        'swa-await-incoming':  '2/5 Locking up BTC',
+        'swa-create-outgoing': '3/5 Locking up NIM',
+        'swa-await-secret':    '4/5 Awaiting swap secret',
+        'swa-settle-incoming': '5/5 Finalizing swap',
+        'swa-complete':        '5/5 Finalizing swap'
+    };
+
+    var timer = null;
+
+    function clearStages() {
+        for (var i = 0; i < STAGES.length; i++) anim.classList.remove(STAGES[i]);
+    }
+
+    function setStage(cls, instant) {
+        if (instant) root.classList.add('swa-no-anim');
+
+        clearStages();
+        anim.classList.add(cls);
+        root.classList.toggle('swa-is-complete', cls === 'swa-complete');
+        if (stepEl && STEP_LABEL[cls]) stepEl.textContent = STEP_LABEL[cls];
+
+        if (instant) {
+            /* Force a reflow so the snapped-back styles are committed while
+               transitions/animations are suppressed, then re-enable them on
+               the next frame. This makes the complete -> sign-swap loop
+               restart invisible (no reverse slide / fade). */
+            /* eslint-disable-next-line no-unused-expressions */
+            root.offsetHeight; // reflow
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    root.classList.remove('swa-no-anim');
+                });
+            });
+        }
+    }
+
+    function step(index, instant) {
+        var cls = STAGES[index];
+        setStage(cls, instant);
+
+        var isLast = index === STAGES.length - 1; // swa-complete
+        var wait = DURATION[cls] + (isLast ? SUCCESS_HOLD : 0);
+
+        timer = setTimeout(function () {
+            if (isLast) {
+                step(0, true);          // restart: snap instantly to the opening pose
+            } else {
+                step(index + 1, false); // advance with animated transition
+            }
+        }, wait);
+    }
+
+    function start() {
+        if (timer) clearTimeout(timer);
+        step(0, true);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start);
+    } else {
+        start();
+    }
+})();
+
+/* --- lgu --- */
+/* ============================================================================
+   lgu — Ledger connect UI loop driver
+   Self-contained IIFE. Cycles the `connect-animation-step` attribute
+   1 -> 2 -> 3 -> 1 … forever on every `.lgu-device-container`, with
+   `illustration="connecting"`, so the CSS keyframes replay seamlessly.
+
+   Step 1: cable slides in + device fades in
+   Step 2: device scales up to the PIN screen + dots fill in a staggered wave
+   Step 3: device fades out -> dashboard flash -> app screen
+   Interval matches the CSS token --lgu-connect-animation-step-duration: 3s.
+   ============================================================================ */
+(function () {
+    'use strict';
+
+    // Keep in sync with --lgu-connect-animation-step-duration (3s).
+    var STEP_DURATION_MS = 3000;
+    var STEPS = 3;
+
+    function start() {
+        var containers = document.querySelectorAll('.lgu-device-container');
+        if (!containers.length) return;
+
+        // Drive every instance in lockstep so multiple embeds stay in sync.
+        var step = 1;
+
+        function apply() {
+            for (var i = 0; i < containers.length; i++) {
+                containers[i].setAttribute('illustration', 'connecting');
+                containers[i].setAttribute('connect-animation-step', String(step));
+            }
+        }
+
+        apply();
+        setInterval(function () {
+            step = (step % STEPS) + 1;
+            apply();
+        }, STEP_DURATION_MS);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start);
+    } else {
+        start();
+    }
+})();
+
+/* --- lofc --- */
+/* ==========================================================================
+   lofc — Nimiq Login File card (static).
+   The card is fully declarative (HTML + CSS); there is no behavior to drive.
+   This no-op IIFE exists only to complete the component trio.
+   ========================================================================== */
+(function () {
+    'use strict';
+    /* intentionally empty — the Login File card is static */
+}());
+
+/* --- lofa --- */
+/* ==========================================================================
+   lofa — Nimiq Login File draw-in animation (autonomous loop)
+
+   Reproduces the Keyguard interaction (LoginFileAnimation.js) where the user
+   types a password — each keystroke calls setStep(length), popping in one QR
+   square (steps 1..8) — and on confirm calls setColor(index), transitioning
+   the line-art file into a filled, colored account card.
+
+   Here there is no input: an IIFE drives the same state machine on a loop —
+   breathe -> draw in squares 1..8 -> colorize (random palette color) -> hold
+   -> reset -> repeat with a DIFFERENT color. No framework, state, or network.
+   ========================================================================== */
+(function () {
+    'use strict';
+
+    var STEPS = 8;                 // LoginFileAnimation.STEPS
+    var COLORS = 10;               // LoginFileConfig entries (lofa-c0 .. lofa-c9)
+
+    var root = document.querySelector('.lofa-root');
+    var background = root && root.querySelector('.lofa-background');
+    if (!root || !background) return;
+
+    var currentColor = -1;
+
+    // --- setStep: cumulatively add step-0..step, remove above (verbatim logic)
+    function setStep(step) {
+        for (var i = STEPS; i > step; i--) {
+            root.classList.remove('lofa-step-' + i);
+        }
+        for (var j = 0; j <= Math.min(step, STEPS); j++) {
+            root.classList.add('lofa-step-' + j);
+        }
+    }
+
+    // --- setColor: paint the background gradient + transition to colored state
+    function setColor(color) {
+        currentColor = color;
+        background.classList.add('lofa-c' + color);
+        root.classList.add('lofa-colored');
+        setStep(0);
+    }
+
+    // --- reset: back to the clear, breathing line-art state
+    function reset() {
+        if (currentColor >= 0) background.classList.remove('lofa-c' + currentColor);
+        root.classList.remove('lofa-colored');
+        setStep(0);
+    }
+
+    function randomColor() {
+        var c = Math.floor(Math.random() * COLORS);
+        if (c === currentColor) c = (c + 1) % COLORS; // ensure a different color
+        return c;
+    }
+
+    // --- timeline ---------------------------------------------------------
+    var INITIAL_HOLD = 700;   // breathe before drawing in
+    var STEP_INTERVAL = 350;  // per square, matches the "typing" cadence
+    var PRE_COLOR_PAUSE = 300; // beat after the 8th square (key visible)
+    var COLOR_HOLD = 2200;    // hold the finished, colored card
+    var RESET_HOLD = 950;     // breathe again before the next cycle
+
+    var timers = [];
+    function later(fn, delay) { timers.push(setTimeout(fn, delay)); }
+    function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+    function cycle() {
+        clearTimers();
+        reset();
+
+        // Draw in squares 1..8 after the initial breathing hold.
+        for (var s = 1; s <= STEPS; s++) {
+            (function (step) {
+                later(function () { setStep(step); }, INITIAL_HOLD + step * STEP_INTERVAL);
+            })(s);
+        }
+
+        var colorAt = INITIAL_HOLD + STEPS * STEP_INTERVAL + PRE_COLOR_PAUSE;
+        later(function () { setColor(randomColor()); }, colorAt);
+
+        // Reset, hold on the clear state, then start the next cycle.
+        var resetAt = colorAt + COLOR_HOLD;
+        later(reset, resetAt);
+        later(cycle, resetAt + RESET_HOLD);
+    }
+
+    // Respect users who prefer reduced motion: show one finished colored card.
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+        setStep(STEPS);
+        setColor(6); // teal
+    } else {
+        cycle();
+    }
+}());
+
+/* --- bcb --- */
+/* =============================================================================
+ * bcb — Backup-code chat bubbles (animation loop)
+ *
+ * A self-contained IIFE state machine. It replaces the source's View Transition
+ * choreography (BackupCodesIllustration.js) with a CSS-transition-driven loop
+ * that cycles through the SAME six steps. For each step the per-bubble state
+ * classes (masked / faded / zoomed / complete) are exactly those computed by
+ * BackupCodesIllustration._getMessageBubbleClasses in the Keyguard source.
+ *
+ * Sequence: intro -> send code 1 -> code 1 complete -> send code 2
+ *           -> code 2 complete -> success (both done) -> reset -> repeat.
+ * ========================================================================== */
+(function () {
+    'use strict';
+
+    var root = document.querySelector('.bcb-root');
+    if (!root) return;
+
+    var bubbles = {
+        1: root.querySelector('.bcb-code-1'),
+        2: root.querySelector('.bcb-code-2'),
+    };
+    if (!bubbles[1] || !bubbles[2]) return;
+
+    var STATE_CLASSES = ['bcb-masked', 'bcb-faded', 'bcb-zoomed', 'bcb-complete'];
+    var STEP_CLASSES = [
+        'bcb-intro',
+        'bcb-send-code-1',
+        'bcb-send-code-1-confirm',
+        'bcb-send-code-2',
+        'bcb-send-code-2-confirm',
+        'bcb-success',
+    ];
+
+    // Per-step definition. `code1` / `code2` list the state suffixes to apply to
+    // each bubble (mirrors _getMessageBubbleClasses for codeIndex 1 and 2).
+    var steps = [
+        { step: 'bcb-intro',                dwell: 1800, code1: ['masked'],                     code2: ['masked'] },
+        { step: 'bcb-send-code-1',          dwell: 1500, code1: ['zoomed'],                     code2: ['masked', 'faded', 'zoomed'] },
+        { step: 'bcb-send-code-1-confirm',  dwell: 1400, code1: ['zoomed', 'complete'],         code2: ['masked', 'faded', 'zoomed'] },
+        { step: 'bcb-send-code-2',          dwell: 1500, code1: ['faded', 'zoomed', 'complete'], code2: ['zoomed'] },
+        { step: 'bcb-send-code-2-confirm',  dwell: 1400, code1: ['faded', 'zoomed', 'complete'], code2: ['zoomed', 'complete'] },
+        { step: 'bcb-success',              dwell: 2400, code1: ['complete'],                   code2: ['complete'] },
+    ];
+
+    function applyState(bubble, names) {
+        STATE_CLASSES.forEach(function (c) { bubble.classList.remove(c); });
+        names.forEach(function (n) { bubble.classList.add('bcb-' + n); });
+    }
+
+    function render(s) {
+        STEP_CLASSES.forEach(function (c) { root.classList.toggle(c, c === s.step); });
+        applyState(bubbles[1], s.code1);
+        applyState(bubbles[2], s.code2);
+    }
+
+    // Respect reduced-motion: render the intro state statically, no loop.
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        render(steps[0]);
+        return;
+    }
+
+    var i = 0;
+    (function tick() {
+        var s = steps[i];
+        render(s);
+        i = (i + 1) % steps.length;
+        window.setTimeout(tick, s.dwell);
+    })();
+})();
+
+/* --- rwg --- */
+/* =============================================================================
+ * rwg — 24-word Recovery Words grid
+ *
+ * The display variant of RecoveryWords (providesInput === false) is a purely
+ * static, non-interactive read-out of the seed phrase. There is no behaviour to
+ * wire up, so this is an intentional no-op IIFE kept for the component trio.
+ * ========================================================================== */
+(function () {
+    'use strict';
+    /* Static grid — no interactivity. */
+})();
+
+/* --- ppb --- */
+/* ppb — eye show/hide toggle.
+ * Mirrors PasswordInput._changeVisibility: swaps input type password<->text
+ * and toggles the `visible` state class that switches the eye glyph.
+ * Self-contained IIFE, no dependencies. */
+(function () {
+    'use strict';
+
+    var buttons = document.querySelectorAll('.ppb-eye-button');
+
+    Array.prototype.forEach.call(buttons, function (button) {
+        var container = button.closest('.ppb-input-container') || document;
+        var input = container.querySelector('.ppb-password');
+        if (!input) return;
+
+        button.addEventListener('click', function () {
+            var reveal = input.getAttribute('type') === 'password';
+            input.setAttribute('type', reveal ? 'text' : 'password');
+            button.classList.toggle('ppb-visible', reveal);
+            button.setAttribute('aria-pressed', String(reveal));
+            button.setAttribute('aria-label', reveal ? 'Hide password' : 'Show password');
+            input.focus();
+        });
+    });
+})();
+
+/* --- bdb --- */
+/* bdb — BalanceDistributionBar (static display variant).
+ * The source display bar has no interactivity (drag lives in the swap-slider
+ * variant, not reproduced here), so this is a deliberate no-op IIFE. */
+(function () {
+    'use strict';
+    /* Static component — nothing to wire. */
+})();

@@ -15,7 +15,8 @@
       "amountsUnit": "Crypto amounts are integers in the smallest unit (luna for NIM; NIM uses 5 decimals, so 1 NIM = 100000 luna). Fiat amounts are decimal numbers.",
       "binding": "Examples use Vue 2 template syntax; a leading ':' marks a bound (JS-evaluated) prop, '@' marks an event listener, 'slot=' marks a named slot.",
       "assetPath": "The kit calls NimiqVueComponents.setAssetPublicPath('assets/js/vue-components/') before mounting."
-    }
+    },
+    "reproductionsNote": "The top-level `reproductions` array (a sibling of `components`, listed after it) catalogs the kit's 'Wallet · Hub · Keyguard' area: faithful STATIC reproductions of distinctive Nimiq product UI, rebuilt in the kit's own token-driven HTML/CSS/JS from the real source repos (nimiq/wallet, nimiq/hub, nimiq/keyguard). They are design references, NOT the runnable upstream components and NOT part of @nimiq/vue-components (the `components` array). Each entry has: name; sourceRepo; sourceComponent; section (the #id anchor on the live site, e.g. #swaps); group (swap|ledger|keyguard); interactive (bool — true when the demo responds to user input, e.g. a draggable handle or a reveal toggle; looping animations are not counted as interactive); description."
   },
   "components": [
     {
@@ -360,6 +361,98 @@
       "props": [],
       "events": ["result", "error", "cancel"],
       "example": "<QrScanner @result=\"onResult\" @error=\"onError\" @cancel=\"onCancel\" />"
+    }
+  ],
+  "reproductions": [
+    {
+      "name": "SwapBalanceBar",
+      "sourceRepo": "nimiq/wallet",
+      "sourceComponent": "SwapBalanceBar",
+      "section": "#swaps",
+      "group": "swap",
+      "interactive": true,
+      "description": "Live, draggable two-sided balance bar (NIM ↔ BTC) for an atomic swap; drag the centre handle to move value between the two assets, updating the percentages, change-bars and equilibrium marker."
+    },
+    {
+      "name": "SwapAnimation",
+      "sourceRepo": "nimiq/wallet",
+      "sourceComponent": "SwapAnimation",
+      "section": "#swaps",
+      "group": "swap",
+      "interactive": false,
+      "description": "Looping 'Performing Atomic Swap' animation — two interlocking HTLC puzzle pieces (green NIM + orange BTC) with a counter-rotating dashed spinner, a step label and a success overlay."
+    },
+    {
+      "name": "Swap icons",
+      "sourceRepo": "nimiq/wallet",
+      "sourceComponent": "SwapIcon · SwapSmallIcon · SwapMediumIcon",
+      "section": "#swaps",
+      "group": "swap",
+      "interactive": false,
+      "description": "The three swap glyphs at their native sizes: SwapIcon (12×16), SwapSmallIcon (16×16) and SwapMediumIcon (24×24)."
+    },
+    {
+      "name": "LedgerUi",
+      "sourceRepo": "nimiq/hub",
+      "sourceComponent": "LedgerUi",
+      "section": "#ledger",
+      "group": "ledger",
+      "interactive": false,
+      "description": "Looping animated Ledger Nano connect illustration — cable, PIN-entry screen and open-app screen states."
+    },
+    {
+      "name": "LoginFile",
+      "sourceRepo": "nimiq/keyguard",
+      "sourceComponent": "LoginFile",
+      "section": "#login-file",
+      "group": "keyguard",
+      "interactive": false,
+      "description": "Keyguard's downloadable account card (the login file) — QR, key icon, Nimiq wordmark, label, date and security waves — shown in its three colour variants (teal, blue, orange)."
+    },
+    {
+      "name": "LoginFileAnimation",
+      "sourceRepo": "nimiq/keyguard",
+      "sourceComponent": "LoginFileAnimation",
+      "section": "#login-file",
+      "group": "keyguard",
+      "interactive": false,
+      "description": "The line-art draw-in animation of the login file: border, title, date, QR and logo strokes drawing themselves in."
+    },
+    {
+      "name": "BackupCodesIllustration",
+      "sourceRepo": "nimiq/keyguard",
+      "sourceComponent": "BackupCodesIllustration",
+      "section": "#backup-recovery",
+      "group": "keyguard",
+      "interactive": false,
+      "description": "Two gradient chat-bubble backup codes ('Nimiq Backup Code 1/2' and '2/2') as shown when backing up an account."
+    },
+    {
+      "name": "RecoveryWords",
+      "sourceRepo": "nimiq/keyguard",
+      "sourceComponent": "RecoveryWords",
+      "section": "#backup-recovery",
+      "group": "keyguard",
+      "interactive": false,
+      "description": "The 24-word recovery phrase laid out as a numbered grid (recovery-words input fields shown in their completed state)."
+    },
+    {
+      "name": "PasswordInput / PasswordBox",
+      "sourceRepo": "nimiq/keyguard",
+      "sourceComponent": "PasswordInput · PasswordBox",
+      "section": "#security",
+      "group": "keyguard",
+      "interactive": true,
+      "description": "PIN / password field: masked dots with a show/hide eye toggle, plus the hexagon loading spinner shown while unlocking."
+    },
+    {
+      "name": "BalanceDistributionBar",
+      "sourceRepo": "nimiq/keyguard",
+      "sourceComponent": "BalanceDistributionBar",
+      "section": "#security",
+      "group": "keyguard",
+      "interactive": false,
+      "description": "Segmented balance-distribution bar splitting holdings across assets (NIM, BTC, USDC) with a separator and an animated active/growing segment."
     }
   ]
 }

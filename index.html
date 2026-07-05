@@ -127,6 +127,17 @@
         <a href="#identicons">Identicons</a>
         <a href="#utilities">Utilities</a>
         <a href="#patterns">Patterns</a>
+      </div>
+      <div class="kit-nav-group">
+        <div class="kit-nav-group-title">Wallet · Hub · Keyguard</div>
+        <a href="#swaps">Swaps</a>
+        <a href="#ledger">Ledger</a>
+        <a href="#login-file">Login File</a>
+        <a href="#backup-recovery">Backup &amp; Recovery</a>
+        <a href="#security">Security</a>
+      </div>
+      <div class="kit-nav-group">
+        <div class="kit-nav-group-title">Reference</div>
         <a href="#resources">Resources</a>
         <a href="#llms">For LLMs</a>
       </div>
@@ -518,6 +529,528 @@
         <h2>Patterns <span class="kit-provenance">nimiq/wallet</span></h2>
         <p class="kit-section-lede">Composed examples built from the primitives above, as they appear in the wallet.</p>
         <div id="patterns-mount"></div>
+      </section>
+
+      <!-- ===================== SWAPS ===================== -->
+      <section class="kit-section" id="swaps">
+        <h2>Swaps <span class="kit-provenance">nimiq/wallet</span></h2>
+        <p class="kit-section-lede">The atomic-swap experience, reproduced from the live wallet. Drag the balance bar to rebalance a swap; the animation shows the two HTLCs interlocking.</p>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Swap balance bar <small>SwapBalanceBar</small></span></div>
+          <div class="demo-stage center">
+            <div class="sbb-root">
+                <div class="sbb-header">
+                    <!-- LEFT: NIM -->
+                    <div class="sbb-currency sbb-left sbb-nimiq">
+                        <svg class="sbb-cicon" width="42" height="42" viewBox="0 0 27 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="currentColor" d="M26.6991 10.875L21.0741 1.125C20.6691 0.4275 19.9266 0 19.1241 0H7.87414C7.07164 0 6.32914 0.4275 5.92789 1.125L0.302891 10.875C-0.0983594 11.5725 -0.0983594 12.4275 0.302891 13.125L5.92789 22.875C6.32914 23.5725 7.07164 24 7.87414 24H19.1241C19.9266 24 20.6691 23.5725 21.0704 22.875L26.6954 13.125C27.1004 12.4275 27.1004 11.5725 26.6991 10.875Z"/>
+                        </svg>
+                        <label class="sbb-clabel">Nimiq</label>
+                        <span class="sbb-amount" data-side="left">600,000 NIM</span>
+                    </div>
+                    <!-- RIGHT: BTC -->
+                    <div class="sbb-currency sbb-right sbb-bitcoin">
+                        <label class="sbb-clabel">Bitcoin</label>
+                        <span class="sbb-amount" data-side="right">0.02 BTC</span>
+                        <svg class="sbb-cicon" width="42" height="42" viewBox="0 0 42 42" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <circle fill="#fff" cx="21" cy="21" r="18" />
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M15.918 41.371c11.253 2.805 22.649-4.04 25.454-15.291C44.176 14.83 37.33 3.433 26.077.628 14.828-2.176 3.433 4.67.629 15.922c-2.806 11.25 4.041 22.645 15.289 25.45zm10.31-29.01c3.041.997 5.265 2.49 4.828 5.27-.316 2.033-1.501 3.018-3.075 3.364 2.161 1.07 3.26 2.712 2.213 5.557-1.3 3.533-4.388 3.831-8.495 3.092l-.998 3.8-2.407-.571.983-3.75a96.07 96.07 0 01-1.919-.474l-.986 3.768-2.406-.571.997-3.807-.652-.161c-.351-.087-.706-.175-1.065-.26l-3.135-.744 1.196-2.623s1.775.448 1.75.415c.682.16.985-.262 1.104-.544l1.575-6.007.255.06a2.197 2.197 0 00-.25-.076l1.123-4.288c.03-.487-.147-1.101-1.122-1.333.038-.024-1.75-.413-1.75-.413l.641-2.448 3.322.79-.003.011c.5.118 1.014.23 1.538.344L20.477 7l2.407.571-.967 3.69c.644.137 1.288.281 1.93.431l.96-3.664 2.408.57-.986 3.764zm-7.622 13.646c1.964.494 6.264 1.575 6.947-1.037.7-2.667-3.463-3.556-5.496-3.991-.229-.049-.43-.092-.594-.13l-1.323 5.043c.134.031.291.07.466.115zm1.857-7.369c1.638.416 5.212 1.324 5.835-1.048.636-2.428-2.838-3.159-4.535-3.516-.19-.04-.359-.076-.496-.108l-1.2 4.574c.114.027.247.06.396.098z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="sbb-connecting-lines">
+                    <svg class="sbb-curve sbb-curve-left" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 35">
+                        <path d="M 1 1" />
+                    </svg>
+                    <svg class="sbb-curve sbb-curve-right" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 35">
+                        <path d="M 1 1" />
+                    </svg>
+                </div>
+
+                <div class="sbb-bar-track">
+                    <div class="sbb-bar sbb-bar-left sbb-nimiq">
+                        <div class="sbb-change"></div>
+                    </div>
+                    <div class="sbb-separator">
+                        <div class="sbb-slidehint sbb-slidehint-left">
+                            <svg viewBox="0 0 6 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.096 2.722a.7.7 0 010 1.174L1.081 6.504A.7.7 0 010 5.917V.7A.7.7 0 011.081.114l4.015 2.608z"/></svg>
+                            <svg viewBox="0 0 6 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.096 2.722a.7.7 0 010 1.174L1.081 6.504A.7.7 0 010 5.917V.7A.7.7 0 011.081.114l4.015 2.608z"/></svg>
+                            <svg viewBox="0 0 6 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.096 2.722a.7.7 0 010 1.174L1.081 6.504A.7.7 0 010 5.917V.7A.7.7 0 011.081.114l4.015 2.608z"/></svg>
+                        </div>
+                        <div class="sbb-handle"></div>
+                        <div class="sbb-slidehint sbb-slidehint-right">
+                            <svg viewBox="0 0 6 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.096 2.722a.7.7 0 010 1.174L1.081 6.504A.7.7 0 010 5.917V.7A.7.7 0 011.081.114l4.015 2.608z"/></svg>
+                            <svg viewBox="0 0 6 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.096 2.722a.7.7 0 010 1.174L1.081 6.504A.7.7 0 010 5.917V.7A.7.7 0 011.081.114l4.015 2.608z"/></svg>
+                            <svg viewBox="0 0 6 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.096 2.722a.7.7 0 010 1.174L1.081 6.504A.7.7 0 010 5.917V.7A.7.7 0 011.081.114l4.015 2.608z"/></svg>
+                        </div>
+                    </div>
+                    <div class="sbb-bar sbb-bar-right sbb-bitcoin">
+                        <div class="sbb-change"></div>
+                    </div>
+                </div>
+
+                <div class="sbb-scale">
+                    <div class="sbb-tenth"><div class="sbb-left-percent">60%</div></div>
+                    <div class="sbb-tenth"></div>
+                    <div class="sbb-tenth"></div>
+                    <div class="sbb-tenth"></div>
+                    <div class="sbb-tenth"></div>
+                    <div class="sbb-tenth"></div>
+                    <div class="sbb-tenth"></div>
+                    <div class="sbb-tenth"></div>
+                    <div class="sbb-tenth"></div>
+                    <div class="sbb-tenth"><div class="sbb-right-percent">40%</div></div>
+                </div>
+
+                <div class="sbb-equilibrium"></div>
+            </div>
+          </div>
+        </div>
+        <p class="kit-note">Drag the ↔ handle to move value between the two assets.</p>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Atomic swap animation <small>SwapAnimation</small></span></div>
+          <div class="demo-stage center">
+            <div class="swa-root">
+                <!-- Success overlay (nq-green-bg + white checkmark) -->
+                <div class="swa-success">
+                    <svg class="swa-check" viewBox="0 0 74 74" aria-hidden="true">
+                        <path d="M71.12 1.84a4.5 4.5 0 0 0-6.28 1.04l-42.1 58.74L8.68 47.54a4.5 4.5 0 1 0-6.36 6.37l17.8 17.81a4.57 4.57 0 0 0 6.84-.56l45.2-63.03a4.5 4.5 0 0 0-1.04-6.29z" fill="currentColor" stroke="currentColor" stroke-width=".8"/>
+                    </svg>
+                    <h1 class="swa-success-title">Atomic Swap successful!</h1>
+                </div>
+
+                <!-- Header -->
+                <div class="swa-header">
+                    <h1 class="swa-h1">Performing Atomic Swap</h1>
+                    <div class="swa-notice">This swap is as decentralized as the blockchain itself.</div>
+                </div>
+
+                <!-- Animation: two interlocking HTLC puzzle pieces + counter-rotating spinner -->
+                <div class="swa-animation swa-left-to-right swa-sign-swap">
+
+                    <!-- LEFT piece: NIM HTLC -->
+                    <div class="swa-left">
+                        <div class="swa-piece-container">
+                            <svg class="swa-piece" width="177" height="96" viewBox="0 0 177 96" style="color: var(--nimiq-green)" aria-hidden="true">
+                                <g class="swa-lines" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                                    <path opacity=".25" d="M10.5 68.63L1.62 53.12a6.5 6.5 0 01-.86-3.22V4A3.26 3.26 0 014 .75h76.6"/>
+                                    <path opacity=".25" d="M95.71 67.27l8.88-15.52a7.69 7.69 0 000-7.63l-7.41-13a1.69 1.69 0 011.47-2.52H100a3.3 3.3 0 012.86 1.65l7.69 13.29a8.66 8.66 0 010 8.59l-7 12.39a1.87 1.87 0 001.63 2.8h13.1a4.31 4.31 0 003.75-2.18c1.76-3.06 5-8.76 6.47-11.49a2.49 2.49 0 012.16-1.31c.53 0 1.19 0 2-.13a1.65 1.65 0 011.62 2.42c-.52 1-.94 1.69-.94 1.69L124 72.76l-1.57 2.76a6.36 6.36 0 01-5.54 3.23H98.44A5.16 5.16 0 0094 81.37l-4.79 8.51c-2.53 4.85-5.56 5.37-10 5.37H4A3.25 3.25 0 01.75 92V62.63"/>
+                                    <path opacity=".25" d="M143.52 77.58c-.15-.29-.28-.59-.41-.89a17.28 17.28 0 01-.17-13 1.5 1.5 0 00-1.42-2h-3.28a2.77 2.77 0 00-2.41 1.4l-7.22 12.64a2 2 0 001.78 3.07h5.37a2.13 2.13 0 011.85 3.19l-3.33 5.83a4 4 0 01-3.44 2l-29.16.11"/>
+                                    <path opacity=".25" d="M6.27 12.82l3-5.54a2.07 2.07 0 011.81-1.07h2.66A1.45 1.45 0 0115 8.41l-8 14a5.24 5.24 0 00-.71 2.65v5.64a1.08 1.08 0 002 .53L21.11 8.81a4.94 4.94 0 014.29-2.49h53.17a7.15 7.15 0 016.16 3.54l5.74 9.87a6.5 6.5 0 005.6 3.27h6.83a2.4 2.4 0 002.21-1.78c.72-2.07.88-6.29 5.85-12a1.76 1.76 0 00-1.3-2.92l-11.33-.2a1.6 1.6 0 00-1.59 2.34l3.8 6.8a1.41 1.41 0 01-1.23 2.09h-1.86a3.48 3.48 0 01-3-1.75L87.73 3.74a2 2 0 011.74-3h51.13a2.68 2.68 0 012.4 3.87 3.45 3.45 0 01-2.11 1.75 4.69 4.69 0 01-3 .06 20.75 20.75 0 00-24.82 30c1.77 3.11 5.29 6.8 4.75 12.19a14.44 14.44 0 01-2.29 6.11c-.67 1.21-1.74 3.07-2.59 4.56a1.58 1.58 0 001.38 2.37H116a3 3 0 002.63-1.52l3.37-5.86a27.51 27.51 0 001.48-3 13.29 13.29 0 00.49-3.86 1.36 1.36 0 011.66-1.37A21.08 21.08 0 00136.6 46a5.07 5.07 0 011.4-.2c2.52 0 5.23 1.64 5.23 4.09v3.54c0 1.92 1.94 3.11 3.74 3.11a3.48 3.48 0 002-.61 17.19 17.19 0 0110.91-3.16 17.25 17.25 0 01-.88 34.48 16.65 16.65 0 01-9.52-2.87c-3.27-2.31-6.23.25-6.23 2.19V92a3.25 3.25 0 01-3.25 3.25H95.62A1.92 1.92 0 0194 92.38l3-5.21a5.81 5.81 0 015-2.92h29.7"/>
+                                    <path opacity=".25" d="M39.61 89.77h22.16l16.55.09a7.52 7.52 0 006.53-3.73l5.81-10a6.59 6.59 0 015.7-3.28h21.48"/>
+                                    <path opacity=".25" d="M25.57 23l-12 20.9a8.3 8.3 0 000 8.28l4.22 7.33a4.33 4.33 0 003.73 2.17h1.37a4.32 4.32 0 013.73 2.18l9.73 17a6.71 6.71 0 005.84 3.4h33.67a6.72 6.72 0 005.82-3.4L98.53 51.4a6.85 6.85 0 000-6.8L81.7 15.15a6.74 6.74 0 00-5.84-3.4H25.59"/>
+                                    <path opacity=".25" d="M22.06 56l-2.58-4.6a6.87 6.87 0 010-6.8l14-24.53a1.83 1.83 0 00-1.59-2.74h-7.83a2.59 2.59 0 00-2.25 1.31L7.3 43.94a8 8 0 000 7.93L14.66 65a4.51 4.51 0 003.93 2.3h1a4.49 4.49 0 013.9 2.26l9.59 16.74A2.38 2.38 0 0131 89.84l-6.32-.07"/>
+                                    <path opacity=".25" d="M92.49 45.12l-14.27-25a5.71 5.71 0 00-5-2.88H44.73a5.72 5.72 0 00-4.94 2.88l-14.28 25a5.85 5.85 0 000 5.76l14.27 25a5.71 5.71 0 004.95 2.88h28.54a5.72 5.72 0 004.94-2.88l14.27-25a5.78 5.78 0 00.01-5.76z"/>
+                                    <circle opacity=".25" cx="159" cy="70" r="10.75"/>
+                                </g>
+                                <path class="swa-fill" fill="currentColor" fill-rule="evenodd" d="M159 52a17.93 17.93 0 00-10.42 3.32c-1.61 1.15-4.58 0.09 -4.58 -1.89v-3.54c0-3.42 -4.31 -5.55 -7.6 -4.63a20 20 0 111.23-38.13c2.75 1 6.37-0.82 6.37 -3.73a3.4 3.4 0 00-3.4-3.4H4a4 4 0 00-4 4v88a4 4 0 004 4h136a4 4 0 004-4v-5.43c0-2 3 -3 4.58 -1.89A18 18 0 10159 52zzM159 80a10 10 0 1110-10a10 10 0 01-10 10z"/>
+                                <g class="swa-info-icon" stroke="#fff" opacity=".5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="15.02" cy="81" r="6" fill="none" stroke-width="1.5"/>
+                                    <circle cx="15.02" cy="78.5" r=".5" fill="white" stroke-width="0.6"/>
+                                    <path d="M15.02 81l0 2" stroke-width="1.5"/>
+                                </g>
+                                <g class="swa-identicon">
+                                    <path class="swa-identicon-border" fill="#fff" fill-opacity=".16" d="M87.35 45.56L75.27 24.44A4.82 4.82 0 0071.08 22H46.92a4.81 4.81 0 00-4.18 2.44L30.65 45.56a4.89 4.89 0 000 4.88l12.08 21.12A4.82 4.82 0 0046.92 74h24.16a4.81 4.81 0 004.18-2.44l12.09-21.12a4.89 4.89 0 000-4.88z"/>
+                                    <svg class="swa-nim-logo" x="45.5" y="36" width="27" height="24" viewBox="0 0 27 24">
+                                        <path fill="#fff" d="M26.6991 10.875L21.0741 1.125C20.6691 0.4275 19.9266 0 19.1241 0H7.87414C7.07164 0 6.32914 0.4275 5.92789 1.125L0.302891 10.875C-0.0983594 11.5725 -0.0983594 12.4275 0.302891 13.125L5.92789 22.875C6.32914 23.5725 7.07164 24 7.87414 24H19.1241C19.9266 24 20.6691 23.5725 21.0704 22.875L26.6954 13.125C27.1004 12.4275 27.1004 11.5725 26.6991 10.875Z"/>
+                                    </svg>
+                                </g>
+                            </svg>
+                            <div class="swa-swap-amount">
+                                <svg class="swa-arrow" width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                                    <path d="M.75 4.5L4 1.25 7.25 4.5M4 2.75v5" stroke-linejoin="round"/>
+                                    <path d="M.75 10.75h6.5"/>
+                                </svg>
+                                <span>10 NIM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Spinner: two dashed counter-rotating circles -->
+                    <svg class="swa-spinner" viewBox="0 0 52 52" aria-hidden="true">
+                        <g fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1.5">
+                            <circle cx="26" cy="-.1" r="7.75" stroke-dasharray="3.5 3.5"/>
+                            <circle cx="26" cy="52.1" r="7.75" stroke-dasharray="3.5 3.5"/>
+                            <path opacity=".2" d="M39.23 48.38a26 26 0 000-44.76M12.77 3.62a26 26 0 000 44.76"/>
+                        </g>
+                    </svg>
+
+                    <!-- RIGHT piece: BTC HTLC -->
+                    <div class="swa-right">
+                        <div class="swa-piece-container">
+                            <svg class="swa-piece" width="177" height="96" viewBox="0 0 177 96" style="color: var(--bitcoin-orange)" aria-hidden="true">
+                                <g class="swa-lines" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                                    <path opacity=".25" d="M88.17 40.56a30.74 30.74 0 1122.39 37.27 30.74 30.74 0 01-22.39-37.27zM46.37 11.71H78a4.12 4.12 0 002.9-1.21 51.15 51.15 0 014.35-3.85 2.72 2.72 0 011.69-.58H87A2.73 2.73 0 0188.66 11a48.25 48.25 0 00-5 4.53 5.6 5.6 0 01-4.09 1.75h-27.5a3.33 3.33 0 00-3.08 2 75.89 75.89 0 00-3.51 10.65h0a75.31 75.31 0 00-1.89 11 2.77 2.77 0 002.8 3h0a2.73 2.73 0 002.67-2.46 70.51 70.51 0 011.76-10.22h0v0a3.26 3.26 0 013.18-2.5h11.16a2.64 2.64 0 012.53 3.41q-.48 1.51-.87 3.09h0a52.85 52.85 0 00-1.45 16.41"/>
+                                    <path opacity=".25" d="M33.48 18.42c.15.29.28.59.41.89a17.28 17.28 0 01.17 13 1.5 1.5 0 001.42 2H37a2.32 2.32 0 002.27-1.89q.39-1.93.87-3.87h0a65.6 65.6 0 012.7-8.55A2 2 0 0041 17.25h0a2 2 0 01-1.85-2.82q1.29-3.18 2.85-6.21a4 4 0 013.54-2.11h31.85"/>
+                                    <path opacity=".25" d="M53.39 23.19h21.42a1.72 1.72 0 011.51 2.54 47.28 47.28 0 00-4.16 10.84h0a47 47 0 002 29.13 2.78 2.78 0 002.57 1.75h0a2.75 2.75 0 002.54-3.79 41.52 41.52 0 01-1.78-25.76h0a42.58 42.58 0 018.91-17.18 41.81 41.81 0 0129-14.38 2.8 2.8 0 002.6-2.79h0a2.8 2.8 0 00-2.8-2.8H37A3.25 3.25 0 0033.75 4v5.43c0 1.94-3 4.5-6.23 2.19A16.65 16.65 0 0018 8.75a17.25 17.25 0 1010 31.32 3.48 3.48 0 012-.61c1.8 0 3.74 1.19 3.74 3.11v3.54c0 2.45 2.71 4.09 5.23 4.09a5.07 5.07 0 001.43-.2 20.7 20.7 0 0111.7.16 1.81 1.81 0 002.15-1.8 63.21 63.21 0 011-11.73A2.77 2.77 0 0158 34.35h.5c1.72 0 2.5 1.56 2.19 3.26a58.89 58.89 0 00-.78 14.76 6.29 6.29 0 001.4 3.63 15.52 15.52 0 012.6 3.5 20.75 20.75 0 01-24.79 30.08 4.69 4.69 0 00-3 .06A3.44 3.44 0 0034 91.4a2.67 2.67 0 002.39 3.85h56.35A3.27 3.27 0 0096 91.81v-.23a3.31 3.31 0 00-1.69-2.69A47.07 47.07 0 0183.23 80a4 4 0 00-2.94-1.33h-2.07A1.55 1.55 0 0077 81.18a52.56 52.56 0 005.77 6.08 1.42 1.42 0 01-.93 2.49H67.27A1.66 1.66 0 0166 87a26.08 26.08 0 005.67-11.5 3.13 3.13 0 013.08-2.46h9.86"/>
+                                    <path opacity=".25" d="M98.82 78.77a36.24 36.24 0 0051.8-15 3.77 3.77 0 013.38-2.13h.61a3.8 3.8 0 003.68-2.78A41.8 41.8 0 00151.38 23M166.17 6.25a35.07 35.07 0 013.2 4 7.31 7.31 0 011.34 4v3.13a1.43 1.43 0 01-2.65.73 57.74 57.74 0 00-7.34-9.8 6.73 6.73 0 00-4.9-2.14L141 6.22"/>
+                                    <path opacity=".25" d="M135.7 16.37c-9.41-5-17-4.62-17-4.62-20.17 0-37 16.15-37 36.32a36.14 36.14 0 008 22.63 5.32 5.32 0 011 4.79h0a5.26 5.26 0 001.88 5.65 42 42 0 0013.79 7A41.71 41.71 0 00118 89.75h34.3"/>
+                                    <path opacity=".25" d="M138.68 84.25A41.47 41.47 0 00154 69.1a3.75 3.75 0 013.23-1.83h1.33a3.81 3.81 0 003.57-2.45 47.35 47.35 0 00-5.76-44.38 7.38 7.38 0 00-6-3.11H145a2.65 2.65 0 00-1.83 4.56 36.17 36.17 0 0111 29.17 35.61 35.61 0 01-.77 5"/>
+                                    <path opacity=".25" d="M169 68.82a2.8 2.8 0 01-1.24-3.37 52.7 52.7 0 00-9.49-51.56 6.2 6.2 0 00-4.73-2.18h-12a10.93 10.93 0 01-4.88-1.2A39.73 39.73 0 00126.15 7a3.07 3.07 0 01-2.49-3v-.06a3.17 3.17 0 013.17-3.18H173A3.25 3.25 0 01176.25 4v44A59 59 0 01173 67.33a2.82 2.82 0 01-4 1.49zM102.69 95.25h70.64a2.9 2.9 0 002.9-2.9V73"/>
+                                    <circle opacity=".25" cx="18" cy="26" r="10.75"/>
+                                </g>
+                                <path class="swa-fill" fill="currentColor" fill-rule="evenodd" d="M18 44a17.93 17.93 0 0010.42-3.32C30 39.53 33 40.59 33 42.57v3.54c0 3.42 4.31 5.55 7.6 4.63a20 20 0 11-1.23 38.13c-2.75-1-6.37.82-6.37 3.73a3.4 3.4 0 003.4 3.4H173a4 4 0 004-4V4a4 4 0 00-4-4H37a4 4 0 00-4 4v5.43c0 2-3 3-4.58 1.89A18 18 0 1018 44zm70.9-3.26a30 30 0 1121.85 36.36A30 30 0 0188.9 40.74zM18 16A10 10 0 118 26a10 10 0 0110-10z"/>
+                                <g class="swa-info-icon" stroke="#fff" opacity=".5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="161.99" cy="81" r="6" fill="none" stroke-width="1.5"/>
+                                    <circle cx="161.99" cy="78.5" r=".5" fill="white" stroke-width="0.6"/>
+                                    <path d="M161.99 81l0 2" stroke-width="1.5"/>
+                                </g>
+                                <g class="swa-logo" fill="none">
+                                    <path fill="currentColor" d="M143.22 54.29a26 26 0 11-18.93-31.51 26 26 0 0118.93 31.51z"/>
+                                    <svg class="swa-btc-logo" x="92" y="22" width="52" height="52" viewBox="1 0 53 52">
+                                        <path fill="#fff" d="M40 22.8c.5-3.4-2.3-5.3-6-6.5l1.2-4.7-3-.7-1.2 4.5-2.4-.5 1.2-4.6-3-.7-1.2 4.7-2-.4-4-1-.8 3s2.2.4 2.1.5c1.3.3 1.5 1 1.4 1.6L21 23.4h.3-.3l-2 7.4a1 1 0 01-1.4.7l-2.1-.5-1.5 3.2 3.9 1 2.1.5-1.2 4.7 3 .7 1.2-4.7 2.4.6-1.2 4.7 3 .7 1.2-4.7c5 .9 8.9.5 10.5-3.9 1.3-3.5 0-5.5-2.7-6.8a4.6 4.6 0 003.7-4.2zm-6.9 9c-.9 3.6-7.1 1.7-9.2 1.2l1.7-6.2c2 .5 8.5 1.4 7.5 5zm1-9c-.9 3.2-6 1.5-7.8 1.1l1.5-5.6c1.7.4 7.1 1.1 6.2 4.4z"/>
+                                    </svg>
+                                </g>
+                            </svg>
+                            <div class="swa-swap-amount">
+                                <svg class="swa-arrow" width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                                    <path d="M7.25 4.5L4 7.75.75 4.5M4 6.25v-5" stroke-linejoin="round"/>
+                                    <path d="M.75 10.75h6.5"/>
+                                </svg>
+                                <span>0.0004 BTC</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer: step label (driven by JS) + persistent warning -->
+                <div class="swa-footer">
+                    <div class="swa-step">1/5 Setting up atomic swap</div>
+                    <div class="swa-dont-close">Don't close your wallet until the swap is complete!</div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Swap icons <small>SwapIcon · SwapMediumIcon · SwapSmallIcon</small></span></div>
+          <div class="demo-stage center">
+            <div class="swi-root">
+                <figure class="swi-item">
+                    <svg class="swi-icon" width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m4.25 15-3-3 3-3M2.43 11.863h7.071M7.25 1l3 3-3 3M9.07 4.133H1.999"/>
+                        </g>
+                    </svg>
+                    <figcaption class="swi-caption">SwapIcon<span class="swi-dim">12&#215;16</span></figcaption>
+                </figure>
+                <figure class="swi-item">
+                    <svg class="swi-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9.25 3.25l2 2-2 2" />
+                            <path d="M10.25 5.25H7.46a4 4 0 00-2.22.67l-.49.33M6.75 12.75l-2-2 2-2"/>
+                            <path d="M5.75 10.75h2.79a4 4 0 002.22-.67l.49-.33"/>
+                        </g>
+                    </svg>
+                    <figcaption class="swi-caption">SwapSmallIcon<span class="swi-dim">16&#215;16</span></figcaption>
+                </figure>
+                <figure class="swi-item">
+                    <svg class="swi-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M13.75 5.25l3 3-3 3" />
+                            <path d="M15.5 8.25h-4.18c-1.19 0-2.34.35-3.33 1l-.74.5M10.25 18.75l-3-3 3-3"/>
+                            <path d="M8.5 15.75h4.18c1.19 0 2.34-.35 3.33-1l.74-.5"/>
+                        </g>
+                    </svg>
+                    <figcaption class="swi-caption">SwapMediumIcon<span class="swi-dim">24&#215;24</span></figcaption>
+                </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== LEDGER ===================== -->
+      <section class="kit-section" id="ledger">
+        <h2>Ledger <span class="kit-provenance">nimiq/hub</span></h2>
+        <p class="kit-section-lede">The animated Ledger Nano connect flow from the Hub — cable, PIN entry and open-app states, looping.</p>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Connect your Ledger <small>LedgerUi</small></span></div>
+          <div class="demo-stage center">
+            <div class="lgu-root">
+                <div class="lgu-stage">
+                    <div class="lgu-device-container nimiq" illustration="connecting" connect-animation-step="1">
+                        <div class="lgu-screen-confirm-address lgu-screen"></div>
+                        <div class="lgu-screen-confirm-transaction lgu-screen"></div>
+                        <div class="lgu-screen-confirm-message lgu-screen"></div>
+                        <div class="lgu-screen-app lgu-screen"></div>
+                        <div class="lgu-screen-dashboard lgu-screen"></div>
+                        <div class="lgu-screen-pin lgu-screen">
+                            <div class="lgu-pin-dot"></div>
+                            <div class="lgu-pin-dot"></div>
+                            <div class="lgu-pin-dot"></div>
+                            <div class="lgu-pin-dot"></div>
+                            <div class="lgu-pin-dot"></div>
+                            <div class="lgu-pin-dot"></div>
+                            <div class="lgu-pin-dot"></div>
+                            <div class="lgu-pin-dot"></div>
+                        </div>
+                        <div class="lgu-opacity-container">
+                            <div class="lgu-cable"></div>
+                            <div class="lgu-device"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== LOGIN FILE ===================== -->
+      <section class="kit-section" id="login-file">
+        <h2>Login File <span class="kit-provenance">nimiq/keyguard</span></h2>
+        <p class="kit-section-lede">Keyguard's iconic account file — the downloadable card and its line-art draw-in animation.</p>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">The account card <small>LoginFile</small></span></div>
+          <div class="demo-stage center">
+            <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+                <!-- Security waves (native 303 x 288), white strokes -->
+                <symbol id="lofc-waves-sym" viewBox="0 0 303 288" fill="none" stroke="white">
+                    <path d="M365.7-158.8c-43 43-57.1 28.8-100 71.8-43 43-29 57.1-72 100.1-43 43-57 28.9-100 71.9-43 43-29 57.1-71.9 100-43 43-57.1 29-100.1 72"/>
+                    <path d="M360-164.5c-43 43-59.9 26-102.9 69-43 43-26 60-69 103s-60 26-103 69-26 60-69 103-60 26-103 69"/>
+                    <path d="M354.4-170.2c-43 43-62.8 23.2-105.8 66.2S225.4-41.2 182.5 1.8c-43 43-62.8 23.2-105.8 66.2s-23.2 62.8-66.2 105.8S-52.3 197-95.3 240"/>
+                    <path d="M348.8-175.8c-43 43-65.7 20.3-108.6 63.3-43 43-20.4 65.7-63.4 108.7S111.2 16.5 68.2 59.5 47.8 125.1 4.8 168.1s-65.6 20.4-108.6 63.4"/>
+                    <path d="M343.1-181.5c-43 43-68.4 17.6-111.4 60.6S214-52.5 171-9.5 102.7 8 59.7 51 42.2 119.5-.8 162.5-69.3 180-112.3 223"/>
+                    <path d="M337.5-187.1c-43 43-71.3 14.7-114.3 57.7s-14.7 71.2-57.7 114.2S94.2-.5 51.2 42.5 36.5 113.8-6.5 156.8s-71.3 14.7-114.3 57.7"/>
+                    <path d="M331.8-192.8c-43 43-74.1 11.9-117.1 54.9s-11.9 74-54.9 117-74 12-117 55-12 74-55 117-74 12-117 55"/>
+                    <path d="M326.1-198.4c-43 43-76.9 9-119.9 52s-9 77-52 120-77 9-120 52-9 76.9-52 119.9-77 9-120 52"/>
+                    <path d="M320.5-204.1c-43 43-79.8 6.2-122.8 49.2S191.5-75 148.5-32 68.8-26 25.8 17s-6.3 79.7-49.3 122.7-79.7 6.3-122.7 49.3"/>
+                    <path d="M314.8-209.8c-43 43-82.6 3.4-125.6 46.4S185.8-80.8 143-37.8c-43 43-82.6 3.4-125.6 46.4s-3.4 82.6-46.4 125.6-82.6 3.4-125.6 46.4"/>
+                </symbol>
+
+                <!-- Key (native 47 x 49) -->
+                <symbol id="lofc-key-sym" viewBox="0 0 47 49" fill="white">
+                    <path d="M46.97 14.27a14 14 0 00-5.34-11.03 14.28 14.28 0 00-17.73-.03 14.12 14.12 0 00-5.38 11.01 14 14 0 001.4 6.12 1 1 0 01-.2 1.15L1.91 39.12a4.01 4.01 0 002.82 6.83 4.09 4.09 0 002.86-1.06 1.02 1.02 0 011.4.04L12 47.92a2.03 2.03 0 002.9.02 2.01 2.01 0 00-.02-2.87l-3.02-2.98a1 1 0 010-1.42l1.27-1.27a1.02 1.02 0 011.44 0l3.01 2.99a2.04 2.04 0 003.45-1.44 2 2 0 00-.57-1.41l-3.02-2.99a1 1 0 010-1.42l8.02-7.95a1.02 1.02 0 011.15-.2 14.31 14.31 0 0018.59-5.9 13.98 13.98 0 001.76-6.8zm-14.23 6.05a6.13 6.13 0 01-5.63-3.73A6 6 0 0128.43 10a6.11 6.11 0 0110.41 4.27c0 1.6-.64 3.14-1.78 4.28a6.12 6.12 0 01-4.32 1.77z"/>
+                </symbol>
+
+                <!-- Nimiq wordmark (native 199 x 24) -->
+                <symbol id="lofc-wordmark-sym" viewBox="0 0 199 24" fill="white">
+                    <path d="M26.7 10.88l-5.62-9.76A2.25 2.25 0 0 0 19.13 0H7.88c-.79 0-1.54.41-1.95 1.13L.3 10.88a2.2 2.2 0 0 0 0 2.24l5.63 9.76A2.25 2.25 0 0 0 7.88 24h11.25c.78 0 1.53-.41 1.95-1.13l5.62-9.75a2.2 2.2 0 0 0 0-2.24zM46.73 4.72h2.43v14.4h-1.91L39.49 9.04v10.08h-2.44V4.72H39l7.76 10.1V4.71h-.03zM53.96 19.12V4.72h2.63v14.4h-2.63zM73.28 4.72h2.06v14.4H73v-8.96l-3.79 8.96H67.5l-3.86-8.85v8.85H61.3V4.72h2.06l4.96 11.3 4.95-11.3zM80.14 19.12V4.72h2.62v14.4h-2.62zM98.06 20.17c.45.45.94.94 1.5 1.4l-1.76 1.42a11.6 11.6 0 0 1-3.34-3.71c-.11 0-.3.03-.6.03-1.39 0-2.58-.3-3.64-.9a5.94 5.94 0 0 1-2.4-2.59A8.7 8.7 0 0 1 87 11.9c0-1.5.26-2.82.83-3.9a6 6 0 0 1 2.36-2.55c1.05-.6 2.25-.9 3.64-.9 1.38 0 2.62.3 3.63.9a5.76 5.76 0 0 1 2.37 2.55c.56 1.12.82 2.43.82 3.9 0 1.65-.34 3.07-.98 4.23a5.99 5.99 0 0 1-2.77 2.6c.38.52.71 1 1.16 1.45zm-7.31-4.3c.75.9 1.8 1.38 3.11 1.38 1.31 0 2.36-.45 3.11-1.39.75-.9 1.13-2.25 1.13-3.94 0-1.68-.38-3-1.13-3.9a3.85 3.85 0 0 0-3.1-1.35c-1.32 0-2.37.45-3.12 1.35-.75.9-1.13 2.22-1.13 3.94a6.6 6.6 0 0 0 1.13 3.9zM112.42 19.12V4.72h1.66v13.02h7.23v1.38h-8.89zM124.91 18.64a4.7 4.7 0 0 1-1.69-1.84 6 6 0 0 1-.6-2.81c0-1.05.2-1.99.6-2.81a4.46 4.46 0 0 1 4.24-2.48c.98 0 1.8.23 2.55.64a4.7 4.7 0 0 1 1.69 1.84 6 6 0 0 1 .6 2.8 6.2 6.2 0 0 1-.6 2.82 4.46 4.46 0 0 1-4.24 2.48c-.97 0-1.83-.23-2.55-.64zm4.84-1.73c.53-.67.82-1.65.82-2.92 0-1.24-.26-2.21-.82-2.89a2.83 2.83 0 0 0-2.33-1.01c-1 0-1.76.34-2.32 1.01-.56.68-.82 1.65-.82 2.89 0 1.27.26 2.25.82 2.92a2.83 2.83 0 0 0 2.33 1.02c1 0 1.8-.34 2.32-1.02zM143.89 8.92v10.1c0 1.5-.38 2.65-1.16 3.44-.8.79-1.92 1.16-3.45 1.16a7.36 7.36 0 0 1-4.02-1.05l.3-1.35c.64.38 1.28.64 1.84.8.56.14 1.2.22 1.88.22.97 0 1.72-.27 2.2-.79.5-.53.76-1.28.76-2.33v-2.4c-.3.64-.75 1.17-1.35 1.5-.6.38-1.31.53-2.14.53-.9 0-1.69-.23-2.36-.64a3.98 3.98 0 0 1-1.61-1.8 6.04 6.04 0 0 1-.57-2.66c0-1.01.19-1.88.56-2.66.38-.79.9-1.35 1.62-1.8a4.65 4.65 0 0 1 4.46-.12c.6.34 1.05.83 1.35 1.47V8.77h1.69v.15zm-2.48 7.54c.56-.64.83-1.54.83-2.7 0-1.16-.27-2.06-.83-2.7a2.97 2.97 0 0 0-2.32-.97 3 3 0 0 0-2.37.97 3.95 3.95 0 0 0-.86 2.7c0 1.16.3 2.06.86 2.7a3 3 0 0 0 2.37.98c.97 0 1.76-.34 2.32-.98zM146.89 4.61h1.99V6.5h-2V4.6zm.15 14.51V8.92h1.65v10.2h-1.65zM160.61 12.71v6.41h-1.65v-6.3c0-.93-.19-1.65-.56-2.06-.38-.45-.97-.67-1.8-.67-.94 0-1.69.3-2.25.86a3.2 3.2 0 0 0-.86 2.36v5.81h-1.62v-7.3c0-1.06-.03-2-.15-2.86h1.58l.15 1.84c.3-.68.79-1.16 1.39-1.54a4.02 4.02 0 0 1 2.13-.52c2.4-.04 3.64 1.31 3.64 3.97zM169.2 19.12V4.72h8.93v1.4h-7.28v4.98h6.86v1.39h-6.86v6.63h-1.65zM180.22 4.61h2V6.5h-2V4.6zm.16 14.51V8.92h1.65v10.2h-1.66zM185.21 19.12V4.24h1.65v14.88h-1.65zM198.56 13.99h-7.46c0 1.31.3 2.28.9 2.92.6.68 1.43.98 2.55.98 1.2 0 2.29-.41 3.26-1.2l.56 1.2c-.44.41-1 .75-1.72.97-.71.23-1.43.38-2.14.38a5 5 0 0 1-3.75-1.43 5.33 5.33 0 0 1-1.35-3.86c0-1.05.19-1.95.6-2.77a4.8 4.8 0 0 1 1.69-1.88 4.63 4.63 0 0 1 2.48-.68c1.34 0 2.4.46 3.18 1.32a5.3 5.3 0 0 1 1.16 3.63V14h.04zm-6.41-3.27a3.81 3.81 0 0 0-1.01 2.18h5.92a3.5 3.5 0 0 0-.82-2.18 2.72 2.72 0 0 0-1.99-.75c-.86 0-1.54.27-2.1.75z"/>
+                </symbol>
+
+                <!-- QR placeholder art (21-module grid). Modules are white; gaps show
+                     the gradient. Data field is a tiled dot pattern clipped to exclude
+                     the three finder corners; finders + dark module drawn on top. -->
+                <defs>
+                    <pattern id="lofc-qrpat" width="5" height="5" patternUnits="userSpaceOnUse">
+                        <g fill="#fff">
+                            <rect x="0" y="0" width="1" height="1" rx="0.34"/>
+                            <rect x="2" y="0" width="1" height="1" rx="0.34"/>
+                            <rect x="1" y="1" width="1" height="1" rx="0.34"/>
+                            <rect x="4" y="1" width="1" height="1" rx="0.34"/>
+                            <rect x="0" y="2" width="1" height="1" rx="0.34"/>
+                            <rect x="3" y="2" width="1" height="1" rx="0.34"/>
+                            <rect x="2" y="3" width="1" height="1" rx="0.34"/>
+                            <rect x="4" y="3" width="1" height="1" rx="0.34"/>
+                            <rect x="0" y="4" width="1" height="1" rx="0.34"/>
+                            <rect x="3" y="4" width="1" height="1" rx="0.34"/>
+                        </g>
+                    </pattern>
+                    <clipPath id="lofc-qrdata" clipPathUnits="userSpaceOnUse">
+                        <rect x="8" y="0" width="5" height="8"/>
+                        <rect x="0" y="8" width="21" height="5"/>
+                        <rect x="8" y="13" width="13" height="8"/>
+                    </clipPath>
+                </defs>
+                <symbol id="lofc-qr-sym" viewBox="0 0 21 21">
+                    <rect x="0" y="0" width="21" height="21" fill="url(#lofc-qrpat)" clip-path="url(#lofc-qrdata)"/>
+                    <g fill="#fff">
+                        <rect x="8" y="13" width="1" height="1" rx="0.34"/>
+                        <g transform="translate(0,0)">
+                            <path fill-rule="evenodd" d="M0 0h7v7H0z M1 1v5h5V1z"/>
+                            <rect x="2" y="2" width="3" height="3" rx="0.4"/>
+                        </g>
+                        <g transform="translate(14,0)">
+                            <path fill-rule="evenodd" d="M0 0h7v7H0z M1 1v5h5V1z"/>
+                            <rect x="2" y="2" width="3" height="3" rx="0.4"/>
+                        </g>
+                        <g transform="translate(0,14)">
+                            <path fill-rule="evenodd" d="M0 0h7v7H0z M1 1v5h5V1z"/>
+                            <rect x="2" y="2" width="3" height="3" rx="0.4"/>
+                        </g>
+                    </g>
+                </symbol>
+            </svg>
+            <div class="lofc-root">
+                <div class="lofc-panel lofc-teal">
+                    <svg class="lofc-waves"><use href="#lofc-waves-sym"/></svg>
+                    <svg class="lofc-key"><use href="#lofc-key-sym"/></svg>
+                    <svg class="lofc-wordmark"><use href="#lofc-wordmark-sym"/></svg>
+                    <div class="lofc-date">2026-07-05</div>
+                    <div class="lofc-label">My Wallet</div>
+                    <div class="lofc-warning">Keep safe and confidential</div>
+                    <svg class="lofc-qr"><use href="#lofc-qr-sym"/></svg>
+                </div>
+            </div>
+            <div class="lofc-root">
+                <div class="lofc-panel lofc-blue">
+                    <svg class="lofc-waves"><use href="#lofc-waves-sym"/></svg>
+                    <svg class="lofc-key"><use href="#lofc-key-sym"/></svg>
+                    <svg class="lofc-wordmark"><use href="#lofc-wordmark-sym"/></svg>
+                    <div class="lofc-date">2026-07-05</div>
+                    <div class="lofc-label">My Wallet</div>
+                    <div class="lofc-warning">Keep safe and confidential</div>
+                    <svg class="lofc-qr"><use href="#lofc-qr-sym"/></svg>
+                </div>
+            </div>
+            <div class="lofc-root">
+                <div class="lofc-panel lofc-orange">
+                    <svg class="lofc-waves"><use href="#lofc-waves-sym"/></svg>
+                    <svg class="lofc-key"><use href="#lofc-key-sym"/></svg>
+                    <svg class="lofc-wordmark"><use href="#lofc-wordmark-sym"/></svg>
+                    <div class="lofc-date">2026-07-05</div>
+                    <div class="lofc-label">My Wallet</div>
+                    <div class="lofc-warning">Keep safe and confidential</div>
+                    <svg class="lofc-qr"><use href="#lofc-qr-sym"/></svg>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Draw-in animation <small>LoginFileAnimation</small></span></div>
+          <div class="demo-stage center">
+            <div class="lofa-root lofa-step-0">
+                <div class="lofa-background"></div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 114 186">
+                    <g class="lofa-waves" fill="none" stroke="currentColor">
+                        <!-- Wave stroke length is 124 -->
+                        <path opacity="0.3" d="M-2.8 77.3c4-2 8.4-4.7 13.9-10.3 15.2-15.2 9.2-21.2 24.4-36.4s21.2-9.2 36.4-24.4a57 57 0 006.6-7.7"/>
+                        <path opacity="0.6" d="M-8.4 71.7C-4 70.1.6 67.6 6.2 62c15.2-15.2 7.2-23.2 22.4-38.4S51.8 16.4 67 1.2c2.9-2.9 4.9-5.5 6.4-7.9"/>
+                        <path opacity="0.75" stroke-width="1.5" d="M-13 67.1a33 33 0 0015.2-9c15.2-15.2 5.2-25.2 20.4-40.4s25.1-5.2 40.3-20.4c2.9-2.9 4.8-5.5 6.2-8.1"/>
+                        <path opacity="0.6" d="M-17.6 62.5a28 28 0 0015.8-8.4c15.2-15.2 3.2-27.2 18.4-42.4S43.8 8.4 59-6.7c2.9-2.9 4.8-5.6 6-8.3"/>
+                        <path opacity="0.3" d="M-20.9 59.2c5.2-.8 10.5-2.5 16.1-8.1C10.4 35.8-2.6 22.9 12.6 7.7S40.8 5.5 56-9.7a30 30 0 006-8.4"/>
+                        <path opacity="0.3" d="M-23.2 56.8c5.4-.6 10.8-2.2 16.4-7.8C8.4 33.8-5.6 19.9 9.6 4.7S38.8 3.5 54-11.7c2.9-2.9 4.7-5.7 5.9-8.5"/>
+                    </g>
+                    <g fill="currentColor">
+                        <path class="lofa-logo" fill="currentColor" d="M29.9 18l-2.1-3.4a.8.8 0 00-.7-.4h-4.2c-.3 0-.6.1-.7.4l-2 3.4c-.2.3-.2.6 0 .8l2 3.5c.1.3.4.4.7.4h4.2c.3 0 .5-.1.7-.4l2-3.5c.2-.2.2-.5 0-.8z"/>
+                        <path class="lofa-key" fill="currentColor" d="M73.5 57a9.8 9.8 0 00-7.8-9.8c-1.5-.3-3-.3-4.5 0s-2.8 1-4 2a9.9 9.9 0 00-2.8 12l.1.4-.2.4-12.5 12.4a2.8 2.8 0 000 4 2.9 2.9 0 004 0c.1 0 .3-.2.5-.1l.5.2 2 2 .6.4.5.1.6-.1.4-.3c.1-.1.3-.3.3-.5l.1-.5a1.4 1.4 0 00-.4-1l-2.1-2.1-.2-.3V76v-.3l.2-.2.9-1a.7.7 0 011 0l2.1 2.2c.3.2.7.4 1 .4s.8-.2 1-.4c.3-.3.4-.7.4-1 0-.4-.1-.7-.4-1l-2-2.1c-.2-.1-.3-.3-.3-.5l.2-.5 5.6-5.6.4-.2h.5a10 10 0 0013-4 9.8 9.8 0 001.3-4.9zm-10 4.2c-.9 0-1.8-.3-2.5-.8s-1.2-1-1.5-1.8c-.3-.8-.5-1.7-.3-2.5s.6-1.6 1.2-2.2 1.4-1 2.2-1.1a4.3 4.3 0 015.1 4.2c0 1-.5 2.1-1.3 2.9-.8.8-1.8 1.3-3 1.3z"/>
+                    </g>
+                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- Border stroke length is 585 -->
+                        <path class="lofa-border" stroke-width="2" d="M1 5a4 4 0 014-4h104a4 4 0 014 4v176a4 4 0 01-4 4H5a4 4 0 01-4-4V5z"/>
+                        <path class="lofa-border" stroke-width="2" d="M1 5a4 4 0 014-4h104a4 4 0 014 4v176a4 4 0 01-4 4H5a4 4 0 01-4-4V5z"/>
+                        <path class="lofa-border" stroke-width="2" d="M1 5a4 4 0 014-4h104a4 4 0 014 4v176a4 4 0 01-4 4H5a4 4 0 01-4-4V5z"/>
+                        <path class="lofa-title" stroke-width="6" d="M89 18H64M55 18H36"/>
+                        <path class="lofa-date" stroke-width="3" d="M70 31H44"/>
+                        <g stroke-width="4">
+                            <path class="lofa-qr" d="M33 138h14v14H33z"/>
+                            <path class="lofa-qr" d="M67 104h14v14H67z"/>
+                            <path class="lofa-qr" d="M61 126v6H33h5v-8M60 146v6h21"/>
+                            <path class="lofa-qr" d="M58 104h3v14M79 124H67v6"/>
+                            <path class="lofa-qr" d="M45 125h8v-9M80 131v14"/>
+                            <path class="lofa-qr" d="M59 139h-6v8"/>
+                            <path class="lofa-qr" d="M53 104v5h3"/>
+                            <path class="lofa-qr" d="M33 104h14v14H33zM67 138h6v6h-6z"/>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== BACKUP & RECOVERY ===================== -->
+      <section class="kit-section" id="backup-recovery">
+        <h2>Backup &amp; Recovery <span class="kit-provenance">nimiq/keyguard</span></h2>
+        <p class="kit-section-lede">How Keyguard backs up and restores accounts — the backup-code bubbles and the 24-word recovery phrase.</p>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Backup codes <small>BackupCodesIllustration</small></span></div>
+          <div class="demo-stage center">
+            <div class="bcb-root bcb-intro">
+                <div class="bcb-bubble bcb-code-1 bcb-masked">
+                    <div class="bcb-background"></div>
+                    <div class="bcb-label">Nimiq Backup Code 1/2</div>
+                    <code class="bcb-code-text">k9Tf!2mQxZ;p7RdLwN4bVsE!6yUcaHgJ8oIrP;0nMfKz</code>
+                </div>
+                <div class="bcb-bubble bcb-code-2 bcb-masked">
+                    <div class="bcb-background"></div>
+                    <div class="bcb-label">Nimiq Backup Code 2/2</div>
+                    <code class="bcb-code-text">Xp29dLtN!wZ;4bVsE6yUc!1aHgJ8oIrP0;nMfKk7Rf2m</code>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Recovery words <small>RecoveryWords</small></span></div>
+          <div class="demo-stage center">
+            <div class="rwg-root">
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">01</span><span class="rwg-word-content" title="word #1">anchor</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">02</span><span class="rwg-word-content" title="word #2">puzzle</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">03</span><span class="rwg-word-content" title="word #3">mirror</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">04</span><span class="rwg-word-content" title="word #4">velvet</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">05</span><span class="rwg-word-content" title="word #5">harvest</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">06</span><span class="rwg-word-content" title="word #6">nation</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">07</span><span class="rwg-word-content" title="word #7">dolphin</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">08</span><span class="rwg-word-content" title="word #8">orbit</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">09</span><span class="rwg-word-content" title="word #9">canyon</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">10</span><span class="rwg-word-content" title="word #10">marble</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">11</span><span class="rwg-word-content" title="word #11">jungle</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">12</span><span class="rwg-word-content" title="word #12">ticket</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">13</span><span class="rwg-word-content" title="word #13">oxygen</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">14</span><span class="rwg-word-content" title="word #14">wisdom</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">15</span><span class="rwg-word-content" title="word #15">forest</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">16</span><span class="rwg-word-content" title="word #16">gravity</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">17</span><span class="rwg-word-content" title="word #17">lobster</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">18</span><span class="rwg-word-content" title="word #18">sunset</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">19</span><span class="rwg-word-content" title="word #19">tornado</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">20</span><span class="rwg-word-content" title="word #20">umbrella</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">21</span><span class="rwg-word-content" title="word #21">violin</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">22</span><span class="rwg-word-content" title="word #22">walnut</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">23</span><span class="rwg-word-content" title="word #23">yellow</span></div>
+                <div class="rwg-word rwg-complete recovery-words-input-field"><span class="rwg-word-number">24</span><span class="rwg-word-content" title="word #24">zebra</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== SECURITY ===================== -->
+      <section class="kit-section" id="security">
+        <h2>Security <span class="kit-provenance">nimiq/keyguard</span></h2>
+        <p class="kit-section-lede">Unlocking and balance display — the PIN / password field with its hexagon spinner, and the balance-distribution bar.</p>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">PIN &amp; password <small>PasswordInput · PasswordBox</small></span></div>
+          <div class="demo-stage center">
+            <div class="ppb-password-input">
+                <div class="ppb-input-container">
+                    <div class="ppb-input-wrapper">
+                        <input class="ppb-input ppb-password" type="password"
+                               value="nimiq2024" placeholder="••••••••"
+                               autocomplete="current-password" aria-label="Password">
+                    </div>
+                    <button type="button" class="ppb-eye-button"
+                            aria-label="Show password" aria-pressed="false">
+                        <!-- .ppb-is-visible = nq-view-off (crossed eye) -->
+                        <svg class="ppb-icon ppb-is-visible" viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.9 6.95c1.59 1 3.03 2.21 4.3 3.6.74.82.74 2.07 0 2.9-2.56 2.81-6.79 5.8-11.04 5.8h-.3a11.26 11.26 0 0 1-4.31-.94L3.4 22.45a1 1 0 0 1-1.63-1.08l.01-.01.01-.01 19.5-19.5a.74.74 0 0 0 .18-.3l.02-.01a1 1 0 1 1 1.41 1.41l-4 4zm-5.59 9.35a4.58 4.58 0 0 0 3-3.03 4.3 4.3 0 0 0-.2-3.06.25.25 0 0 0-.4-.07l-5.57 5.56a.25.25 0 0 0 .07.4 4.3 4.3 0 0 0 3.1.2z"/><path d="M7.62 13.4a.24.24 0 0 0 .06-.24A4.32 4.32 0 0 1 7.5 12a4.5 4.5 0 0 1 5.66-4.33c.09.03.18 0 .24-.06l1.94-1.94a.25.25 0 0 0-.1-.42c-1.05-.34-2.14-.5-3.24-.5C7.7 4.69 3.4 7.7.81 10.55a2.15 2.15 0 0 0 0 2.9 21.21 21.21 0 0 0 3.43 3.03c.1.07.24.06.33-.03l3.05-3.05z"/></g></svg>
+                        <!-- .ppb-not-visible = nq-view (open eye) -->
+                        <svg class="ppb-icon ppb-not-visible" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 4.6c4.4-.06 8.79 3.01 11.43 5.92.75.84.75 2.11 0 2.95-2.61 2.88-6.94 5.93-11.28 5.93h-.31c-4.33 0-8.66-3.05-11.27-5.93a2.21 2.21 0 0 1 0-2.95C3.2 7.62 7.6 4.54 12 4.6zm0 2.8a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2z" fill="currentColor"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" fill="currentColor"/></svg>
+                    </button>
+                </div>
+                <div class="ppb-caption">Type = password · click the eye to reveal</div>
+            </div>
+            <svg height="48" width="54" color="inherit" class="ppb-loading-spinner"><g stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round">
+                <path class="ppb-big-hex" d="M51.9,21.9L41.3,3.6c-0.8-1.3-2.2-2.1-3.7-2.1H16.4c-1.5,0-2.9,0.8-3.7,2.1L2.1,21.9c-0.8,1.3-0.8,2.9,0,4.2 l10.6,18.3c0.8,1.3,2.2,2.1,3.7,2.1h21.3c1.5,0,2.9-0.8,3.7-2.1l10.6-18.3C52.7,24.8,52.7,23.2,51.9,21.9z" opacity="0.4" stroke-dasharray="92.5 60"/>
+                <path class="ppb-small-hex" d="M51.9,21.9L41.3,3.6c-0.8-1.3-2.2-2.1-3.7-2.1H16.4c-1.5,0-2.9,0.8-3.7,2.1L2.1,21.9c-0.8,1.3-0.8,2.9,0,4.2 l10.6,18.3c0.8,1.3,2.2,2.1,3.7,2.1h21.3c1.5,0,2.9-0.8,3.7-2.1l10.6-18.3C52.7,24.8,52.7,23.2,51.9,21.9z" stroke-dasharray="47.5 105"/>
+            </g></svg>
+          </div>
+        </div>
+        <div class="demo">
+          <div class="demo-head"><span class="demo-title">Balance distribution <small>BalanceDistributionBar</small></span></div>
+          <div class="demo-stage center">
+            <div class="bdb-root">
+                <!-- LEFT group: NIM (active, growing) + NIM (inactive) -->
+                <div class="bdb-bar nim-green active" style="width:30%">
+                    <div class="bdb-change" style="width:40%"></div>
+                </div>
+                <div class="bdb-bar nim-gold" style="width:10%"></div>
+
+                <!-- Separator between the two accounts / sides of the swap -->
+                <div class="bdb-separator"></div>
+
+                <!-- RIGHT group: BTC + USDC (shown active so brand colours read) -->
+                <div class="bdb-bar btc active" style="width:40%"></div>
+                <div class="bdb-bar usdc active" style="width:20%"></div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- ===================== RESOURCES ===================== -->

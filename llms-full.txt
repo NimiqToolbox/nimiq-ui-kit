@@ -16,7 +16,9 @@ The kit is a **zero-build static site** — just `index.html`, `assets/`, `token
 | [@nimiq/vue-components](https://github.com/nimiq/vue-components) | git | The live Vue components (31 demos, 34 tags) |
 | [@nimiq/identicons](https://github.com/nimiq/iqons) | 1.6.2 | Identicon / avatar generator |
 | [@nimiq/utils](https://github.com/nimiq/nimiq-utils) | local | Formatting, validation, request-links, tweening, clipboard |
-| [nimiq/wallet](https://github.com/nimiq/wallet) | master | Muli / Fira Mono fonts, opacity ladder, crypto colors, patterns |
+| [nimiq/wallet](https://github.com/nimiq/wallet) | master | Muli / Fira Mono fonts, opacity ladder, crypto colors, patterns; the Swaps & balance-bar reproductions |
+| [nimiq/hub](https://github.com/nimiq/hub) | master | The animated Ledger connect (`LedgerUi`) reproduction |
+| [nimiq/keyguard](https://github.com/nimiq/keyguard) | master | The Login File, backup codes, recovery words, PIN & balance-bar reproductions |
 | [onmax/nimiq-ui (nimiq-icons)](https://github.com/onmax/nimiq-ui) | MIT | Extended `nimiq-icons` set (Iconify JSON) |
 
 **Grid:** the whole system is an 8px grid — `html { font-size: 8px }`, so `1rem = 8px` and `Nrem = N × 8px`.
@@ -919,6 +921,62 @@ Composed examples built from the primitives above, as they appear in the wallet 
 
 ---
 
+# Wallet · Hub · Keyguard (reproduced patterns)
+
+Distinctive Nimiq product UI — from the **Wallet**, the **Hub** and the **Keyguard** — **faithfully reproduced as static demos** inside the kit. Each one is rebuilt in the kit's own token-driven HTML/CSS/JS from the real source repos; they are **design references, not the runnable upstream components**, and they are **not** part of `@nimiq/vue-components`. Machine-readable form: the `reproductions` array in `components.json`. On the live site these sit under the "Wallet · Hub · Keyguard" nav group.
+
+## Swaps `nimiq/wallet`
+
+The atomic-swap experience from the live wallet. Live section: [`/#swaps`](https://nimiqtoolbox.github.io/nimiq-ui-kit/#swaps).
+
+### SwapBalanceBar
+A live, **draggable** two-sided balance bar (NIM ↔ BTC): drag the centre handle to move value between the two assets, and the percentages, change-bars and equilibrium marker update. Reproduced from `SwapBalanceBar` in nimiq/wallet.
+
+### SwapAnimation
+The looping "Performing Atomic Swap" animation — two interlocking HTLC puzzle pieces (a green NIM piece and an orange BTC piece) with a counter-rotating dashed spinner, a step label and a success overlay. Reproduced from `SwapAnimation` in nimiq/wallet.
+
+### Swap icons — `SwapIcon` · `SwapSmallIcon` · `SwapMediumIcon`
+The three swap glyphs at their native sizes: `SwapIcon` (12×16), `SwapSmallIcon` (16×16) and `SwapMediumIcon` (24×24). Reproduced from nimiq/wallet.
+
+## Ledger `nimiq/hub`
+
+The animated Ledger connect flow from the Hub. Live section: [`/#ledger`](https://nimiqtoolbox.github.io/nimiq-ui-kit/#ledger).
+
+### LedgerUi
+The looping animated **Ledger Nano connect** illustration — cable, PIN-entry screen and open-app screen states. Reproduced from `LedgerUi` in nimiq/hub.
+
+## Login File `nimiq/keyguard`
+
+Keyguard's iconic downloadable account file. Live section: [`/#login-file`](https://nimiqtoolbox.github.io/nimiq-ui-kit/#login-file).
+
+### LoginFile
+The account card — QR, key icon, Nimiq wordmark, label, date and security waves — shown in its three colour variants (teal, blue, orange). Reproduced from `LoginFile` in nimiq/keyguard.
+
+### LoginFileAnimation
+The line-art **draw-in animation** of the login file: border, title, date, QR and logo strokes drawing themselves in. Reproduced from `LoginFileAnimation` in nimiq/keyguard.
+
+## Backup & Recovery `nimiq/keyguard`
+
+How Keyguard backs up and restores accounts. Live section: [`/#backup-recovery`](https://nimiqtoolbox.github.io/nimiq-ui-kit/#backup-recovery).
+
+### BackupCodesIllustration
+The two gradient chat-bubble **backup codes** ("Nimiq Backup Code 1/2" and "2/2"). Reproduced from `BackupCodesIllustration` in nimiq/keyguard.
+
+### RecoveryWords
+The **24-word recovery phrase** laid out as a numbered grid (recovery-words input fields in their completed state). Reproduced from `RecoveryWords` in nimiq/keyguard.
+
+## Security `nimiq/keyguard`
+
+Unlocking and balance display. Live section: [`/#security`](https://nimiqtoolbox.github.io/nimiq-ui-kit/#security).
+
+### PasswordInput · PasswordBox
+The **PIN / password field**: masked dots with a show/hide **eye toggle**, plus the hexagon loading spinner shown while unlocking. Reproduced from `PasswordInput` / `PasswordBox` in nimiq/keyguard.
+
+### BalanceDistributionBar
+The segmented **balance-distribution bar** splitting holdings across assets (NIM, BTC, USDC) with a separator and an animated active/growing segment. Reproduced from `BalanceDistributionBar` in nimiq/keyguard.
+
+---
+
 # Resources
 
 | Package | Repository | License |
@@ -928,6 +986,8 @@ Composed examples built from the primitives above, as they appear in the wallet 
 | @nimiq/identicons | https://github.com/nimiq/iqons | ISC |
 | @nimiq/utils | https://github.com/nimiq/nimiq-utils | Apache-2.0 |
 | nimiq/wallet | https://github.com/nimiq/wallet | — |
+| nimiq/hub | https://github.com/nimiq/hub | — |
+| nimiq/keyguard | https://github.com/nimiq/keyguard | — |
 | nimiq-icons (extended set) | https://github.com/onmax/nimiq-ui | MIT |
 
 **In-kit artifacts for agents:** `llms.txt` (index) · `llms-full.txt` (this file) · `components.json` (Vue manifest) · `tokens/tokens.json` + `tokens/tokens.css` (tokens) · `assets/nimiq-icons.json` (extended icons) · `AGENTS.md` (how to consume & regenerate).
