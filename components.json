@@ -6,9 +6,9 @@
     "upstream": "https://github.com/nimiq/vue-components",
     "generatedFrom": "assets/js/kit.js — the GROUPS object (~lines 400-547). One entry per live demo; props come from each demo's knobs plus props revealed by its Vue template and code(state) snippet.",
     "componentCount": {
-      "demos": 31,
-      "distinctTags": 34,
-      "note": "GROUPS mounts 31 interactive demos across 5 groups. They reference 34 distinct component tags: the 31 demo tags plus PageHeader, PageBody and PageFooter, which are composed inside the single SmallPage demo (see its relatedTags). The kit's README and index.html say '34 components' — that number matches the distinct-tag count but is NOT the number of demos (31)."
+      "demos": 30,
+      "distinctTags": 33,
+      "note": "GROUPS mounts 30 interactive demos across 5 groups (the @deprecated Wallet demo was removed). They reference 33 distinct component tags: the 30 demo tags plus PageHeader, PageBody and PageFooter, which are composed inside the single SmallPage demo (see its relatedTags). The kit's README and index.html still say '34 components' (the pre-removal distinct-tag count)."
     },
     "schemaNote": "Custom, intentionally simple schema inspired by the Custom Elements Manifest (webcomponents/custom-elements-manifest) and Storybook stories.json/args shapes, but flattened for direct LLM reading. Per component: name, tag, group, description, optional flags (deprecated, note, relatedTags), props[], optional events[], optional slots[], and example. Each prop has: name; type (string|number|boolean|select|object|array); options[] (select only); default (the kit's interactive knob default, OR the concrete value the demo passes for an inferred prop); inferred:true when the prop/value was read from the component's template or code() snippet rather than an interactive knob (so its exact runtime default is not asserted); optional note. events[] and slots[] are plain-language strings. This is NOT the W3C DTCG or CEM JSON schema; it is a bespoke reading aid.",
     "conventions": {
@@ -328,18 +328,6 @@
       ],
       "slots": ["One named slot per entry (slot=\"<entry>\")."],
       "example": "<Carousel :entries=\"['a','b','c']\" selected=\"a\">\n  <div slot=\"a\">…</div>\n</Carousel>"
-    },
-    {
-      "name": "Wallet",
-      "tag": "Wallet",
-      "group": "Layout & Pages",
-      "description": "Wallet summary card showing a wallet's accounts and balance.",
-      "deprecated": true,
-      "note": "Marked @deprecated in the kit's example snippet.",
-      "props": [
-        { "name": "wallet", "type": "object", "inferred": true, "note": "{ id, label, type, accounts: [{ address }], balance, … }." }
-      ],
-      "example": "<Wallet :wallet=\"{id,label,type,accounts:[{address}],balance,…}\" />  <!-- @deprecated component -->"
     },
     {
       "name": "QrCode",

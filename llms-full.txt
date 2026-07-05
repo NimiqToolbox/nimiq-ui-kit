@@ -733,17 +733,6 @@ Slots: one named slot per entry (`slot="<entry>"`).
 </Carousel>
 ```
 
-### Wallet `<Wallet>` — **@deprecated**
-Wallet summary card showing a wallet's accounts and balance. Marked `@deprecated` in the kit's example.
-
-| Prop | Type | Default | Notes |
-|---|---|---|---|
-| wallet | object | — | `{ id, label, type, accounts: [{ address }], balance, … }` _(inferred)_ |
-
-```html
-<Wallet :wallet="{id,label,type,accounts:[{address}],balance,…}" />  <!-- @deprecated component -->
-```
-
 ## Group: QR
 
 ### QrCode `<QrCode>`

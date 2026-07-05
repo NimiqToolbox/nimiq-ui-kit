@@ -602,10 +602,6 @@
           knobs: [],
           template: '<Carousel :entries="entries" :selected="selected" style="width:40rem"><div slot="one" class="nq-card" style="margin:0;padding:2rem;text-align:center">Slide one</div><div slot="two" class="nq-card" style="margin:0;padding:2rem;text-align:center">Slide two</div><div slot="three" class="nq-card" style="margin:0;padding:2rem;text-align:center">Slide three</div></Carousel>',
           code: function () { return '<Carousel :entries="[\'a\',\'b\',\'c\']" selected="a">\n  <div slot="a">…</div>\n</Carousel>'; } }),
-        demo({ title: 'Wallet', tag: 'Wallet', stageClass: 'center',
-          data: { wallet: { id: 'w1', label: 'Keyguard Wallet', type: 2, fileExported: true, wordsExported: true, balance: 4200000000, accounts: [{ address: ADDR }, { address: ADDR2 }] } }, knobs: [],
-          template: '<div style="width:44rem;max-width:100%"><Wallet :wallet="wallet"/></div>',
-          code: function () { return '<Wallet :wallet="{id,label,type,accounts:[{address}],balance,…}" />  <!-- @deprecated component -->'; } })
       ],
       'vc-qr-mount': [
         demo({ title: 'QrCode', tag: 'QrCode', stageClass: 'center',
