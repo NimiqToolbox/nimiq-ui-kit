@@ -128,6 +128,7 @@
         <a href="#utilities">Utilities</a>
         <a href="#patterns">Patterns</a>
         <a href="#resources">Resources</a>
+        <a href="#llms">For LLMs</a>
       </div>
     </nav>
   </aside>
@@ -139,6 +140,10 @@
       <header class="kit-hero">
         <h1>Nimiq UI Kit</h1>
         <p>The authoritative reference for the entire Nimiq UI universe — design tokens, foundations, CSS components, live Vue components, identicons and utilities — built directly from the real, published sources.</p>
+        <div class="kit-hero-links">
+          <a class="nq-link" href="https://github.com/NimiqToolbox/nimiq-ui-kit">View on GitHub ↗</a>
+          <a class="nq-link" href="#llms">For LLMs &amp; agents</a>
+        </div>
       </header>
 
       <!-- ===================== OVERVIEW ===================== -->
@@ -526,6 +531,23 @@
             <tr><td>@nimiq/identicons</td><td><a href="https://github.com/nimiq/iqons">github.com/nimiq/iqons</a></td><td>ISC</td></tr>
             <tr><td>@nimiq/utils</td><td><a href="https://github.com/nimiq/nimiq-utils">github.com/nimiq/nimiq-utils</a></td><td>Apache-2.0</td></tr>
             <tr><td>nimiq/wallet</td><td><a href="https://github.com/nimiq/wallet">github.com/nimiq/wallet</a></td><td>—</td></tr>
+            <tr><td>Nimiq UI Kit (this kit)</td><td><a href="https://github.com/NimiqToolbox/nimiq-ui-kit">github.com/NimiqToolbox/nimiq-ui-kit</a></td><td>—</td></tr>
+          </tbody>
+        </table></div></div>
+      </section>
+
+      <!-- ===================== FOR LLMs & AGENTS ===================== -->
+      <section class="kit-section" id="llms">
+        <h2>For LLMs &amp; Agents <span class="kit-provenance">llms.txt · machine-readable</span></h2>
+        <p class="kit-section-lede">This page builds its component catalog, swatches and icons with JavaScript, so an agent that only fetches the HTML sees empty mounts. These static, copy-ready exports expose the whole kit — tokens, components, props, examples and icons — with no code to run. Source &amp; issues live on <a class="nq-link" href="https://github.com/NimiqToolbox/nimiq-ui-kit">GitHub</a>.</p>
+        <div class="kit-card"><div class="table-scroll"><table class="res-table">
+          <thead><tr><th>Artifact</th><th>What it is</th></tr></thead>
+          <tbody>
+            <tr><td><a class="nq-link" href="llms.txt">llms.txt</a></td><td>Curated index of the kit for LLMs (<a class="nq-link" href="https://llmstxt.org">llmstxt.org</a> format)</td></tr>
+            <tr><td><a class="nq-link" href="llms-full.txt">llms-full.txt</a></td><td>The entire kit as one flat Markdown document — tokens, foundations, every component with props &amp; examples, and the icon list</td></tr>
+            <tr><td><a class="nq-link" href="components.json">components.json</a></td><td>Structured manifest of every Vue component: tag, group, props, events, slots and a copyable example</td></tr>
+            <tr><td><a class="nq-link" href="AGENTS.md">AGENTS.md</a></td><td>How an agent should consume the kit, plus the token &amp; class conventions</td></tr>
+            <tr><td><a class="nq-link" href="tokens/tokens.json">tokens/tokens.json</a></td><td>Design tokens as machine-readable JSON — colours, type scale, spacing, radius, motion…</td></tr>
           </tbody>
         </table></div></div>
       </section>

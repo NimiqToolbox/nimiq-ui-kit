@@ -74,6 +74,8 @@ a:hover { text-decoration: underline; }
 .kit-hero { padding: 24px 0 8px; }
 .kit-hero h1 { font-size: var(--fs-hero-h1); font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; }
 .kit-hero p { font-size: var(--fs-hero-p); color: rgba(31,35,72,0.6); margin: 0 0 4px; max-width: 62ch; }
+.kit-hero-links { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 16px; }
+.kit-hero-links a { font-size: 15px; font-weight: 600; }
 
 /* --- Sections ------------------------------------------------------------ */
 .kit-section { padding-top: 56px; scroll-margin-top: 24px; }
