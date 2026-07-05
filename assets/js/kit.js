@@ -1454,3 +1454,20 @@
     'use strict';
     /* Static component — nothing to wire. */
 })();
+
+/* Login File card QR — mount the real @nimiq/vue-components QrCode (white, rounded modules),
+   the same generator the actual keyguard Login File uses. */
+(function () {
+  if (!window.Vue) return;
+  document.querySelectorAll('.lofc-qr[data-lofc-qr]').forEach(function (el) {
+    var data = el.getAttribute('data-lofc-qr') || 'https://nimiq.com';
+    try {
+      var vm = new window.Vue({
+        data: function () { return { d: data }; },
+        template: '<QrCode :data="d" :size="264" fill="white" errorCorrection="M"/>'
+      });
+      vm.$mount();
+      el.appendChild(vm.$el);
+    } catch (e) { if (window.console) console.warn('lofc QR mount failed', e); }
+  });
+})();

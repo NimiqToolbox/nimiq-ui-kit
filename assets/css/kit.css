@@ -2565,3 +2565,7 @@ pre.code .tok-cmt { color: #7a7fa6; }
 }
 /* Vue QrCode renders to <canvas> (raster) — render at 2x and scale to 160px so it's sharp on retina, matching the wallet's own technique. */
 #vc-qr-mount canvas { width: 160px !important; height: 160px !important; }
+/* Login File card: the mounted Vue QrCode canvas fills the 99x99 QR box (2x render, scaled = sharp). */
+.lofc-qr { overflow: hidden; }
+.lofc-qr canvas { width: 100% !important; height: 100% !important; display: block; }
+.lofc-warning { font-weight: 700; }
